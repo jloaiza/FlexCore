@@ -7,6 +7,7 @@ using ModuloCuentas.DTO;
 using ModuloCuentas.Cuentas;
 using ModuloCuentas.DAO;
 using ModuloCuentas.Generales;
+using System.Threading;
 
 namespace ModuloCuentas.Managers
 {
@@ -30,6 +31,35 @@ namespace ModuloCuentas.Managers
             {
                 return "Ha ocurrido un error en la transacción";
             }
+        }
+
+        public static string iniciarAhorro(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            try
+            {
+                CuentaAhorroAutomaticoDTO _cuentaAhorroAutomaticoDTO = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
+                if (_cuentaAhorroAutomaticoDTO.getEstado() == true)
+                {
+                    ThreadStart _delegado = new ThreadStart(() => iniciarAhorroAux(pCuentaAhorroAutomatico));
+                    Thread _hiloReplica = new Thread(_delegado);
+                    _hiloReplica.Start();
+                    return "Transacción completada con éxito";
+                }
+                else
+                {
+                    return "Debe activar la cuenta antes de iniciar el ahorro";
+                }
+            }
+            catch
+            {
+                return "Ha ocurrido un error en la transacción";
+            }
+            
+        }
+
+        private static void iniciarAhorroAux(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+
         }
 
         public static string eliminarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -67,7 +97,8 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
+                CuentaAhorroAutomatico _cuentaAhorroAutomatico =  CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico.getNumeroCuenta());
+                return cuentaAhorroAutomaticoADTO(_cuentaAhorroAutomatico);
             }
             catch
             {
@@ -75,11 +106,13 @@ namespace ModuloCuentas.Managers
             }
         }
 
+        //CAMBIAR A GETCEDULA
         public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCedula(pCuentaAhorroAutomatico);
+                CuentaAhorroAutomatico _cuentaAhorroAutomatico = CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCedula(pCuentaAhorroAutomatico.getNumeroCuenta());
+                return cuentaAhorroAutomaticoADTO(_cuentaAhorroAutomatico);
             }
             catch
             {
@@ -87,11 +120,18 @@ namespace ModuloCuentas.Managers
             }
         }
 
+        //CAMBIAR A GET NOMBRE
         public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNombre(pCuentaAhorroAutomatico);
+                List<CuentaAhorroAutomatico> _cuentaAhorroAutomatico = CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNombre(pCuentaAhorroAutomatico.getNumeroCuenta());
+                List<CuentaAhorroAutomaticoDTO> _cuentasSalida = new List<CuentaAhorroAutomaticoDTO>();
+                foreach (CuentaAhorroAutomatico cuentas in _cuentaAhorroAutomatico)
+                {
+                    _cuentasSalida.Add(cuentaAhorroAutomaticoADTO(cuentas));
+                }
+                return _cuentasSalida;
             }
             catch
             {
@@ -99,11 +139,13 @@ namespace ModuloCuentas.Managers
             }
         }
 
+        //CAMBIAR A GET CIF
         public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCIF(pCuentaAhorroAutomatico);
+                CuentaAhorroAutomatico _cuentaAhorroAutomatico = CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCIF(pCuentaAhorroAutomatico.getNumeroCuenta());
+                return cuentaAhorroAutomaticoADTO(_cuentaAhorroAutomatico);
             }
             catch
             {
@@ -115,10 +157,10 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroAutomaticoDTO _cuentaActual = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
-                if (Tiempo.getHoraActual() > _cuentaActual.getFechaFinalizacion() && _cuentaActual.getSaldo() >= pMonto)
+                CuentaAhorroAutomaticoDTO _cuentaActualDTO = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
+                if (Tiempo.getHoraActual() > _cuentaActualDTO.getFechaFinalizacion() && _cuentaActualDTO.getSaldo() >= pMonto)
                 {
-                    CuentaAhorroAutomaticoDAO.quitarDinero(pCuentaAhorroAutomatico, pMonto);
+                    CuentaAhorroAutomaticoDAO.quitarDinero(_cuentaActualDTO.getNumeroCuenta(), pMonto);
                     return "Transacción completada con éxito";
                 }
                 else
@@ -129,6 +171,19 @@ namespace ModuloCuentas.Managers
             catch
             {
                 return "Ha ocurrido un error en la transacción";
+            }
+        }
+
+        public static bool agregarDinero(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
+        {
+            try
+            {
+                CuentaAhorroAutomaticoDAO.agregarDinero(pCuentaAhorroVista.getNumeroCuenta(), pMonto);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -152,6 +207,26 @@ namespace ModuloCuentas.Managers
                 _montoAhorro = ((pTiempoAhorro) / (Tiempo.diasAMeses(pMagnitudPeriodoAhorro))) * pMontoDeduccion;
             }
             return _montoAhorro;
+        }
+
+        private static CuentaAhorroAutomaticoDTO cuentaAhorroAutomaticoADTO(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
+        {
+            CuentaAhorroAutomaticoDTO _cuentaSalida = new CuentaAhorroAutomaticoDTO();
+            _cuentaSalida.setDescripcion(pCuentaAhorroAutomatico.getDescripcion());
+            _cuentaSalida.setEstado(pCuentaAhorroAutomatico.getEstado());
+            _cuentaSalida.setFechaFinalizacion(pCuentaAhorroAutomatico.getFechaFinalizacion().Day, pCuentaAhorroAutomatico.getFechaFinalizacion().Month, pCuentaAhorroAutomatico.getFechaFinalizacion().Year);
+            _cuentaSalida.setFechaInicio(pCuentaAhorroAutomatico.getFechaInicio().Day, pCuentaAhorroAutomatico.getFechaInicio().Month, pCuentaAhorroAutomatico.getFechaInicio().Year);
+            _cuentaSalida.setMagnitudPeriodoAhorro(pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro());
+            _cuentaSalida.setMontoAhorro(pCuentaAhorroAutomatico.getMontoAhorro());
+            _cuentaSalida.setMontoDeduccion(pCuentaAhorroAutomatico.getMontoDeduccion());
+            _cuentaSalida.setNumeroCuenta(pCuentaAhorroAutomatico.getNumeroCuenta());
+            _cuentaSalida.setNumeroCuentaDeduccion(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion());
+            _cuentaSalida.setProposito(pCuentaAhorroAutomatico.getProposito());
+            _cuentaSalida.setSaldo(pCuentaAhorroAutomatico.getSaldo());
+            _cuentaSalida.setTiempoAhorro(pCuentaAhorroAutomatico.getTiempoAhorro());
+            _cuentaSalida.setTipoMoneda(pCuentaAhorroAutomatico.getTipoMoneda());
+            _cuentaSalida.setTipoPeriodo(pCuentaAhorroAutomatico.getTipoPeriodo());
+            return _cuentaSalida;
         }
     }
 }

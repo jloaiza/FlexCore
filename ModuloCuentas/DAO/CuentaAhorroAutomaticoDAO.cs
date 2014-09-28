@@ -10,9 +10,14 @@ namespace ModuloCuentas.DAO
 {
     internal static class CuentaAhorroAutomaticoDAO
     {
-        public static void agregarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuenta)
+        public static void agregarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
         {
             //Se agrega la cuenta a la base;
+        }
+
+        public static void modificarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
+        {
+            //se modifica la cuenta SIN MODIFICAR LOS SALDOS Y COSAS QUE NO DEBEN SER MODIFICADAS;
         }
 
         public static void eliminarCuentaAhorroAutomaticoBase(string pNumeroCuenta)
@@ -20,44 +25,38 @@ namespace ModuloCuentas.DAO
             //se elimina la cuenta;
         }
 
-        public static void modificarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuenta)
-        {
-            //se modifica la cuenta SIN MODIFICAR LOS SALDOS Y COSAS QUE NO DEBEN SER MODIFICADAS;
-        }
-
-        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoNumeroCuenta(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoNumeroCuenta(string pNumeroCuenta)
         {
             //SE OBTIENE LA CUENTA DADO EL NUMERO DE CUENTA;
             return null;
         }
 
-        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        public static List<CuentaAhorroAutomatico> obtenerCuentaAhorroAutomaticoNombre(string pNombre)
         {
             //SE OBTIENE LA CUENTA DADO EL NOMBRE;
             return null;
         }
 
-        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoCedula(string pCedula)
         {
             //SE OBTIENE LA CUENTA DADA LA CEDULA;
             return null;
         }
 
-        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoCIF(string pCIF)
         {
             //SE OBTIENE LA CUENTA DADO EL CIF;
             return null;
         }
 
-        public static void quitarDinero(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, decimal pMonto)
+        public static void quitarDinero(string pNumeroCuenta, decimal pMonto)
         {
             //QUITA DINERO A LA CUENTA
         }
 
-        public static bool existeCuenta(string pNumeroCuenta)
+        public static void agregarDinero(string pNumeroCuenta, decimal pMonto)
         {
-            //DEVUELLVE TRUE SI YA LA CUENTA EXISTE
-            return true;
+            //se agrega dinero a la cuenta;
         }
     }
 }

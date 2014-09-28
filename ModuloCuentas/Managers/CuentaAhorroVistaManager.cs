@@ -59,7 +59,8 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista);
+                CuentaAhorroVista _cuentaAhorroVista =  CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista.getNumeroCuenta());
+                return cuentaAhorroVistaADTO(_cuentaAhorroVista);
             }
             catch
             {
@@ -67,11 +68,13 @@ namespace ModuloCuentas.Managers
             }
         }
 
+        //PASAR A GET CEDULA
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista);
+                CuentaAhorroVista _cuentaAhorroVista = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista.getNumeroCuenta());
+                return cuentaAhorroVistaADTO(_cuentaAhorroVista);
             }
             catch
             {
@@ -83,7 +86,13 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista);
+                List<CuentaAhorroVista> _cuentasAhorroVista = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista.getNumeroCuenta());
+                List<CuentaAhorroVistaDTO> _cuentasSalida = new List<CuentaAhorroVistaDTO>();
+                foreach (CuentaAhorroVista cuentas in _cuentasAhorroVista)
+                {
+                    _cuentasSalida.Add(cuentaAhorroVistaADTO(cuentas));
+                }
+                return _cuentasSalida;
             }
             catch
             {
@@ -91,11 +100,13 @@ namespace ModuloCuentas.Managers
             }
         }
 
+        //PASAR A GET CIF 
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista);
+                CuentaAhorroVista _cuentaAhorroVista = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista.getNumeroCuenta());
+                return cuentaAhorroVistaADTO(_cuentaAhorroVista);
             }
             catch
             {
@@ -119,7 +130,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVistaDAO.agregarDinero(pCuentaAhorroVista, pMonto);
+                CuentaAhorroVistaDAO.agregarDinero(pCuentaAhorroVista.getNumeroCuenta(), pMonto);
                 return "Transacción completada con éxito";
             }
             catch
@@ -135,7 +146,7 @@ namespace ModuloCuentas.Managers
                 CuentaAhorroVistaDTO _cuentaActual = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista);
                 if (_cuentaActual.getSaldoFlotante() >= pMonto)
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(pCuentaAhorroVista, pMonto);
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaActual.getNumeroCuenta(), pMonto);
                     return "Transacción completada con éxito";
                 }
                 else
@@ -147,6 +158,18 @@ namespace ModuloCuentas.Managers
             {
                 return "Ha ocurrido un error en la transacción";
             }
+        }
+
+        private static CuentaAhorroVistaDTO cuentaAhorroVistaADTO(CuentaAhorroVista pCuentaAhorroVista)
+        {
+            CuentaAhorroVistaDTO _cuentaSalida = new CuentaAhorroVistaDTO();
+            _cuentaSalida.setDescripcion(pCuentaAhorroVista.getDescripcion());
+            _cuentaSalida.setEstado(pCuentaAhorroVista.getEstado());
+            _cuentaSalida.setNumeroCuenta(pCuentaAhorroVista.getNumeroCuenta());
+            _cuentaSalida.setSaldo(pCuentaAhorroVista.getSaldo());
+            _cuentaSalida.setSaldoFlotante(pCuentaAhorroVista.getSaldoFlotante());
+            _cuentaSalida.setTipoMoneda(pCuentaAhorroVista.getTipoMoneda());
+            return _cuentaSalida;
         }
     }
 }
