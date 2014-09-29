@@ -58,5 +58,10 @@ namespace ModuloCuentas.DAO
         {
             //se agrega dinero a la cuenta;
         }
+
+        public static void modificarEstado(string pNumeroCuenta, bool pEstado)
+        {
+            //modifica el estado de una cuenta;
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace ModuloCuentas.DTO
         private DateTime _fechaInicio;
         private int _tiempoAhorro;
         private DateTime _fechaFinalizacion;
+        private DateTime _ultimaFechaCobro;
         private decimal _montoAhorro;
         private decimal _montoDeduccion;
         private string _proposito;
@@ -63,6 +64,11 @@ namespace ModuloCuentas.DTO
             return _fechaFinalizacion;
         }
 
+        public DateTime getUltimaFechaCobro()
+        {
+            return _ultimaFechaCobro;
+        }
+
         public decimal getMontoAhorro()
         {
             return _montoAhorro;
@@ -98,19 +104,25 @@ namespace ModuloCuentas.DTO
             _tipoPeriodo = pTipoPeriodo;
         }
 
-        public void setFechaInicio(int pDia, int pMes, int pAño)
+        public void setFechaInicio(int pDia, int pMes, int pAño, int pHora, int pMinuto, int pSegundo)
         {
-            _fechaInicio = new DateTime(pAño, pMes, pDia);
+            _fechaInicio = new DateTime(pAño, pMes, pDia, pHora, pMinuto, pSegundo);
         }
+
+        public void setUltimaFechaCobro(int pDia, int pMes, int pAño, int pHora, int pMinuto, int pSegundo)
+        {
+            _ultimaFechaCobro = new DateTime(pAño, pMes, pDia, pHora, pMinuto, pSegundo);
+        }
+
 
         public void setTiempoAhorro(int pTiempoAhorro)
         {
             _tiempoAhorro = pTiempoAhorro;
         }
 
-        public void setFechaFinalizacion(int pDia, int pMes, int pAño)
+        public void setFechaFinalizacion(int pDia, int pMes, int pAño, int pHora, int pMinuto, int pSegundo)
         {
-            _fechaFinalizacion = new DateTime(pAño, pMes, pDia);
+            _fechaFinalizacion = new DateTime(pAño, pMes, pDia, pHora, pMinuto, pSegundo);
         }
 
         public void setMontoAhorro(decimal pMontoAhorro)

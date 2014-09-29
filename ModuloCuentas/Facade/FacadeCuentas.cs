@@ -45,14 +45,59 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroVistaManager.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista);
         }
 
-        public static string agregarDinero(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
+        public static string agregarDineroCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
         {
             return CuentaAhorroVistaManager.agregarDinero(pCuentaAhorroVista, pMonto);
         }
 
-        public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
+        public static string realizarPagoODebitoCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
         {
             return CuentaAhorroVistaManager.realizarPagoODebito(pCuentaAhorroVista, pMonto);
+        }
+
+        public static string agregarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.agregarCuentaAhorroAutomatico(pCuentaAhorroAutomatico);
+        }
+
+        public static string iniciarAhorroCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.iniciarAhorro(pCuentaAhorroAutomatico);
+        }
+
+        public static string eliminarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.eliminarCuentaAhorroAutomatico(pCuentaAhorroAutomatico);
+        }
+
+        public static string modificarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.modificarCuentaAhorroAutomatico(pCuentaAhorroAutomatico);
+        }
+
+        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoNumeroCuenta(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
+        }
+
+        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoCedula(pCuentaAhorroAutomatico);
+        }
+
+        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoNombre(pCuentaAhorroAutomatico);
+        }
+
+        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        {
+            return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoCIF(pCuentaAhorroAutomatico);
+        }
+
+        public static string realizarPagoODebitoCuentoAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, decimal pMonto)
+        {
+            return CuentaAhorroAutomaticoManager.realizarPagoODebito(pCuentaAhorroAutomatico, pMonto);
         }
     }
 }

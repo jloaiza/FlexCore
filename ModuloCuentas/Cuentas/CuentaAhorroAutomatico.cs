@@ -17,15 +17,17 @@ namespace ModuloCuentas.Cuentas
         private int _magnitudPeriodoAhorro;
         private int _tipoPeriodo;
         private string _numeroCuentaDeduccion;
+        private DateTime _ultimaFechaCobro;
 
         public CuentaAhorroAutomatico(string pNumeroCuenta, string pDescripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, DateTime pFechaInicio, int pTiempoAhorro,
-            DateTime pFechaFinalizacion, decimal pMontoAhorro, decimal pMontoDeduccion, int pMagnitudPeriodoAhorro, int pTipoPeriodo, string pNumeroCuentaDeduccion) : 
+            DateTime pFechaFinalizacion, DateTime pUltimaFechaCobro, decimal pMontoAhorro, decimal pMontoDeduccion, int pMagnitudPeriodoAhorro, int pTipoPeriodo, string pNumeroCuentaDeduccion) : 
             base(pNumeroCuenta, pDescripcion, pSaldo, pEstado, pTipoMoneda)
         {
             _fechaInicio = pFechaInicio;
             _tiempoAhorro = pTiempoAhorro;
             _fechaFinalizacion = pFechaFinalizacion;
             _montoAhorro = pMontoAhorro;
+            _ultimaFechaCobro = pUltimaFechaCobro;
             _montoDeduccion = pMontoDeduccion;
             _magnitudPeriodoAhorro = pMagnitudPeriodoAhorro;
             _tipoPeriodo = pTipoPeriodo;
@@ -45,6 +47,11 @@ namespace ModuloCuentas.Cuentas
         public DateTime getFechaFinalizacion()
         {
             return _fechaFinalizacion;
+        }
+
+        public DateTime getUltimaFechaCobro()
+        {
+            return _ultimaFechaCobro;
         }
 
         public decimal getMontoAhorro()
@@ -85,6 +92,11 @@ namespace ModuloCuentas.Cuentas
         public void setFechaInicio(DateTime pFechaInicio)
         {
             _fechaInicio = pFechaInicio;
+        }
+
+        public void setUltimaFechaCobro(DateTime pUltimaFechaCobro)
+        {
+            _ultimaFechaCobro = pUltimaFechaCobro;
         }
 
         public void setTiempoAhorro(int pTiempoAhorro)
