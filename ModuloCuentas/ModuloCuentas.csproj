@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ConexionMySQLServer">
+      <HintPath>..\..\ConexionMySQLServer\ConexionMySQLServer\bin\Debug\ConexionMySQLServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,10 +50,12 @@
     <Compile Include="Cuentas\GeneradorCuentas.cs" />
     <Compile Include="DAO\CuentaAhorroAutomaticoDAO.cs" />
     <Compile Include="DAO\CuentaAhorroVistaDAO.cs" />
+    <Compile Include="DAO\CuentaBeneficiariosDAO.cs" />
     <Compile Include="DTO\CuentaAhorroAutomaticoDTO.cs" />
     <Compile Include="DTO\CuentaAhorroVistaDTO.cs" />
     <Compile Include="Facade\FacadeCuentas.cs" />
     <Compile Include="Generales\Tiempo.cs" />
+    <Compile Include="Generales\Transformaciones.cs" />
     <Compile Include="Managers\CuentaAhorroAutomaticoManager.cs" />
     <Compile Include="Managers\CuentaAhorroVistaManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

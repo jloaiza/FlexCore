@@ -55,6 +55,11 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroVistaManager.realizarPagoODebito(pCuentaAhorroVista, pMonto);
         }
 
+        public static string realizarCierreCuentas()
+        {
+            return CuentaAhorroVistaManager.realizarCierreCuentas();
+        }
+
         public static string agregarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             return CuentaAhorroAutomaticoManager.agregarCuentaAhorroAutomatico(pCuentaAhorroAutomatico);

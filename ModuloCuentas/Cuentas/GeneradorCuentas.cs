@@ -53,7 +53,7 @@ namespace ModuloCuentas.Cuentas
                         _numeroCuenta = "6" + _numeroCuenta;
                     }
                 }
-            } while (!CuentaAhorroDAO.existeCuenta(_numeroCuenta));
+            } while (CuentaAhorroDAO.existeCuenta(_numeroCuenta));
             return _numeroCuenta;
         }
     }

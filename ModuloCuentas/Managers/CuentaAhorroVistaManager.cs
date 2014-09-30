@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ModuloCuentas.DTO;
 using ModuloCuentas.Cuentas;
 using ModuloCuentas.DAO;
+using System.Threading;
 
 namespace ModuloCuentas.Managers
 {
@@ -13,6 +14,7 @@ namespace ModuloCuentas.Managers
     {
         public static string agregarCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            //AQUI TIENE QUE METER LOS BENEFICIARIOS Y LOS CLIENTES
             try
             {
                 string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROVISTA, pCuentaAhorroVista.getTipoMoneda());
@@ -139,25 +141,45 @@ namespace ModuloCuentas.Managers
             }
         }
 
-        public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
+        public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
         {
             try
             {
-                CuentaAhorroVistaDTO _cuentaActual = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista);
-                if (_cuentaActual.getSaldoFlotante() >= pMonto)
+                CuentaAhorroVistaDTO _cuentaOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaOrigen);
+                if (_cuentaOrigen.getSaldoFlotante() >= pMonto && _cuentaOrigen.getEstado() == true)
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaActual.getNumeroCuenta(), pMonto);
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroVistaDestino.getNumeroCuenta());
                     return "Transacción completada con éxito";
                 }
                 else
                 {
-                    return "Fondos insuficientes";
+                    return "Fondos insuficientes o cuenta inactiva";
                 }
             }
             catch
             {
                 return "Ha ocurrido un error en la transacción";
             }
+        }
+
+        public static string realizarCierreCuentas()
+        {
+            try
+            {
+                ThreadStart _delegado = new ThreadStart(realizarCierreCuentasAux);
+                Thread _hiloReplica = new Thread(_delegado);
+                _hiloReplica.Start();
+                return "Transacción completada con éxito";
+            }
+            catch
+            {
+                return "Ha ocurrido un error en la transacción";
+            }
+        }
+
+        private static void realizarCierreCuentasAux()
+        {
+            CuentaAhorroVistaDAO.iniciarCierre();
         }
 
         private static CuentaAhorroVistaDTO cuentaAhorroVistaADTO(CuentaAhorroVista pCuentaAhorroVista)

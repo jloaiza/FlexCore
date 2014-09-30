@@ -15,8 +15,8 @@ namespace ModuloCuentas.Cuentas
 
         //DINERO
 
-        public static int DOLARES = 0;
-        public static int COLONES = 1;
+        public static int DOLARES = 1;
+        public static int COLONES = 2;
 
         //PERIODO
 
@@ -27,15 +27,15 @@ namespace ModuloCuentas.Cuentas
 
         //MESES
 
-        public static int ENERO = 01;
-        public static int FEBRERO = 02;
-        public static int MARZO = 03;
-        public static int ABRIL = 04;
-        public static int MAYO = 05;
-        public static int JUNIO = 06;
-        public static int JULIO = 07;
-        public static int AGOSTO = 08;
-        public static int SEPTIEMBRE = 09;
+        public static int ENERO = 1;
+        public static int FEBRERO = 2;
+        public static int MARZO = 3;
+        public static int ABRIL = 4;
+        public static int MAYO = 5;
+        public static int JUNIO = 6;
+        public static int JULIO = 7;
+        public static int AGOSTO = 8;
+        public static int SEPTIEMBRE = 9;
         public static int OCTUBRE = 10;
         public static int NOVIEMBRE = 11;
         public static int DICIEMBRE = 12;
