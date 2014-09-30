@@ -50,9 +50,9 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroVistaManager.agregarDinero(pCuentaAhorroVista, pMonto);
         }
 
-        public static string realizarPagoODebitoCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
+        public static string realizarPagoODebitoCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
         {
-            return CuentaAhorroVistaManager.realizarPagoODebito(pCuentaAhorroVista, pMonto);
+            return CuentaAhorroVistaManager.realizarPagoODebito(pCuentaAhorroVistaOrigen, pMonto, pCuentaAhorroVistaDestino);
         }
 
         public static string realizarCierreCuentas()
