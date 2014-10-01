@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModuloCuentas.DTO;
 using ModuloCuentas.Cuentas;
 using ModuloCuentas.DAO;
 using ModuloCuentas.Generales;
 using System.Threading;
+using FlexCoreDTOs.Cuentas;
 
 namespace ModuloCuentas.Managers
 {

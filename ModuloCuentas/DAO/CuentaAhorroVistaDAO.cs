@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ModuloCuentas.Cuentas;
-using ModuloCuentas.DTO;
 using ConexionMySQLServer.ConexionMySql;
 using MySql.Data.MySqlClient;
 using ModuloCuentas.Generales;
