@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace ModuloCuentas.DTO
 {
-    public class CuentaAhorroAutomaticoDTO
+    public class CuentaAhorroAutomaticoDTO : CuentaAhorroDTO
     {
-        private string _numeroCuenta;
-        private string _descripcion;
-        private decimal _saldo;
-        private bool _estado;
-        private int _tipoMoneda;
         private DateTime _fechaInicio;
         private int _tiempoAhorro;
         private DateTime _fechaFinalizacion;
@@ -23,31 +18,6 @@ namespace ModuloCuentas.DTO
         private int _magnitudPeriodoAhorro;
         private int _tipoPeriodo;
         private string _numeroCuentaDeduccion;
-
-        public string getNumeroCuenta()
-        {
-            return _numeroCuenta;
-        }
-
-        public string getDescripcion()
-        {
-            return _descripcion;
-        }
-
-        public decimal getSaldo()
-        {
-            return _saldo;
-        }
-
-        public bool getEstado()
-        {
-            return _estado;
-        }
-
-        public int getTipoMoneda()
-        {
-            return _tipoMoneda;
-        }
 
         public DateTime getFechaInicio()
         {
@@ -148,31 +118,6 @@ namespace ModuloCuentas.DTO
         public void setNumeroCuentaDeduccion(string pNumeroCuentaDeduccion)
         {
             _numeroCuentaDeduccion = pNumeroCuentaDeduccion;
-        }
-
-        public void setNumeroCuenta(string pNumeroCuenta)
-        {
-            _numeroCuenta = pNumeroCuenta;
-        }
-
-        public void setDescripcion(string pDescripcion)
-        {
-            _descripcion = pDescripcion;
-        }
-
-        public void setEstado(bool pEstado)
-        {
-            _estado = pEstado;
-        }
-
-        public void setTipoMoneda(int pTipoMoneda)
-        {
-            _tipoMoneda = pTipoMoneda;
-        }
-
-        public void setSaldo(decimal pSaldo)
-        {
-            _saldo = pSaldo;
         }
     }
 }

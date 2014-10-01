@@ -53,6 +53,7 @@
     <Compile Include="DAO\CuentaBeneficiariosDAO.cs" />
     <Compile Include="DAO\PeriocidadAhorroDAO.cs" />
     <Compile Include="DTO\CuentaAhorroAutomaticoDTO.cs" />
+    <Compile Include="DTO\CuentaAhorroDTO.cs" />
     <Compile Include="DTO\CuentaAhorroVistaDTO.cs" />
     <Compile Include="Facade\FacadeCuentas.cs" />
     <Compile Include="Generales\Tiempo.cs" />
