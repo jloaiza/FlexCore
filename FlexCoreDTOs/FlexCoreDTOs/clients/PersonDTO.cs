@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlexCoreDTOs.clients
 {
-    class PersonDTO
+    public class PersonDTO
     {
         public static readonly string PHYSICAL_PERSON = "Fisica";
         public static readonly string JURIDIC_PERSON  = "Juridica";

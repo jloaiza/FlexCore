@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlexCoreDTOs.clients
 {
-    class PersonAddressDTO
+    public class PersonAddressDTO
     {
         private string _address;
         private int _personID;

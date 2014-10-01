@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlexCoreDTOs.clients
 {
-    class PhysicalPersonDTO:PersonDTO
+    public class PhysicalPersonDTO:PersonDTO
     {
         private string _firstLastName;
         private string _secondLastName;

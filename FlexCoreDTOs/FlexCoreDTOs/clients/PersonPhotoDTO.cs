@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlexCoreDTOs.clients
 {
-    class PersonPhotoDTO
+    public class PersonPhotoDTO
     {
         private string _hexBytes;
         private int    _personID;
