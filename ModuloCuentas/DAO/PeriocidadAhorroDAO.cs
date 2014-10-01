@@ -37,14 +37,17 @@ namespace ModuloCuentas.DAO
 
         public static int obtenerIdPeriodo(string pNumeroCuenta)
         {
+            int _idPeriodo = 0;
             String _query = "SELECT * FROM CUENTA_AHORRO_AUTOMATICO_V WHERE numCuenta = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            int _idPeriodo = Convert.ToInt32(_reader["idPeriodo"]);
+            if(_reader.Read())
+            {
+                _idPeriodo = Convert.ToInt32(_reader["idPeriodo"]);
+            }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _idPeriodo;
         }

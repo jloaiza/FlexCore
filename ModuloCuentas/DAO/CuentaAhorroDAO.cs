@@ -59,7 +59,7 @@ namespace ModuloCuentas.DAO
 
         public static void modificarCuentaAhorro(int pIdCuenta, CuentaAhorroVista pCuentaAhorroVista)
         {
-            String _query = "UPDATE CUENTA_AHORRO SET DESCRIPCION = @descripcion, TIPOMONEDA = @tipoMoneda, ACTIVA = @estado WHERE IDCUENTA = @idCuenta";
+            String _query = "UPDATE CUENTA_AHORRO SET DESCRIPCION = @descripcion, TIPOMONEDA = @tipoMoneda, ACTIVA = @estado WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -73,7 +73,7 @@ namespace ModuloCuentas.DAO
 
         public static void modificarEstadoCuentaAhorro(int pIdCuenta, bool pEstado)
         {
-            String _query = "UPDATE CUENTA_AHORRO SET ACTIVA = @estado WHERE IDCUENTA = @idCuenta";
+            String _query = "UPDATE CUENTA_AHORRO SET ACTIVA = @estado WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -85,7 +85,7 @@ namespace ModuloCuentas.DAO
 
         public static void modificarCuentaAhorro(int pIdCuenta, CuentaAhorroAutomatico pCuentaAhorroAutomatico)
         {
-            String _query = "UPDATE CUENTA_AHORRO SET DESCRIPCION = @descripcion, TIPOMONEDA = @tipoMoneda WHERE IDCUENTA = @idCuenta";
+            String _query = "UPDATE CUENTA_AHORRO SET DESCRIPCION = @descripcion, TIPOMONEDA = @tipoMoneda WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -98,7 +98,7 @@ namespace ModuloCuentas.DAO
 
         public static void modificarSaldo(int pIdCuenta, decimal pSaldo)
         {
-            String _query = "UPDATE CUENTA_AHORRO SET SALDO = @saldo WHERE IDCUENTA = @idCuenta";
+            String _query = "UPDATE CUENTA_AHORRO SET SALDO = @saldo WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -110,14 +110,13 @@ namespace ModuloCuentas.DAO
 
         public static bool existeCuenta(string pNumeroCuenta)
         {
-            String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V WHERE NUMCUENTA = @numCuenta";
+            String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V WHERE NUMCUENTA = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            if(_reader.HasRows)
+            if(_reader.Read())
             {
                 MySQLManager.cerrarConexion(_conexionMySQLBase);
                 return true;
@@ -131,30 +130,41 @@ namespace ModuloCuentas.DAO
 
         public static int obtenerCuentaAhorroID(string pNumeroCuenta)
         {
-            String _query = "SELECT * FROM CUENTA_AHORRO WHERE NUMCUENTA = @numCuenta";
+            int _idCuenta = 0;
+            String _query = "SELECT * FROM CUENTA_AHORRO WHERE NUMCUENTA = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            int _idCuenta = Convert.ToInt32(_reader["idCuenta"]);
+            if(_reader.Read())
+            {
+                _idCuenta = Convert.ToInt32(_reader["idCuenta"]);
+            }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _idCuenta;
         }
 
         public static string obtenerNumeroCuenta(int pIdCuenta)
         {
-            String _query = "SELECT * FROM CUENTA_AHORRO WHERE IDCUENTA = @idCuenta";
+            string _numeroCuenta = "";
+            String _query = "SELECT * FROM CUENTA_AHORRO WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@idCuenta", pIdCuenta);
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            string _numeroCuenta = _reader["numCuenta"].ToString();
+            if(_reader.Read())
+            {
+                _numeroCuenta = _reader["numCuenta"].ToString();
+            }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _numeroCuenta;
+        }
+
+        public static int obtenerTipoCuenta(string pNumeroCuenta)
+        {
+            return Constantes.AHORROVISTA;
         }
     }
 }

@@ -48,20 +48,23 @@ namespace ModuloCuentas.DAO
 
         public static CuentaAhorroVista obtenerCuentaAhorroVistaNumeroCuenta(string pNumeroCuenta)
         {
+            CuentaAhorroVista _cuentaSalida = null;
             String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V WHERE NUMCUENTA = @numCuenta";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            string _numeroCuenta = _reader["numCuenta"].ToString();
-            string _descripcion = _reader["descripcion"].ToString();
-            decimal _saldo = Convert.ToDecimal(_reader["saldo"]);
-            bool _estado = Transformaciones.intToBool(Convert.ToInt32(_reader["activa"]));
-            int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
-            decimal _saldoFlotante = Convert.ToDecimal(_reader["saldoFlotante"]);
-            CuentaAhorroVista _cuentaSalida = new CuentaAhorroVista(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _saldoFlotante);
+            if(_reader.Read())
+            {
+                string _numeroCuenta = _reader["numCuenta"].ToString();
+                string _descripcion = _reader["descripcion"].ToString();
+                decimal _saldo = Convert.ToDecimal(_reader["saldo"]);
+                bool _estado = Transformaciones.intToBool(Convert.ToInt32(_reader["activa"]));
+                int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
+                decimal _saldoFlotante = Convert.ToDecimal(_reader["saldoFlotante"]);
+                _cuentaSalida = new CuentaAhorroVista(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _saldoFlotante);
+            }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _cuentaSalida;
         }

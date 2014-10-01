@@ -13,7 +13,7 @@ namespace ModuloCuentas.Managers
 {
     internal static class CuentaAhorroAutomaticoManager
     {
-        public static int SLEEP = 10000;
+        public static int SLEEP = 1000;
 
         public static string agregarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
@@ -27,6 +27,7 @@ namespace ModuloCuentas.Managers
                     _fechaFinalizacion, pCuentaAhorroAutomatico.getFechaInicio(), _montoAhorro, pCuentaAhorroAutomatico.getMontoDeduccion(), pCuentaAhorroAutomatico.getProposito(), 
                     pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro(), pCuentaAhorroAutomatico.getTipoPeriodo(), pCuentaAhorroAutomatico.getNumeroCuentaDeduccion());
                 CuentaAhorroAutomaticoDAO.agregarCuentaAhorroAutomaticoBase(_cuentaAhorroAutomatico);
+                pCuentaAhorroAutomatico.setNumeroCuenta(_numeroCuenta);
                 Console.WriteLine(iniciarAhorro(pCuentaAhorroAutomatico));
                 return "Transacción completada con éxito";
             }
@@ -41,14 +42,14 @@ namespace ModuloCuentas.Managers
             try
             {
                 CuentaAhorroAutomaticoDTO _cuentaAhorroAutomaticoDTO = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
-                Console.WriteLine("Hora de iniciar a cobrar");
                 ThreadStart _delegado = new ThreadStart(() => esperarTiempoInicioAhorro(pCuentaAhorroAutomatico));
                 Thread _hiloReplica = new Thread(_delegado);
                 _hiloReplica.Start();
                 return "Transacción completada con éxito";
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "Ha ocurrido un error en la transacción";
             }
             
@@ -58,18 +59,33 @@ namespace ModuloCuentas.Managers
         {
             while(Tiempo.getHoraActual() < pCuentaAhorroAutomatico.getFechaInicio())
             {
+                //VEAMEN
+                Console.WriteLine("Aun no es la hora de iniciar el cobro....");
+                //VEAMEN
                 Thread.Sleep(SLEEP);
             }
+            //VEAMEN
+            Console.WriteLine("Se inicia el cobro :D....");
+            //VEAMEN
             pCuentaAhorroAutomatico.setEstado(true);
+            //VEAMEN
+            Console.WriteLine("Se pasa el estado de la cuenta a TRUE...");
+            //VEAMEN
             CuentaAhorroAutomaticoDAO.modificarEstado(pCuentaAhorroAutomatico.getNumeroCuenta(), true);
+            //VEAMEN
+            Console.WriteLine("Se modifica el estado en la base...");
+            //VEAMEN
             iniciarAhorroAux(pCuentaAhorroAutomatico);
         }
 
         private static void iniciarAhorroAux(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
-            CuentaAhorroAutomaticoDTO _cuentaAhorroAutomaticoDTO = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);         
+            CuentaAhorroAutomaticoDTO _cuentaAhorroAutomaticoDTO = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
             if (_cuentaAhorroAutomaticoDTO.getTipoPeriodo() == Constantes.SEGUNDOS)
             {
+                //VEAMEN
+                Console.WriteLine("Se inicia el cobro en segundos....");
+                //VEAMEN
                 cobrarEnSegundos(_cuentaAhorroAutomaticoDTO);
             }
             else if (_cuentaAhorroAutomaticoDTO.getTipoPeriodo() == Constantes.MINUTOS)
@@ -88,15 +104,33 @@ namespace ModuloCuentas.Managers
 
         private static void cobrarEnSegundos(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            //VEAMEN
+            Console.WriteLine("Cobrando en segundos...");
+            //VEAMEN
             while (pCuentaAhorroAutomatico.getUltimaFechaCobro() < pCuentaAhorroAutomatico.getFechaFinalizacion())
             {
                 if (pCuentaAhorroAutomatico.getUltimaFechaCobro().AddSeconds(pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro()) < Tiempo.getHoraActual())
                 {
                     DateTime _horaActualLimitada = getHoraActualLimitada(pCuentaAhorroAutomatico);
+                    //VEANME
+                    Console.WriteLine("Hora actual limitada: " + _horaActualLimitada.ToString());
+                    //VEANME
                     TimeSpan _tiempoTranscurrido = _horaActualLimitada - pCuentaAhorroAutomatico.getUltimaFechaCobro();
+                    //VEANME
+                    Console.WriteLine("Segundos transcurridos: " + _tiempoTranscurrido.TotalSeconds);
+                    //VEANME
                     int _proporcionalidadDeCobro = Convert.ToInt32(Math.Truncate(_tiempoTranscurrido.TotalSeconds / pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro()));
+                    //VEANME
+                    Console.WriteLine("Constante de proporcionalidad: " + _proporcionalidadDeCobro);
+                    //VEANME
                     decimal _montoAAhorrar = _proporcionalidadDeCobro * pCuentaAhorroAutomatico.getMontoDeduccion();
-                    CuentaAhorroAutomaticoDAO.agregarDinero(pCuentaAhorroAutomatico.getNumeroCuenta(), _montoAAhorrar, Constantes.AHORROAUTOMATICO);
+                    //VEANME
+                    Console.WriteLine("Monto ahorrar: " + _montoAAhorrar);
+                    //VEANME
+                    CuentaAhorroVistaDAO.quitarDinero(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion(), _montoAAhorrar, pCuentaAhorroAutomatico.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
+                    //VEANME
+                    Console.WriteLine("Se agrego el dinero...");
+                    //VEANME
                     modificarUltimaFechaCobro(pCuentaAhorroAutomatico, _horaActualLimitada, _proporcionalidadDeCobro);
                 }
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
@@ -114,7 +148,7 @@ namespace ModuloCuentas.Managers
                     TimeSpan _tiempoTranscurrido = _horaActualLimitada - pCuentaAhorroAutomatico.getUltimaFechaCobro();
                     int _proporcionalidadDeCobro = Convert.ToInt32(Math.Truncate(_tiempoTranscurrido.TotalDays / pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro()));
                     decimal _montoAAhorrar = _proporcionalidadDeCobro * pCuentaAhorroAutomatico.getMontoDeduccion();
-                    CuentaAhorroAutomaticoDAO.agregarDinero(pCuentaAhorroAutomatico.getNumeroCuenta(), _montoAAhorrar, Constantes.AHORROAUTOMATICO);
+                    CuentaAhorroVistaDAO.quitarDinero(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion(), _montoAAhorrar, pCuentaAhorroAutomatico.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
                     modificarUltimaFechaCobro(pCuentaAhorroAutomatico, _horaActualLimitada, _proporcionalidadDeCobro);
                 }
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
@@ -132,7 +166,7 @@ namespace ModuloCuentas.Managers
                     TimeSpan _tiempoTranscurrido = _horaActualLimitada - pCuentaAhorroAutomatico.getUltimaFechaCobro();
                     int _proporcionalidadDeCobro = Convert.ToInt32(Math.Truncate(_tiempoTranscurrido.TotalMinutes / pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro()));
                     decimal _montoAAhorrar = _proporcionalidadDeCobro * pCuentaAhorroAutomatico.getMontoDeduccion();
-                    CuentaAhorroAutomaticoDAO.agregarDinero(pCuentaAhorroAutomatico.getNumeroCuenta(), _montoAAhorrar, Constantes.AHORROAUTOMATICO);
+                    CuentaAhorroVistaDAO.quitarDinero(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion(), _montoAAhorrar, pCuentaAhorroAutomatico.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
                     modificarUltimaFechaCobro(pCuentaAhorroAutomatico, _horaActualLimitada, _proporcionalidadDeCobro);
                 }
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
@@ -150,7 +184,7 @@ namespace ModuloCuentas.Managers
                     TimeSpan _tiempoTranscurrido = _horaActualLimitada - pCuentaAhorroAutomatico.getUltimaFechaCobro();
                     int _proporcionalidadDeCobro = Convert.ToInt32(Math.Truncate(_tiempoTranscurrido.TotalHours / pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro()));
                     decimal _montoAAhorrar = _proporcionalidadDeCobro * pCuentaAhorroAutomatico.getMontoDeduccion();
-                    CuentaAhorroAutomaticoDAO.agregarDinero(pCuentaAhorroAutomatico.getNumeroCuenta(), _montoAAhorrar, Constantes.AHORROAUTOMATICO);
+                    CuentaAhorroVistaDAO.quitarDinero(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion(), _montoAAhorrar, pCuentaAhorroAutomatico.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
                     modificarUltimaFechaCobro(pCuentaAhorroAutomatico, _horaActualLimitada, _proporcionalidadDeCobro);
                 }
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
@@ -182,7 +216,7 @@ namespace ModuloCuentas.Managers
                 _ultimaFechaCobro = pCuentaAhorroAutomatico.getUltimaFechaCobro().AddDays(pProporcionalidadDeCobro * pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro());
             }
             pCuentaAhorroAutomatico.setUltimaFechaCobro(_ultimaFechaCobro.Day, _ultimaFechaCobro.Month, _ultimaFechaCobro.Year, _ultimaFechaCobro.Hour, _ultimaFechaCobro.Minute, _ultimaFechaCobro.Second);
-            modificarCuentaAhorroAutomatico(pCuentaAhorroAutomatico);
+            CuentaAhorroAutomaticoDAO.modificarUltimaFechaCobro(pCuentaAhorroAutomatico.getNumeroCuenta(), pCuentaAhorroAutomatico.getUltimaFechaCobro());
         }
 
         private static DateTime getHoraActualLimitada(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -361,12 +395,12 @@ namespace ModuloCuentas.Managers
             _cuentaSalida.setDescripcion(pCuentaAhorroAutomatico.getDescripcion());
             _cuentaSalida.setEstado(pCuentaAhorroAutomatico.getEstado());
             _cuentaSalida.setFechaFinalizacion(pCuentaAhorroAutomatico.getFechaFinalizacion().Day, pCuentaAhorroAutomatico.getFechaFinalizacion().Month, 
-                pCuentaAhorroAutomatico.getFechaFinalizacion().Year, pCuentaAhorroAutomatico.getFechaFinalizacion().Hour, pCuentaAhorroAutomatico.getFechaFinalizacion().Day,
+                pCuentaAhorroAutomatico.getFechaFinalizacion().Year, pCuentaAhorroAutomatico.getFechaFinalizacion().Hour, pCuentaAhorroAutomatico.getFechaFinalizacion().Minute,
                 pCuentaAhorroAutomatico.getFechaFinalizacion().Second);
             _cuentaSalida.setFechaInicio(pCuentaAhorroAutomatico.getFechaInicio().Day, pCuentaAhorroAutomatico.getFechaInicio().Month, pCuentaAhorroAutomatico.getFechaInicio().Year,
-                pCuentaAhorroAutomatico.getFechaInicio().Hour, pCuentaAhorroAutomatico.getFechaInicio().Day, pCuentaAhorroAutomatico.getFechaInicio().Second);
+                pCuentaAhorroAutomatico.getFechaInicio().Hour, pCuentaAhorroAutomatico.getFechaInicio().Minute, pCuentaAhorroAutomatico.getFechaInicio().Second);
             _cuentaSalida.setUltimaFechaCobro(pCuentaAhorroAutomatico.getUltimaFechaCobro().Day, pCuentaAhorroAutomatico.getUltimaFechaCobro().Month, pCuentaAhorroAutomatico.getUltimaFechaCobro().Year,
-                pCuentaAhorroAutomatico.getUltimaFechaCobro().Day, pCuentaAhorroAutomatico.getUltimaFechaCobro().Hour, pCuentaAhorroAutomatico.getUltimaFechaCobro().Second);
+                pCuentaAhorroAutomatico.getUltimaFechaCobro().Hour, pCuentaAhorroAutomatico.getUltimaFechaCobro().Minute, pCuentaAhorroAutomatico.getUltimaFechaCobro().Second);
             _cuentaSalida.setMagnitudPeriodoAhorro(pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro());
             _cuentaSalida.setMontoAhorro(pCuentaAhorroAutomatico.getMontoAhorro());
             _cuentaSalida.setMontoDeduccion(pCuentaAhorroAutomatico.getMontoDeduccion());

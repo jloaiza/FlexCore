@@ -39,7 +39,7 @@ namespace ModuloCuentas.DAO
         public static void modificarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
         {
             CuentaAhorroDAO.modificarCuentaAhorro(CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico.getNumeroCuenta()), pCuentaAhorroAutomatico);
-            String _query = "UPDATE CUENTA_AHORRO_AUTOMATICO SET TIEMPOAHORRO = @tiempoAhorro, MONTOFINAL = @montoFinal, MONTODEDUCCION = @montoDeduccion, FECHAFINALIZACION = @fechaFinalizacion, IDCUENTADEDUCCION = @idCuentaDeduccion, PROPOSITO = @proposito, WHERE IDCUENTAAHORRO = @idCuenta";
+            String _query = "UPDATE CUENTA_AHORRO_AUTOMATICO SET TIEMPOAHORRO = @tiempoAhorro, MONTOFINAL = @montoFinal, MONTODEDUCCION = @montoDeduccion, FECHAFINALIZACION = @fechaFinalizacion, IDCUENTADEDUCCION = @idCuentaDeduccion, PROPOSITO = @proposito, WHERE IDCUENTAAHORRO = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -56,10 +56,22 @@ namespace ModuloCuentas.DAO
                 pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro(), pCuentaAhorroAutomatico.getTipoPeriodo());
         }
 
+        public static void modificarUltimaFechaCobro(string pNumeroCuenta, DateTime pUltimaFechaCobro)
+        {
+            String _query = "UPDATE CUENTA_AHORRO_AUTOMATICO SET ULTIMAFECHACOBRO = @ultimaFechaCobro WHERE IDCUENTAAHORRO = @idCuenta;";
+            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
+            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
+            _comandoMySQL.CommandText = _query;
+            _comandoMySQL.Parameters.AddWithValue("@ultimaFechaCobro", pUltimaFechaCobro);
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
+            _comandoMySQL.ExecuteNonQuery();
+            MySQLManager.cerrarConexion(_conexionMySQLBase);
+        }
+
         public static void eliminarCuentaAhorroAutomaticoBase(string pNumeroCuenta)
         {
             int _idPeriodo = PeriocidadAhorroDAO.obtenerIdPeriodo(pNumeroCuenta);
-            String _query = "DELETE FROM CUENTA_AHORRO_AUTOMATICO WHERE idCuentaAhorro = @idCuenta";
+            String _query = "DELETE FROM CUENTA_AHORRO_AUTOMATICO WHERE idCuentaAhorro = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -72,31 +84,33 @@ namespace ModuloCuentas.DAO
 
         public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoNumeroCuenta(string pNumeroCuenta)
         {
-            String _query = "SELECT * FROM CUENTA_AHORRO_AUTOMATICO_V WHERE NUMCUENTA = @numCuenta";
+            CuentaAhorroAutomatico _cuentaSalida = null;
+            String _query = "SELECT * FROM CUENTA_AHORRO_AUTOMATICO_V WHERE NUMCUENTA = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            string _numeroCuenta = _reader["numCuenta"].ToString();
-            string _descripcion = _reader["descripcion"].ToString();
-            decimal _saldo = Convert.ToDecimal(_reader["saldo"]);
-            bool _estado = Transformaciones.intToBool(Convert.ToInt32(_reader["activa"]));
-            int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
-            DateTime _fechaInicio = Convert.ToDateTime(_reader["fechaInicio"]);
-            int _tiempoAhorro = Convert.ToInt32(_reader["tiempoAhorro"]);
-            DateTime _fechaFinalizacion = Convert.ToDateTime(_reader["fechaFinalizacion"]);
-            DateTime _ultimaFechaCobro = Convert.ToDateTime(_reader["ultimaFechaCobro"]);
-            decimal _montoAhorro = Convert.ToDecimal(_reader["montoAhorro"]);
-            decimal _montoDeduccion = Convert.ToDecimal(_reader["montoDeduccion"]);
-            int _proposito = Convert.ToInt32(_reader["proposito"]);
-            int _magnitudPeriodoAhorro = Convert.ToInt32(_reader["periodicidad"]);
-            int _tipoPeriodo = Convert.ToInt32(_reader["idTipoPeriodo"]);
-            string _numeroCuentaDeduccion = CuentaAhorroDAO.obtenerNumeroCuenta(Convert.ToInt32(_reader["idCuentaDeduccion"]));
-
-            CuentaAhorroAutomatico _cuentaSalida = new CuentaAhorroAutomatico(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _fechaInicio, _tiempoAhorro,
-                _fechaFinalizacion, _ultimaFechaCobro, _montoAhorro, _montoDeduccion, _proposito, _magnitudPeriodoAhorro, _tipoPeriodo, _numeroCuentaDeduccion);
+            if(_reader.Read())
+            {
+                string _numeroCuenta = _reader["numCuenta"].ToString();
+                string _descripcion = _reader["descripcion"].ToString();
+                decimal _saldo = Convert.ToDecimal(_reader["saldo"]);
+                bool _estado = Transformaciones.intToBool(Convert.ToInt32(_reader["activa"]));
+                int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
+                DateTime _fechaInicio = Convert.ToDateTime(_reader["fechaInicio"]);
+                int _tiempoAhorro = Convert.ToInt32(_reader["tiempoAhorro"]);
+                DateTime _fechaFinalizacion = Convert.ToDateTime(_reader["fechaFinalizacion"]);
+                DateTime _ultimaFechaCobro = Convert.ToDateTime(_reader["ultimaFechaCobro"]);
+                decimal _montoAhorro = Convert.ToDecimal(_reader["montoFinal"]);
+                decimal _montoDeduccion = Convert.ToDecimal(_reader["montoDeduccion"]);
+                int _proposito = Convert.ToInt32(_reader["idProposito"]);
+                int _magnitudPeriodoAhorro = Convert.ToInt32(_reader["periodicidad"]);
+                int _tipoPeriodo = Convert.ToInt32(_reader["idTipoPeriodo"]);
+                string _numeroCuentaDeduccion = CuentaAhorroDAO.obtenerNumeroCuenta(Convert.ToInt32(_reader["idCuentaDeduccion"]));
+                _cuentaSalida = new CuentaAhorroAutomatico(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _fechaInicio, _tiempoAhorro,
+                    _fechaFinalizacion, _ultimaFechaCobro, _montoAhorro, _montoDeduccion, _proposito, _magnitudPeriodoAhorro, _tipoPeriodo, _numeroCuentaDeduccion);
+            }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _cuentaSalida;
         }
