@@ -147,14 +147,22 @@ namespace ModuloCuentas.Managers
             {
                 CuentaAhorroVistaDTO _cuentaOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaOrigen);
                 CuentaAhorroVistaDTO _cuentaDestino = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaDestino);
-                if (_cuentaOrigen.getSaldoFlotante() >= pMonto && _cuentaOrigen.getEstado() == true && _cuentaDestino.getEstado() == true)
+                if(_cuentaOrigen.getSaldoFlotante() < pMonto)
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroVistaDestino.getNumeroCuenta(), Constantes.AHORROVISTA);
-                    return "Transacción completada con éxito";
+                    return "Fondos insuficientes";
+                }
+                else if(_cuentaOrigen.getEstado() == false)
+                {
+                    return "La cuenta con la cual se desea pagar se encuentra actualmente desactivada";
+                }
+                else if(_cuentaDestino.getEstado() == false)
+                {
+                    return "La cuenta a la cual se desea pagar se encuentra actualmente desactivada";
                 }
                 else
                 {
-                    return "Fondos insuficientes o cuenta inactiva";
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroVistaDestino.getNumeroCuenta(), Constantes.AHORROVISTA);
+                    return "Transacción completada con éxito";
                 }
             }
             catch
@@ -169,14 +177,22 @@ namespace ModuloCuentas.Managers
             {
                 CuentaAhorroVistaDTO _cuentaOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaOrigen);
                 CuentaAhorroAutomaticoDTO _cuentaDestino = CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomaticoDestino);
-                if (_cuentaOrigen.getSaldoFlotante() >= pMonto && _cuentaOrigen.getEstado() == true && _cuentaDestino.getEstado() == false)
+                if (_cuentaOrigen.getSaldoFlotante() < pMonto)
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroAutomaticoDestino.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
-                    return "Transacción completada con éxito";
+                    return "Fondos insuficientes";
+                }
+                else if (_cuentaOrigen.getEstado() == false)
+                {
+                    return "La cuenta con la cual se desea pagar se encuentra actualmente desactivada";
+                }
+                else if (_cuentaDestino.getEstado() == true)
+                {
+                    return "La cuenta a la cual se desea pagar se encuentra actualmente en ahorro";
                 }
                 else
                 {
-                    return "Fondos insuficientes o cuenta en ahorro";
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroAutomaticoDestino.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
+                    return "Transacción completada con éxito";
                 }
             }
             catch

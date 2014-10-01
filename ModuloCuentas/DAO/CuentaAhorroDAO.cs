@@ -161,10 +161,5 @@ namespace ModuloCuentas.DAO
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _numeroCuenta;
         }
-
-        public static int obtenerTipoCuenta(string pNumeroCuenta)
-        {
-            return Constantes.AHORROVISTA;
-        }
     }
 }
