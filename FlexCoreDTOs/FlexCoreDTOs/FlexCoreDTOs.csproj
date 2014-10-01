@@ -39,9 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clients\ClientDocument.cs" />
-    <Compile Include="clients\PhysicalClientDTO.cs" />
-    <Compile Include="clients\GenericClient.cs" />
+    <Compile Include="clients\PersonAddressDTO.cs" />
+    <Compile Include="clients\PersonDocumentDTO.cs" />
+    <Compile Include="clients\PersonDTO.cs" />
+    <Compile Include="clients\ClientDTO.cs" />
+    <Compile Include="clients\PersonPhoneDTO.cs" />
+    <Compile Include="clients\PersonPhotoDTO.cs" />
+    <Compile Include="clients\PhysicalPersonDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

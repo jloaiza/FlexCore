@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace FlexCoreDTOs.clients
 {
-    class ClientDocument
+    class PersonDocumentDTO
     {
         private string _hexBytes;
         private string _name;
         private string _description;
         private int    _clientID;
 
-        public ClientDocument(string pDocHexBytes, string pName, string pDescription, int pClientID)
+        public PersonDocumentDTO(string pDocHexBytes, string pName, string pDescription, int pClientID)
         {
                _hexBytes = pDocHexBytes;
                    _name = pName;
