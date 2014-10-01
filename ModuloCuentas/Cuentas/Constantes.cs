@@ -20,10 +20,10 @@ namespace ModuloCuentas.Cuentas
 
         //PERIODO
 
-        public static int DIAS = 0;
-        public static int HORAS = 1;
-        public static int MINUTOS = 2;
-        public static int SEGUNDOS = 3;
+        public static int DIAS = 1;
+        public static int HORAS = 2;
+        public static int MINUTOS = 3;
+        public static int SEGUNDOS = 4;
 
         //MESES
 
@@ -39,5 +39,12 @@ namespace ModuloCuentas.Cuentas
         public static int OCTUBRE = 10;
         public static int NOVIEMBRE = 11;
         public static int DICIEMBRE = 12;
+
+        //PROPOSITOS
+
+        public static int VACACIONES = 1;
+        public static int BIENINMUEBLE = 2;
+        public static int BIENMUEBLE = 3;
+        public static int SALUD = 4;
     }
 }

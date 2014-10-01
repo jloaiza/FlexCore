@@ -13,14 +13,14 @@ namespace ModuloCuentas.Cuentas
         private DateTime _fechaFinalizacion;
         private decimal _montoAhorro;
         private decimal _montoDeduccion;
-        private string _proposito;
+        private int _proposito;
         private int _magnitudPeriodoAhorro;
         private int _tipoPeriodo;
         private string _numeroCuentaDeduccion;
         private DateTime _ultimaFechaCobro;
 
         public CuentaAhorroAutomatico(string pNumeroCuenta, string pDescripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, DateTime pFechaInicio, int pTiempoAhorro,
-            DateTime pFechaFinalizacion, DateTime pUltimaFechaCobro, decimal pMontoAhorro, decimal pMontoDeduccion, int pMagnitudPeriodoAhorro, int pTipoPeriodo, string pNumeroCuentaDeduccion) : 
+            DateTime pFechaFinalizacion, DateTime pUltimaFechaCobro, decimal pMontoAhorro, decimal pMontoDeduccion, int pProposito, int pMagnitudPeriodoAhorro, int pTipoPeriodo, string pNumeroCuentaDeduccion) : 
             base(pNumeroCuenta, pDescripcion, pSaldo, pEstado, pTipoMoneda)
         {
             _fechaInicio = pFechaInicio;
@@ -29,6 +29,7 @@ namespace ModuloCuentas.Cuentas
             _montoAhorro = pMontoAhorro;
             _ultimaFechaCobro = pUltimaFechaCobro;
             _montoDeduccion = pMontoDeduccion;
+            _proposito = pProposito;
             _magnitudPeriodoAhorro = pMagnitudPeriodoAhorro;
             _tipoPeriodo = pTipoPeriodo;
             _numeroCuentaDeduccion = pNumeroCuentaDeduccion;
@@ -64,7 +65,7 @@ namespace ModuloCuentas.Cuentas
             return _montoDeduccion;
         }
 
-        public string getProposito()
+        public int getProposito()
         {
             return _proposito;
         }
@@ -119,7 +120,7 @@ namespace ModuloCuentas.Cuentas
             _montoDeduccion = pMontoDeduccion;
         }
 
-        public void setProposito(string pProposito)
+        public void setProposito(int pProposito)
         {
             _proposito = pProposito;
         }

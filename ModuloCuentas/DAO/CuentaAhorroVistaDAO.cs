@@ -21,29 +21,29 @@ namespace ModuloCuentas.DAO
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@saldoFlotante", pCuentaAhorroVista.getSaldoFlotante());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", obtenerCuentaAhorroVistaID(pCuentaAhorroVista.getNumeroCuenta()));
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta()));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             //AQUI VA UN CICLO WHILE PARA LOS BENEFICIARIOS, PERO POR EL MOMENTO
-            CuentaBeneficiariosDAO.agregarBeneficiario(obtenerCuentaAhorroVistaID(pCuentaAhorroVista.getNumeroCuenta()).ToString(), "1");
+            CuentaBeneficiariosDAO.agregarBeneficiario(CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta()).ToString(), "1");
         }
 
         public static void modificarCuentaAhorroVistaBase(CuentaAhorroVista pCuentaAhorroVista)
         {
-            CuentaAhorroDAO.modificarCuentaAhorro(obtenerCuentaAhorroVistaID(pCuentaAhorroVista.getNumeroCuenta()).ToString(), pCuentaAhorroVista);
+            CuentaAhorroDAO.modificarCuentaAhorro(CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta()), pCuentaAhorroVista);
         }
 
         public static void eliminarCuentaAhorroVistaBase(string pNumeroCuenta)
         {
-            CuentaBeneficiariosDAO.eliminarBeneficiario(obtenerCuentaAhorroVistaID(pNumeroCuenta).ToString());
+            CuentaBeneficiariosDAO.eliminarBeneficiario(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta).ToString());
             String _query = "DELETE FROM CUENTA_AHORRO_VISTA WHERE idCuenta = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", obtenerCuentaAhorroVistaID(pNumeroCuenta));
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
-            CuentaAhorroDAO.eliminarCuentaAhorro(obtenerCuentaAhorroVistaID(pNumeroCuenta).ToString());
+            CuentaAhorroDAO.eliminarCuentaAhorro(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
         }
 
         public static CuentaAhorroVista obtenerCuentaAhorroVistaNumeroCuenta(string pNumeroCuenta)
@@ -84,21 +84,19 @@ namespace ModuloCuentas.DAO
             return null;
         }
 
-        public static int obtenerCuentaAhorroVistaID(string pNumeroCuenta)
+        public static void agregarDinero(string pNumeroCuenta, decimal pMonto, int pTipoCuenta)
         {
-            String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V WHERE NUMCUENTA = @numCuenta";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
-            MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
-            _reader.Read();
-            int _idCuenta = Convert.ToInt32(_reader["idCuenta"]);
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-            return _idCuenta;
+            if(pTipoCuenta == Constantes.AHORROVISTA)
+            {
+                agregarDineroAux(pNumeroCuenta, pMonto);
+            }
+            else if(pTipoCuenta == Constantes.AHORROAUTOMATICO)
+            {
+                CuentaAhorroAutomaticoDAO.agregarDinero(pNumeroCuenta, pMonto, Constantes.AHORROAUTOMATICO);
+            }
         }
 
-        public static void agregarDinero(string pNumeroCuenta, decimal pMonto)
+        private static void agregarDineroAux(string pNumeroCuenta, decimal pMonto)
         {
             CuentaAhorroVista _cuentaAhorroVista = obtenerCuentaAhorroVistaNumeroCuenta(pNumeroCuenta);
             _cuentaAhorroVista.setSaldoFlotante(_cuentaAhorroVista.getSaldoFlotante() + pMonto);
@@ -112,7 +110,7 @@ namespace ModuloCuentas.DAO
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
 
-        public static void quitarDinero(string pNumeroCuentaOrigen, decimal pMonto, string pNumeroCuentaDestino)
+        public static void quitarDinero(string pNumeroCuentaOrigen, decimal pMonto, string pNumeroCuentaDestino, int pTipoCuenta)
         {
             CuentaAhorroVista _cuentaAhorroOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pNumeroCuentaOrigen);
             _cuentaAhorroOrigen.setSaldoFlotante(_cuentaAhorroOrigen.getSaldoFlotante() - pMonto);
@@ -121,10 +119,10 @@ namespace ModuloCuentas.DAO
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@saldoFlotante", _cuentaAhorroOrigen.getSaldoFlotante());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", _cuentaAhorroOrigen.getNumeroCuenta());
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaAhorroOrigen.getNumeroCuenta()));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
-            agregarDinero(pNumeroCuentaDestino, pMonto);
+            agregarDinero(pNumeroCuentaDestino, pMonto, pTipoCuenta);
         }
 
         public static void iniciarCierre()
@@ -136,7 +134,7 @@ namespace ModuloCuentas.DAO
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
             while(_reader.Read())
             {
-                CuentaAhorroDAO.modificarSaldo(_reader["idCuenta"].ToString(), Convert.ToDecimal(_reader["saldoFlotante"]));
+                CuentaAhorroDAO.modificarSaldo(Convert.ToInt32(_reader["idCuenta"]), Convert.ToDecimal(_reader["saldoFlotante"]));
             }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }

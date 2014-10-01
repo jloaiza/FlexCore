@@ -55,6 +55,11 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroVistaManager.realizarPagoODebito(pCuentaAhorroVistaOrigen, pMonto, pCuentaAhorroVistaDestino);
         }
 
+        public static string realizarPagoODebitoCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoDestino)
+        {
+            return CuentaAhorroVistaManager.realizarPagoODebito(pCuentaAhorroVistaOrigen, pMonto, pCuentaAhorroAutomaticoDestino);
+        }
+
         public static string realizarCierreCuentas()
         {
             return CuentaAhorroVistaManager.realizarCierreCuentas();
@@ -100,9 +105,14 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoCIF(pCuentaAhorroAutomatico);
         }
 
-        public static string realizarPagoODebitoCuentoAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, decimal pMonto)
+        public static string realizarPagoODebitoCuentoAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoOrigen, decimal pMonto, CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoDestino)
         {
-            return CuentaAhorroAutomaticoManager.realizarPagoODebito(pCuentaAhorroAutomatico, pMonto);
+            return CuentaAhorroAutomaticoManager.realizarPagoODebito(pCuentaAhorroAutomaticoOrigen, pMonto, pCuentaAhorroAutomaticoDestino);
+        }
+
+        public static string realizarPagoODebitoCuentoAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
+        {
+            return CuentaAhorroAutomaticoManager.realizarPagoODebito(pCuentaAhorroAutomaticoOrigen, pMonto, pCuentaAhorroVistaDestino);
         }
     }
 }

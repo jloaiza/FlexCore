@@ -19,7 +19,7 @@ namespace ModuloCuentas.DTO
         private DateTime _ultimaFechaCobro;
         private decimal _montoAhorro;
         private decimal _montoDeduccion;
-        private string _proposito;
+        private int _proposito;
         private int _magnitudPeriodoAhorro;
         private int _tipoPeriodo;
         private string _numeroCuentaDeduccion;
@@ -79,7 +79,7 @@ namespace ModuloCuentas.DTO
             return _montoDeduccion;
         }
 
-        public string getProposito()
+        public int getProposito()
         {
             return _proposito;
         }
@@ -135,7 +135,7 @@ namespace ModuloCuentas.DTO
             _montoDeduccion = pMontoDeduccion;
         }
 
-        public void setProposito(string pProposito)
+        public void setProposito(int pProposito)
         {
             _proposito = pProposito;
         }

@@ -51,6 +51,7 @@
     <Compile Include="DAO\CuentaAhorroAutomaticoDAO.cs" />
     <Compile Include="DAO\CuentaAhorroVistaDAO.cs" />
     <Compile Include="DAO\CuentaBeneficiariosDAO.cs" />
+    <Compile Include="DAO\PeriocidadAhorroDAO.cs" />
     <Compile Include="DTO\CuentaAhorroAutomaticoDTO.cs" />
     <Compile Include="DTO\CuentaAhorroVistaDTO.cs" />
     <Compile Include="Facade\FacadeCuentas.cs" />
