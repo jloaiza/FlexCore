@@ -46,6 +46,9 @@
     <Compile Include="clients\PersonPhoneDTO.cs" />
     <Compile Include="clients\PersonPhotoDTO.cs" />
     <Compile Include="clients\PhysicalPersonDTO.cs" />
+    <Compile Include="Cuentas\CuentaAhorroAutomaticoDTO.cs" />
+    <Compile Include="Cuentas\CuentaAhorroDTO.cs" />
+    <Compile Include="Cuentas\CuentaAhorroVistaDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
