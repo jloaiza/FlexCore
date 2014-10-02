@@ -16,14 +16,13 @@ namespace ModuloCuentas.Cuentas
         private int _tipoMoneda;
         private ClientDTO _cliente;
 
-        public CuentaAhorro(string pNumeroCuenta, string pDescripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente)
+        public CuentaAhorro(string pNumeroCuenta, string pDescripcion, decimal pSaldo, bool pEstado, int pTipoMoneda)
         {
             _numeroCuenta = pNumeroCuenta;
             _descripcion = pDescripcion;
             _saldo = pSaldo;
             _estado = pEstado;
             _tipoMoneda = pTipoMoneda;
-            _cliente = pCliente;
         }
 
         public string getNumeroCuenta()

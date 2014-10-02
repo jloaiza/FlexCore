@@ -7,6 +7,7 @@ using ModuloCuentas.Cuentas;
 using ConexionMySQLServer.ConexionMySql;
 using MySql.Data.MySqlClient;
 using ModuloCuentas.Generales;
+using FlexCoreDTOs.clients;
 
 namespace ModuloCuentas.DAO
 {
@@ -23,8 +24,10 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta()));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
-            //AQUI VA UN CICLO WHILE PARA LOS BENEFICIARIOS, PERO POR EL MOMENTO
-            CuentaBeneficiariosDAO.agregarBeneficiario(CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta()).ToString(), "1");
+            foreach(PhysicalPersonDTO beneficiario in pCuentaAhorroVista.getListaBeneficiarios())
+            {
+                CuentaBeneficiariosDAO.agregarBeneficiario(CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta()), beneficiario.getPersonID());
+            }
         }
 
         public static void modificarCuentaAhorroVistaBase(CuentaAhorroVista pCuentaAhorroVista)
@@ -34,7 +37,7 @@ namespace ModuloCuentas.DAO
 
         public static void eliminarCuentaAhorroVistaBase(string pNumeroCuenta)
         {
-            CuentaBeneficiariosDAO.eliminarBeneficiario(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta).ToString());
+            CuentaBeneficiariosDAO.eliminarBeneficiario(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
             String _query = "DELETE FROM CUENTA_AHORRO_VISTA WHERE idCuenta = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
@@ -62,7 +65,11 @@ namespace ModuloCuentas.DAO
                 bool _estado = Transformaciones.intToBool(Convert.ToInt32(_reader["activa"]));
                 int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
                 decimal _saldoFlotante = Convert.ToDecimal(_reader["saldoFlotante"]);
+                int _idCliente = Convert.ToInt32(_reader["idCliente"]);
                 _cuentaSalida = new CuentaAhorroVista(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _saldoFlotante);
+                ClientDTO _cliente = new ClientDTO(_idCliente, "");
+                _cuentaSalida.setCliente(_cliente);
+                _cuentaSalida.setListaBeneficiarios(CuentaBeneficiariosDAO.obtenerListaBeneficiarios(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta)));
             }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _cuentaSalida;

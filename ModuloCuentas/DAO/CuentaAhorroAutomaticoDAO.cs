@@ -7,6 +7,7 @@ using ModuloCuentas.Cuentas;
 using MySql.Data.MySqlClient;
 using ConexionMySQLServer.ConexionMySql;
 using ModuloCuentas.Generales;
+using FlexCoreDTOs.clients;
 
 namespace ModuloCuentas.DAO
 {
@@ -106,9 +107,12 @@ namespace ModuloCuentas.DAO
                 int _proposito = Convert.ToInt32(_reader["idProposito"]);
                 int _magnitudPeriodoAhorro = Convert.ToInt32(_reader["periodicidad"]);
                 int _tipoPeriodo = Convert.ToInt32(_reader["idTipoPeriodo"]);
+                int _idCliente = Convert.ToInt32(_reader["idCliente"]);
                 string _numeroCuentaDeduccion = CuentaAhorroDAO.obtenerNumeroCuenta(Convert.ToInt32(_reader["idCuentaDeduccion"]));
                 _cuentaSalida = new CuentaAhorroAutomatico(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _fechaInicio, _tiempoAhorro,
                     _fechaFinalizacion, _ultimaFechaCobro, _montoAhorro, _montoDeduccion, _proposito, _magnitudPeriodoAhorro, _tipoPeriodo, _numeroCuentaDeduccion);
+                ClientDTO _cliente = new ClientDTO(_idCliente, "");
+                _cuentaSalida.setCliente(_cliente);
             }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _cuentaSalida;

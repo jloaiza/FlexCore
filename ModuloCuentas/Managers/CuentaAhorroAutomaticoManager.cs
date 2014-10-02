@@ -7,7 +7,7 @@ using ModuloCuentas.Cuentas;
 using ModuloCuentas.DAO;
 using ModuloCuentas.Generales;
 using System.Threading;
-using FlexCoreDTOs.Cuentas;
+using FlexCoreDTOs.cuentas;
 
 namespace ModuloCuentas.Managers
 {
@@ -26,6 +26,7 @@ namespace ModuloCuentas.Managers
                     false, pCuentaAhorroAutomatico.getTipoMoneda(), pCuentaAhorroAutomatico.getFechaInicio(), pCuentaAhorroAutomatico.getTiempoAhorro(),
                     _fechaFinalizacion, pCuentaAhorroAutomatico.getFechaInicio(), _montoAhorro, pCuentaAhorroAutomatico.getMontoDeduccion(), pCuentaAhorroAutomatico.getProposito(), 
                     pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro(), pCuentaAhorroAutomatico.getTipoPeriodo(), pCuentaAhorroAutomatico.getNumeroCuentaDeduccion());
+                _cuentaAhorroAutomatico.setCliente(pCuentaAhorroAutomatico.getCliente());
                 CuentaAhorroAutomaticoDAO.agregarCuentaAhorroAutomaticoBase(_cuentaAhorroAutomatico);
                 pCuentaAhorroAutomatico.setNumeroCuenta(_numeroCuenta);
                 Console.WriteLine(iniciarAhorro(pCuentaAhorroAutomatico));
@@ -415,6 +416,7 @@ namespace ModuloCuentas.Managers
             _cuentaSalida.setTiempoAhorro(pCuentaAhorroAutomatico.getTiempoAhorro());
             _cuentaSalida.setTipoMoneda(pCuentaAhorroAutomatico.getTipoMoneda());
             _cuentaSalida.setTipoPeriodo(pCuentaAhorroAutomatico.getTipoPeriodo());
+            _cuentaSalida.setCliente(pCuentaAhorroAutomatico.getCliente());
             return _cuentaSalida;
         }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ModuloCuentas.Cuentas;
 using ModuloCuentas.DAO;
 using System.Threading;
-using FlexCoreDTOs.Cuentas;
+using FlexCoreDTOs.cuentas;
 
 namespace ModuloCuentas.Managers
 {
@@ -14,12 +14,13 @@ namespace ModuloCuentas.Managers
     {
         public static string agregarCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
-            //AQUI TIENE QUE METER LOS BENEFICIARIOS Y LOS CLIENTES
             try
             {
                 string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROVISTA, pCuentaAhorroVista.getTipoMoneda());
                 CuentaAhorroVista _cuentaAhorroVista = new CuentaAhorroVista(_numeroCuenta, pCuentaAhorroVista.getDescripcion(), 0, pCuentaAhorroVista.getEstado(),
                     pCuentaAhorroVista.getTipoMoneda(), 0);
+                _cuentaAhorroVista.setCliente(pCuentaAhorroVista.getCliente());
+                _cuentaAhorroVista.setListaBeneficiarios(pCuentaAhorroVista.getListaBeneficiarios());
                 CuentaAhorroVistaDAO.agregarCuentaAhorroVistaBase(_cuentaAhorroVista);
                 return "Transacción completada con éxito";
             }

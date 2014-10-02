@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ModuloCuentas.Managers;
-using FlexCoreDTOs.Cuentas;
+using FlexCoreDTOs.cuentas;
 
 namespace ModuloCuentas.Facade
 {

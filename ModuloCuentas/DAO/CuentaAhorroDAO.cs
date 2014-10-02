@@ -22,7 +22,7 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorroVista.getDescripcion());
             _comandoMySQL.Parameters.AddWithValue("@saldo", pCuentaAhorroVista.getSaldo());
             _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorroVista.getEstado()));
-            _comandoMySQL.Parameters.AddWithValue("@idCliente", "1");
+            _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorroVista.getCliente().getClientID());
             _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroVista.getTipoMoneda());
             _comandoMySQL.Parameters.AddWithValue("@bloqueada", "0");
             _comandoMySQL.ExecuteNonQuery();
@@ -39,7 +39,7 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorroAutomatico.getDescripcion());
             _comandoMySQL.Parameters.AddWithValue("@saldo", pCuentaAhorroAutomatico.getSaldo());
             _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorroAutomatico.getEstado()));
-            _comandoMySQL.Parameters.AddWithValue("@idCliente", "2");
+            _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorroAutomatico.getCliente().getClientID());
             _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroAutomatico.getTipoMoneda());
             _comandoMySQL.Parameters.AddWithValue("@bloqueada", "0");
             _comandoMySQL.ExecuteNonQuery();
