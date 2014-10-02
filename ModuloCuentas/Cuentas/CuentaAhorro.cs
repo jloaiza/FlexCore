@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlexCoreDTOs.clients;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +14,16 @@ namespace ModuloCuentas.Cuentas
         private decimal _saldo;
         private bool _estado;
         private int _tipoMoneda;
+        private ClientDTO _cliente;
 
-        public CuentaAhorro(string pNumeroCuenta, string pDescripcion, decimal pSaldo, bool pEstado, int pTipoMoneda)
+        public CuentaAhorro(string pNumeroCuenta, string pDescripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente)
         {
             _numeroCuenta = pNumeroCuenta;
             _descripcion = pDescripcion;
             _saldo = pSaldo;
             _estado = pEstado;
             _tipoMoneda = pTipoMoneda;
+            _cliente = pCliente;
         }
 
         public string getNumeroCuenta()
@@ -51,6 +54,16 @@ namespace ModuloCuentas.Cuentas
         public int getTipoMoneda()
         {
             return _tipoMoneda;
+        }
+
+        public ClientDTO getCliente()
+        {
+            return _cliente;
+        }
+
+        public void setCliente(ClientDTO pCliente)
+        {
+            _cliente = pCliente;
         }
 
         public void setNumeroCuenta(string pNumeroCuenta)
