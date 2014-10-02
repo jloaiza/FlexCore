@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlexCoreDTOs.clients;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace FlexCoreDTOs.cuentas
         private int _tipoMoneda;
         private decimal _saldo;
         private bool _estado;
+        ClientDTO _cliente;
 
         public string getNumeroCuenta()
         {
@@ -64,5 +66,14 @@ namespace FlexCoreDTOs.cuentas
             _tipoMoneda = pTipoMoneda;
         }
 
+        public void setCliente(ClientDTO pCliente)
+        {
+            _cliente = pCliente;
+        }
+
+        public ClientDTO getCliente()
+        {
+            return _cliente;
+        }
     }
 }
