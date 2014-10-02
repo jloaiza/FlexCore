@@ -11,7 +11,7 @@ namespace FlexCoreDTOs.clients
         private string _firstLastName;
         private string _secondLastName;
 
-        public PhysicalPersonDTO(int pPersonID, string pName, string pFirstLastName, string pSecondLastName, string pIDCard)
+        public PhysicalPersonDTO(int pPersonID=-1, string pName="", string pFirstLastName="", string pSecondLastName="", string pIDCard="")
             : base (pPersonID, pName, pIDCard, PersonDTO.PHYSICAL_PERSON)
         {
              _firstLastName = pFirstLastName;

@@ -16,7 +16,7 @@ namespace FlexCoreDTOs.clients
         private string _idCard;
         private string _type;
 
-        public PersonDTO(int pPersonID, string pName, string pIDCard, string pType)
+        public PersonDTO(int pPersonID = -1, string pName ="", string pIDCard="", string pType="")
         {
             _personID = pPersonID;
             _name = pName;

@@ -13,7 +13,7 @@ namespace FlexCoreDTOs.clients
         private string _description;
         private int    _clientID;
 
-        public PersonDocumentDTO(string pDocHexBytes, string pName, string pDescription, int pClientID)
+        public PersonDocumentDTO(int pClientID=-1, string pDocHexBytes="", string pName="", string pDescription="")
         {
                _hexBytes = pDocHexBytes;
                    _name = pName;

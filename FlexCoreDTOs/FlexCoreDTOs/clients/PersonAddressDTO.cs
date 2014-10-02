@@ -11,7 +11,7 @@ namespace FlexCoreDTOs.clients
         private string _address;
         private int _personID;
 
-        public PersonAddressDTO(string pAddress, int pPersonID)
+        public PersonAddressDTO(int pPersonID = -1, string pAddress = "")
         {
             _address = pAddress;
             _personID = pPersonID;
