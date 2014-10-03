@@ -8,29 +8,11 @@ using FlexCoreDTOs.clients;
 using MySql.Data.MySqlClient;
 using System.Data;
 
-namespace FlexCoreDAOs.clients
+namespace FlexCoreDAOs
 {
-    class ClientsDAO
+
+    public class ClientsDAO
     {
-
-        private void executeNonQuery(string pQuery)
-        {
-            MySqlConnection connection = MySQLManager.nuevaConexion();
-            MySqlCommand command = new MySqlCommand(pQuery, connection);
-            command.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(connection);
-        }
-
-        private DataTable executeReadQuery(string pQuery)
-        {
-            MySqlConnection connection = MySQLManager.nuevaConexion();
-            MySqlDataAdapter adapter = new MySqlDataAdapter(pQuery, connection);
-            DataSet dataSet = new DataSet();
-            adapter.Fill(dataSet);
-            DataTable table = dataSet.Tables[0];
-            MySQLManager.cerrarConexion(connection);
-            return table;
-        }
 
         private string getInsertQuery(string pTableName, string pColumns, string pValues)
         {
@@ -39,7 +21,7 @@ namespace FlexCoreDAOs.clients
 
         private string getDeleteQuery(string pTableName, string pCondition)
         {
-            return String.Format("DELTE FROM {0} WHERE {1}", pTableName, pCondition);
+            return String.Format("DELETE FROM {0} WHERE {1}", pTableName, pCondition);
         }
 
         private string getUpdateQuery(string pTableName, string pValues, string pCondition)
@@ -57,77 +39,154 @@ namespace FlexCoreDAOs.clients
             return String.Format("SELECT {0} FROM {1}", pSelection, pFrom);
         }
 
-        private DataTable executeReadQuery(string pSelection, string pFrom, string pCondition)
+        private MySqlCommand getCommand()
         {
-            
-            string query;
-            if (pCondition == "")
-                query = getSelectQuery(pSelection, pFrom);
-            else
-                query = getSelectQuery(pSelection, pFrom, pCondition);
-            return executeReadQuery(query);
+            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
+            return _conexionMySQLBase.CreateCommand();
         }
 
-        private void executeUpdateQuery(string pTableName, string pValues, string pCondition)
-        {
-            string query = getUpdateQuery(pTableName, pValues, pCondition);
-            executeNonQuery(query);
-        }
-
-        private void exectuteDeleteQuery(string pTableName, string pCondition)
-        {
-            string query = getDeleteQuery(pTableName, pCondition);
-            executeNonQuery(query);
-        }
-
-        private void executeInsertQuery(string pTableName, string pColumns, string pValues)
-        {
-            string query = getInsertQuery(pTableName, pColumns, pValues);
-            executeNonQuery(query);
-        }
+        //---------------------------------------------------
 
         public void newPerson(PersonDTO pPerson)
         {
             string tableName = "PERSONA";
-            string columns = "idPersona, nombre, cedula, tipo";
-            string values = String.Format("{0}, {1}, {2}, {3}", 
-                pPerson.getPersonID(), pPerson.getName(), pPerson.getIDCard(), pPerson.getPersonType());
-            executeInsertQuery(tableName, columns, values);
+            string columns = "nombre, cedula, tipo";
+            string values = "@nombre, @cedula, @tipo";
+            string query = getInsertQuery(tableName, columns, values);
+            MySqlCommand command = getCommand();
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@nombre", pPerson.getName());
+            command.Parameters.AddWithValue("@cedula", pPerson.getIDCard());
+            command.Parameters.AddWithValue("@tipo", pPerson.getPersonType());
+            command.ExecuteNonQuery();
+
+            MySQLManager.cerrarConexion(command.Connection);
         }
 
         public void deletePerson(PersonDTO pPerson)
         {
             string tableName = "PERSONA";
-            string condition = "idPersona =" + pPerson.getPersonID();
-            exectuteDeleteQuery(tableName, condition);
+            string condition = "idPersona = @idPersona";
+            string query = getDeleteQuery(tableName, condition);
+            MySqlCommand command = getCommand();
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@idPersona", pPerson.getPersonID());
+            command.ExecuteNonQuery();
+            MySQLManager.cerrarConexion(command.Connection);
         }
 
-        public void updatePerson(PersonDTO pPerson)
+        public void updatePerson(PersonDTO pNewPerson, PersonDTO pOldPerson)
         {
             string tableName = "PERSONA";
-            string values = String.Format("nombre={0}, cedula={1}, tipo={2}", 
-                pPerson.getName(), pPerson.getIDCard(), pPerson.GetType());
-            string condition = "idPersona =" + pPerson.getPersonID();
-            executeUpdateQuery(tableName, values, condition);
+            //Añadir trigger que valide el cambio de tipo
+            string values = "idPersona=@nuevoIdPersona, nombre=@nuevoNombre, cedula=@nuevaCedula, tipo=@nuevoTipo";
+            string condition = "idPersona = @idPersonaAnterior";
+            string query = getUpdateQuery(tableName, values, condition);
+            MySqlCommand command = getCommand();
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@nuevoIdPersona", pNewPerson.getPersonID());
+            command.Parameters.AddWithValue("@nuevoNombre", pNewPerson.getName());
+            command.Parameters.AddWithValue("@nuevaCedula", pNewPerson.getIDCard());
+            command.Parameters.AddWithValue("@nuevoTipo", pNewPerson.getPersonType());
+            command.Parameters.AddWithValue("@idPersonaAnterior", pOldPerson.getPersonID());
+            command.ExecuteNonQuery();
+            MySQLManager.cerrarConexion(command.Connection);
+        }
+
+        private string addCondition(string pBuffer, string pCondition)
+        {
+            if (pBuffer != "")
+            {
+                pBuffer += " AND ";
+            }
+            pBuffer += pCondition;
+            return pBuffer;
+        }
+
+        private string getFindPersonCondition(PersonDTO pPerson)
+        {
+            //CAMBIAR POR DEFAULTS
+            string condition = "";
+            if (pPerson.getPersonID() != -1)
+                Console.WriteLine("person id");
+                condition = addCondition(condition, "idPersona = @idPersona");
+            if (pPerson.getName() != "")
+                Console.WriteLine("person name");
+                condition = addCondition(condition, "nombre = @nombre");
+            if (pPerson.getIDCard() != "")
+                Console.WriteLine("person card");
+                condition = addCondition(condition, "cedula = @cedula");
+            if (pPerson.getPersonType() != "")
+                Console.WriteLine("person type");
+                condition = addCondition(condition, "tipo = @tipo");
+            return condition;
+        }
+
+        private void setCommandFindClientParameters(MySqlCommand pCommand, PersonDTO pPerson)
+        {
+            if (pPerson.getPersonID() != -1)
+                pCommand.Parameters.AddWithValue("@idPersona", pPerson.getPersonID());
+            if (pPerson.getName() != "")
+                pCommand.Parameters.AddWithValue("@nombre", pPerson.getName());
+            if (pPerson.getIDCard() != "")
+                pCommand.Parameters.AddWithValue("@cedula", pPerson.getIDCard());
+            if (pPerson.getPersonType() != "")
+                pCommand.Parameters.AddWithValue("@tipo", pPerson.getPersonType());
         }
 
         public List<PersonDTO> findPerson(PersonDTO pPerson)
         {
             string selection = "*";
             string from = "PERSONA";
-            string condition = "idPersona = " + pPerson.getPersonID();
-            DataTable dataTable = executeReadQuery(selection, from, condition);
+            string condition = getFindPersonCondition(pPerson);
+            string query = getSelectQuery(selection, from, condition);
+            //query = "SELECT * FROM PERSONA WHERE nombre = 'Joseph' AND cedula = @cedula";
+            MySqlCommand command = getCommand();
+            command.CommandText = query;
+            setCommandFindClientParameters(command, pPerson);
+            Console.WriteLine("query {0} {1}", command.CommandText, command.Parameters.Count);
+
+            MySqlDataReader reader = command.ExecuteReader();
             List<PersonDTO> list = new List<PersonDTO>();
-            foreach (DataRow row in dataTable.Rows)
+
+            while (reader.Read())
             {
-                PersonDTO person = new PersonDTO(pPerson.getPersonID());
-                person.setName(row["nombre"]);
-                person.setIDCard(row["cedula"]);
-                person.setPersonType(row["tipo"]);
+                PersonDTO person = new PersonDTO();
+                person.setPersonID((int)reader["idPersona"]);
+                person.setName(reader["nombre"].ToString());
+                person.setIDCard(reader["cedula"].ToString());
+                person.setPersonType(reader["tipo"].ToString());
                 list.Add(person);
             }
+            MySQLManager.cerrarConexion(command.Connection);
             return list;
         }
+
+        public void newPhysicalPerson(PhysicalPersonDTO pPerson)
+        {
+            string tableName = "PERSONA_FISICA";
+            string columns = "primerApellido, segundoApellido, idPersona";
+            string values = String.Format("{0}, {1}, {2}",
+                pPerson.getFirstLastName(), pPerson.getSecondLastName(), pPerson.getPersonID());
+            
+
+        }
+
+        public void deletePhysicalPerson(PhysicalPersonDTO pPerson)
+        {
+            string tableName = "PERSONA_FISICA";
+            string condition = "idPersona = " + pPerson.getPersonID();
+            
+
+        }
+
+        public void updatePhysicalPerson(PhysicalPersonDTO pNewPerson, PhysicalPersonDTO pOldPerson)
+        {
+            string tableName = "PERSONA_FISICA";
+            string values = String.Format("primerApellido");
+        }
+
+
 
     }
 }
