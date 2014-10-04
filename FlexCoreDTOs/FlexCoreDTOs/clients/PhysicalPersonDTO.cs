@@ -11,7 +11,20 @@ namespace FlexCoreDTOs.clients
         private string _firstLastName;
         private string _secondLastName;
 
-        public PhysicalPersonDTO(int pPersonID=-1, string pName="", string pFirstLastName="", string pSecondLastName="", string pIDCard="")
+        public PhysicalPersonDTO()
+        {
+            _firstLastName = DTOConstants.DEFAULT_STRING;
+            _secondLastName = DTOConstants.DEFAULT_STRING;
+        }
+
+        public PhysicalPersonDTO(int pPersonID)
+            : base (pPersonID)
+        {
+            _firstLastName = DTOConstants.DEFAULT_STRING;
+            _secondLastName = DTOConstants.DEFAULT_STRING;
+        }
+
+        public PhysicalPersonDTO(int pPersonID, string pName, string pFirstLastName, string pSecondLastName, string pIDCard)
             : base (pPersonID, pName, pIDCard, PersonDTO.PHYSICAL_PERSON)
         {
              _firstLastName = pFirstLastName;

@@ -16,7 +16,24 @@ namespace FlexCoreDTOs.clients
         private string _idCard;
         private string _type;
 
-        public PersonDTO(int pPersonID = -1, string pName ="", string pIDCard="", string pType="")
+        public PersonDTO()
+        {
+            _personID = DTOConstants.DEFAULT_INT_ID;
+            _name = DTOConstants.DEFAULT_STRING;
+            _idCard = DTOConstants.DEFAULT_STRING;
+            _type = DTOConstants.DEFAULT_STRING;
+        }
+
+
+        public PersonDTO(int pPersonID)
+        {
+            _personID = pPersonID;
+            _name = DTOConstants.DEFAULT_STRING;
+            _idCard = DTOConstants.DEFAULT_STRING;
+            _type = DTOConstants.DEFAULT_STRING;
+        }
+
+        public PersonDTO(int pPersonID, string pName, string pIDCard, string pType)
         {
             _personID = pPersonID;
             _name = pName;

@@ -11,7 +11,13 @@ namespace FlexCoreDTOs.clients
         private string _hexBytes;
         private int    _personID;
 
-        public PersonPhotoDTO(int pPersonID=-1, string pHexBytes="")
+        public PersonPhotoDTO(int pPersonID)
+        {
+            _personID = pPersonID;
+            _hexBytes = DTOConstants.DEFAULT_STRING;
+        }
+
+        public PersonPhotoDTO(int pPersonID, string pHexBytes)
         {
             _hexBytes = pHexBytes;
             _personID = pPersonID;

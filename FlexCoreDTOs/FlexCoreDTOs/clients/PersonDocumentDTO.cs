@@ -13,7 +13,31 @@ namespace FlexCoreDTOs.clients
         private string _description;
         private int    _clientID;
 
-        public PersonDocumentDTO(int pClientID=-1, string pDocHexBytes="", string pName="", string pDescription="")
+        public PersonDocumentDTO()
+        {
+            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _name = DTOConstants.DEFAULT_STRING;
+            _description = DTOConstants.DEFAULT_STRING;
+            _clientID = DTOConstants.DEFAULT_INT_ID;
+        }
+
+        public PersonDocumentDTO(string pName)
+        {
+            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _name = pName;
+            _description = DTOConstants.DEFAULT_STRING;
+            _clientID = DTOConstants.DEFAULT_INT_ID;
+        }
+
+        public PersonDocumentDTO(int pClientID)
+        {
+            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _name = DTOConstants.DEFAULT_STRING;
+            _description = DTOConstants.DEFAULT_STRING;
+            _clientID = pClientID;
+        }
+
+        public PersonDocumentDTO(int pClientID, string pDocHexBytes, string pName, string pDescription)
         {
                _hexBytes = pDocHexBytes;
                    _name = pName;
@@ -28,7 +52,7 @@ namespace FlexCoreDTOs.clients
 
         public string getDescription() { return _description; }
 
-        public int getClientID() { return _clientID; }
+        public int getPersonID() { return _clientID; }
 
         //setters
         public void setDocHexBytes(string pBytes) { _hexBytes = pBytes; }
@@ -37,7 +61,7 @@ namespace FlexCoreDTOs.clients
 
         public void setDescription(string pDescription) { _description = pDescription; }
 
-        public void setClientID(int pClientID) { _clientID = pClientID; }
+        public void setPersonID(int pClientID) { _clientID = pClientID; }
 
     }
 }

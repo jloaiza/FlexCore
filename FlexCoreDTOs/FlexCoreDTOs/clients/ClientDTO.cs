@@ -9,12 +9,25 @@ namespace FlexCoreDTOs.clients
 {
     public class ClientDTO
     {
-
         private string _CIF;
         private bool   _active;
         private int    _clientID;
 
-        public ClientDTO(int pIDClient = -1, string pCIF = "", bool pActive = false)
+        public ClientDTO(int pClientID)
+        {
+            _clientID = pClientID;
+            _active = false;
+            _CIF = DTOConstants.DEFAULT_STRING;
+        }
+
+        public ClientDTO()
+        {
+            _clientID = DTOConstants.DEFAULT_INT_ID;
+            _active = false;
+            _CIF = DTOConstants.DEFAULT_STRING;
+        }
+
+        public ClientDTO(int pIDClient, string pCIF, bool pActive = false)
         {
                 _clientID = pIDClient;
                      _CIF = pCIF;
