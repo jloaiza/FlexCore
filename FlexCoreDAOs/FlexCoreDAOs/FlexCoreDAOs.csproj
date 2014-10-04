@@ -48,7 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientsDAO.cs" />
+    <Compile Include="clients\ClientDAO.cs" />
+    <Compile Include="clients\PersonAddressDAO.cs" />
+    <Compile Include="clients\PersonDocumentDAO.cs" />
+    <Compile Include="clients\PersonPhoneDAO.cs" />
+    <Compile Include="clients\PersonPhotoDAO.cs" />
+    <Compile Include="clients\GeneralDAO.cs" />
+    <Compile Include="clients\PersonDAO.cs" />
+    <Compile Include="clients\PhysicalPersonDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
