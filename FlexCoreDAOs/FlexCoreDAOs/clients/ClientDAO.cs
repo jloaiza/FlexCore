@@ -1,0 +1,125 @@
+﻿using System;
+using System.Collections.Generic;
+using ConexionMySQLServer.ConexionMySql;
+using MySql.Data.MySqlClient;
+using FlexCoreDTOs.clients;
+
+namespace FlexCoreDAOs.clients
+{
+    class ClientDAO:GeneralDAO<ClientDTO>
+    {
+
+        private static readonly string PERSON_ID = "idClienta";
+        private static readonly string CIF = "CIF";
+        private static readonly string ACTIVE = "activo";
+
+        protected override string getFindCondition(ClientDTO pClient)
+        {
+            string condition = "";
+            if (pClient.getClientID() != DTOConstants.DEFAULT_INT_ID)
+            {
+                condition = addCondition(condition, String.Format("{0}= @{0}", PERSON_ID));
+            }
+            if (pClient.getCIF() != DTOConstants.DEFAULT_STRING)
+            {
+                condition = addCondition(condition, String.Format("{0} LIKE @{0}", CIF));
+            }
+            return condition;
+        }
+
+        protected override void setFindParameters(MySqlCommand pCommand, ClientDTO pClient)
+        {
+            if (pClient.getClientID() != DTOConstants.DEFAULT_INT_ID)
+            {
+                pCommand.Parameters.AddWithValue("@" + PERSON_ID, pClient.getClientID());
+            }
+
+            if (pClient.getCIF() != DTOConstants.DEFAULT_STRING)
+            {
+                pCommand.Parameters.AddWithValue("@" + CIF, pClient.getCIF());
+            }
+        }
+
+        public override void insert(ClientDTO pClient, MySqlCommand pCommand)
+        {
+            string tableName = "CLIENTE";
+            string columns = String.Format("{0}, {1}, {2}", PERSON_ID, CIF, ACTIVE);
+            string values = String.Format("@{0}, @{1}, @{2}", PERSON_ID, CIF, ACTIVE);
+            string query = getInsertQuery(tableName, columns, values);
+
+            pCommand.CommandText = query;
+            pCommand.Parameters.AddWithValue("@" + PERSON_ID, pClient.getClientID());
+            pCommand.Parameters.AddWithValue("@" + CIF, pClient.getCIF());
+            pCommand.Parameters.AddWithValue("@" + ACTIVE, boolToSql(pClient.isActive()));
+            pCommand.ExecuteNonQuery();
+        }
+        public override void delete(ClientDTO pClient, MySqlCommand pCommand)
+        {
+            string tableName = "CLIENTE";
+            string condition = String.Format("{0} = @{0} OR {1}=@{1}", PERSON_ID, CIF);
+            string query = getDeleteQuery(tableName, condition);
+
+            pCommand.CommandText = query;
+            pCommand.Parameters.AddWithValue("@" + PERSON_ID, pClient.getClientID());
+            pCommand.Parameters.AddWithValue("@" + CIF, pClient.getCIF());
+            pCommand.ExecuteNonQuery();
+        }
+
+        public override void update(ClientDTO pNewClient, ClientDTO pPastClient, MySqlCommand pCommand)
+        {
+            string tableName = "CLIENTE";
+            string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}, {2}=@nuevo{2}", PERSON_ID, CIF, ACTIVE);
+            string condition = String.Format("{0} = @{0}Anterior OR {1} = @{1}Anterior", PERSON_ID, CIF);
+            string query = getUpdateQuery(tableName, values, condition);
+
+            pCommand.CommandText = query;
+            pCommand.Parameters.AddWithValue("@nuevo" + PERSON_ID, pNewClient.getClientID());
+            pCommand.Parameters.AddWithValue("@nuevo" + CIF, pNewClient.getCIF());
+            pCommand.Parameters.AddWithValue("@nuevo" + ACTIVE, boolToSql(pNewClient.isActive()));
+            pCommand.Parameters.AddWithValue("@" + PERSON_ID + "Anterior", pPastClient.getClientID());
+            pCommand.Parameters.AddWithValue("@" + CIF + "Anterior", pPastClient.getCIF());
+            pCommand.ExecuteNonQuery();
+        }
+
+        public override List<ClientDTO> search(ClientDTO pClient, MySqlCommand pCommand)
+        {
+            string selection = "*";
+            string from = "CLIENTE";
+            string condition = getFindCondition(pClient);
+            string query = getSelectQuery(selection, from, condition);
+
+            pCommand.CommandText = query;
+            setFindParameters(pCommand, pClient);
+
+            MySqlDataReader reader = pCommand.ExecuteReader();
+            List<ClientDTO> list = new List<ClientDTO>();
+
+            while (reader.Read())
+            {
+                ClientDTO client = new ClientDTO();
+                client.setClientID((int)reader[PERSON_ID]);
+                client.setCIF(reader[CIF].ToString());
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                list.Add(client);
+            }
+            return list;
+        }
+
+        public override List<ClientDTO> getAll(MySqlCommand pCommand)
+        {
+            string query = "SELECT * FROM CLIENTE";
+            pCommand.CommandText = query;
+            MySqlDataReader reader = pCommand.ExecuteReader();
+            List<ClientDTO> list = new List<ClientDTO>();
+            while (reader.Read())
+            {
+                ClientDTO client = new ClientDTO();
+                client.setClientID((int)reader[PERSON_ID]);
+                client.setCIF(reader[CIF].ToString());
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                list.Add(client);
+            }
+            return list;
+        }
+    }
+}

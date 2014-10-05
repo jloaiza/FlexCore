@@ -125,7 +125,7 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand)
+        public List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand)
         {
             string selection = "*";
             string from = "PERSONA_JURIDICA_V";
