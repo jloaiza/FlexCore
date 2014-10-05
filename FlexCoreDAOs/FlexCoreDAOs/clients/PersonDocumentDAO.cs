@@ -6,23 +6,29 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class PersonDocumentDAO:GeneralDAO<PersonDocumentDTO>
+    public class PersonDocumentDAO:GeneralDAO<PersonDocumentDTO>
     {
+
+        private static readonly string DOCUMENT = "documento";
+        private static readonly string DOC_NAME = "nombreDocumento";
+        private static readonly string DOC_DESCRIP = "descripcionDocumento";
+        private static readonly string PERSON_ID = "idPersona";
+
         protected override string getFindCondition(PersonDocumentDTO pDocument)
         {
-            //CAMBIAR POR DEFAULTS
+            
             string condition = "";
-            if (pDocument.getPersonID() != -1)
+            if (pDocument.getPersonID() != DTOConstants.DEFAULT_INT_ID)
             {
-                condition = addCondition(condition, "idCliente = @idCliente");
+                condition = addCondition(condition, String.Format("{0}= @{0}", PERSON_ID));
             }
-            if (pDocument.getName() != "")
+            if (pDocument.getName() != DTOConstants.DEFAULT_STRING)
             {
-                condition = addCondition(condition, "nombreDocumento LIKE %@nombreDocumento%");
+                condition = addCondition(condition, String.Format("{0} LIKE @{0}", DOC_NAME));
             }
-            if (pDocument.getDescription() != "")
+            if (pDocument.getDescription() != DTOConstants.DEFAULT_STRING)
             {
-                condition = addCondition(condition, "descripcionDocumento LIKE %@descripcionDocumento%");
+                condition = addCondition(condition, String.Format("{0} LIKE @{0}", DOC_DESCRIP));
             }
             
             return condition;
@@ -30,58 +36,61 @@ namespace FlexCoreDAOs.clients
 
         protected override void setFindParameters(MySqlCommand pCommand, PersonDocumentDTO pDocument)
         {
-            if (pDocument.getPersonID() != -1)
+            if (pDocument.getPersonID() != DTOConstants.DEFAULT_INT_ID)
             {
-                pCommand.Parameters.AddWithValue("@idCliente", pDocument.getPersonID());
+                pCommand.Parameters.AddWithValue("@"+PERSON_ID, pDocument.getPersonID());
             }
-            if (pDocument.getName() != "")
+            if (pDocument.getName() != DTOConstants.DEFAULT_STRING)
             {
-                pCommand.Parameters.AddWithValue("@nombreDocumento", pDocument.getName());
+                pCommand.Parameters.AddWithValue("@"+DOC_NAME, pDocument.getName());
             }
-            if (pDocument.getDescription() != "")
+            if (pDocument.getDescription() != DTOConstants.DEFAULT_STRING)
             {
-                pCommand.Parameters.AddWithValue("@descripcionDocumento", pDocument.getDescription());
+                pCommand.Parameters.AddWithValue("@"+DOC_DESCRIP, pDocument.getDescription());
             }
         }
 
         public override void insert(PersonDocumentDTO pDocument, MySqlCommand pCommand)
         {
             string tableName = "DOCUMENTO_PERSONA";
-            string columns = "documento, nombreDocumento, descripcionDocumento, idPersona";
-            string values = "@documento, @nombreDocumento, @descripcionDocumento, @idPersona";
+            string columns = String.Format("{0}, {1}, {2}, {3}", DOCUMENT, DOC_NAME, DOC_DESCRIP, PERSON_ID);
+            string values = String.Format("@{0}, @{1}, @{2}, @{3}", DOCUMENT, DOC_NAME, DOC_DESCRIP, PERSON_ID);
             string query = getInsertQuery(tableName, columns, values);
 
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@documento", pDocument.getDocHexBytes());
-            pCommand.Parameters.AddWithValue("@nombreDocumento", pDocument.getName());
-            pCommand.Parameters.AddWithValue("@descripcionDocumento", pDocument.getDescription());
-            pCommand.Parameters.AddWithValue("@idPersona", pDocument.getPersonID());
+            pCommand.Parameters.AddWithValue("@"+DOCUMENT, pDocument.getDocHexBytes());
+            pCommand.Parameters.AddWithValue("@"+DOC_NAME, pDocument.getName());
+            pCommand.Parameters.AddWithValue("@"+DOC_DESCRIP, pDocument.getDescription());
+            pCommand.Parameters.AddWithValue("@"+PERSON_ID, pDocument.getPersonID());
             pCommand.ExecuteNonQuery();
         }
 
         public override void delete(PersonDocumentDTO pDocument, MySqlCommand pCommand)
         {
             string tableName = "DOCUMENTO_PERSONA";
-            string condition = "idCliente = @idCliente";
+            string condition = String.Format("{0}= @{0} AND {1}=@{1}", PERSON_ID, DOC_NAME);
             string query = getDeleteQuery(tableName, condition);
 
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@idCliente", pDocument.getPersonID());
+            pCommand.Parameters.AddWithValue("@"+PERSON_ID, pDocument.getPersonID());
+            pCommand.Parameters.AddWithValue("@"+DOC_NAME, pDocument.getName());
             pCommand.ExecuteNonQuery();
         }
 
         public override void update(PersonDocumentDTO pNewDoc, PersonDocumentDTO pPastDoc, MySqlCommand pCommand)
         {
             string tableName = "DOCUMENTO_PERSONA";
-            string values = "idCliente=@nuevoIdCliente, CIF=@nuevoCIF, activo=@nuevoActivo";
-            string condition = "idCliente = @idClienteAnterior";
+            string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}, {2}=@nuevo{2}, {3}=@nuevo{3}", DOCUMENT, PERSON_ID, DOC_NAME, DOC_DESCRIP);
+            string condition = String.Format("{0}= @{0}Anterior AND {1}=@{1}Anterior", PERSON_ID, DOC_NAME);
             string query = getUpdateQuery(tableName, values, condition);
 
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@nuevoIdCliente", pNewDoc.getPersonID());
-            pCommand.Parameters.AddWithValue("@nuevoCIF", pNewDoc.getCIF());
-            pCommand.Parameters.AddWithValue("@nuevoActivo", boolToSql(pNewDoc.isActive()));
-            pCommand.Parameters.AddWithValue("@idClienteAnterior", pPastDoc.getPersonID());
+            pCommand.Parameters.AddWithValue("@nuevo"+DOCUMENT, pNewDoc.getDocHexBytes());
+            pCommand.Parameters.AddWithValue("@nuevo"+PERSON_ID, pNewDoc.getPersonID());
+            pCommand.Parameters.AddWithValue("@nuevo"+DOC_NAME, pNewDoc.getName());
+            pCommand.Parameters.AddWithValue("@nuevo"+DOC_DESCRIP, pNewDoc.getDescription());
+            pCommand.Parameters.AddWithValue("@"+PERSON_ID+"Anterior", pPastDoc.getPersonID());
+            pCommand.Parameters.AddWithValue("@" + DOC_NAME + "Anterior", pPastDoc.getName());
             pCommand.ExecuteNonQuery();
         }
 
@@ -101,9 +110,10 @@ namespace FlexCoreDAOs.clients
             while (reader.Read())
             {
                 PersonDocumentDTO client = new PersonDocumentDTO();
-                client.setClientID((int)reader["idCliente"]);
-                client.setCIF(reader["CIF"].ToString());
-                client.setActive(sqlToBool(reader["cedula"].ToString()));
+                client.setPersonID((int)reader[PERSON_ID]);
+                client.setName(reader[DOC_NAME].ToString());
+                client.setDocHexBytes(bytesToHex((byte[])reader[DOCUMENT]));
+                client.setDescription(reader[DOC_DESCRIP].ToString());
                 list.Add(client);
             }
             return list;
