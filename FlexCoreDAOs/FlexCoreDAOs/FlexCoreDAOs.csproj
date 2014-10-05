@@ -48,6 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="administration\CierreQueriesDAO.cs" />
+    <Compile Include="administration\ConfiguracionesQueriesDAO.cs" />
+    <Compile Include="administration\DispositivoCuentaQueriesDAO.cs" />
+    <Compile Include="administration\ErrorQueriesDAO.cs" />
+    <Compile Include="administration\HistoricoTransaccionalQueriesDAO.cs" />
+    <Compile Include="administration\PagoInteresesQueriesDAO.cs" />
+    <Compile Include="administration\TipoTransaccionQueriesDAO.cs" />
+    <Compile Include="administration\TransaccionesVueloQueriesDAO.cs" />
     <Compile Include="clients\ClientDAO.cs" />
     <Compile Include="clients\JuridicalClientViewDAO.cs" />
     <Compile Include="clients\PersonAddressDAO.cs" />
