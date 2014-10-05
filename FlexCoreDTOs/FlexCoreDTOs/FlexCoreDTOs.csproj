@@ -50,6 +50,14 @@
     <Compile Include="cuentas\CuentaAhorroAutomaticoDTO.cs" />
     <Compile Include="cuentas\CuentaAhorroDTO.cs" />
     <Compile Include="cuentas\CuentaAhorroVistaDTO.cs" />
+    <Compile Include="administration\CierreDTO.cs" />
+    <Compile Include="administration\ConfiguracionesDTO.cs" />
+    <Compile Include="administration\DispositivoCuentaDTO.cs" />
+    <Compile Include="administration\ErrorDTO.cs" />
+    <Compile Include="administration\HistoricoTransaccionalDTO.cs" />
+    <Compile Include="administration\PagoInteresesDTO.cs" />
+    <Compile Include="administration\TipoTransaccionDTO.cs" />
+    <Compile Include="administration\TransaccionesVueloDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
