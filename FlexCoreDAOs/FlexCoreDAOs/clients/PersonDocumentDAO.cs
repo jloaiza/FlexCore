@@ -58,7 +58,7 @@ namespace FlexCoreDAOs.clients
             string query = getInsertQuery(tableName, columns, values);
 
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@"+DOCUMENT, pDocument.getDocHexBytes());
+            pCommand.Parameters.AddWithValue("@"+DOCUMENT, pDocument.getFile());
             pCommand.Parameters.AddWithValue("@"+DOC_NAME, pDocument.getName());
             pCommand.Parameters.AddWithValue("@"+DOC_DESCRIP, pDocument.getDescription());
             pCommand.Parameters.AddWithValue("@"+PERSON_ID, pDocument.getPersonID());
@@ -85,7 +85,7 @@ namespace FlexCoreDAOs.clients
             string query = getUpdateQuery(tableName, values, condition);
 
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@nuevo"+DOCUMENT, pNewDoc.getDocHexBytes());
+            pCommand.Parameters.AddWithValue("@nuevo"+DOCUMENT, pNewDoc.getFile());
             pCommand.Parameters.AddWithValue("@nuevo"+PERSON_ID, pNewDoc.getPersonID());
             pCommand.Parameters.AddWithValue("@nuevo"+DOC_NAME, pNewDoc.getName());
             pCommand.Parameters.AddWithValue("@nuevo"+DOC_DESCRIP, pNewDoc.getDescription());
@@ -112,7 +112,7 @@ namespace FlexCoreDAOs.clients
                 PersonDocumentDTO client = new PersonDocumentDTO();
                 client.setPersonID((int)reader[PERSON_ID]);
                 client.setName(reader[DOC_NAME].ToString());
-                client.setDocHexBytes(bytesToHex((byte[])reader[DOCUMENT]));
+                client.setDocHexBytes((byte[])reader[DOCUMENT]);
                 client.setDescription(reader[DOC_DESCRIP].ToString());
                 list.Add(client);
             }

@@ -12,17 +12,6 @@ namespace FlexCoreDAOs.clients
         private static readonly string PHOTO = "foto";
         private static readonly string PERSON_ID = "idPersona";
 
-        protected override string getFindCondition(PersonPhotoDTO pPhoto)
-        {
-            //Este método no es necesario para esta clase
-            return null;
-        }
-
-        protected override void setFindParameters(MySqlCommand pCommand, PersonPhotoDTO pPhoto)
-        {
-            //Este método no es necesario para esta clase
-        }
-
         public override void insert(PersonPhotoDTO pPhoto, MySqlCommand pCommand)
         {
             string tableName = "FOTO_PERSONA";
@@ -77,7 +66,7 @@ namespace FlexCoreDAOs.clients
             while (reader.Read())
             {
                 PersonPhotoDTO photo = new PersonPhotoDTO(pPhoto.getPersonID());
-                photo.setHexBytes(reader[PHOTO].ToString());
+                photo.setHexBytes((byte[])reader[PHOTO]);
                 list.Add(photo);
             }
             return list;

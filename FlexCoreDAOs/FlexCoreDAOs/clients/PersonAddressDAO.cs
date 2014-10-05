@@ -13,17 +13,6 @@ namespace FlexCoreDAOs.clients
         private static readonly string ADDRESS = "direccion";
         private static readonly string PERSON_ID = "idCliente";
 
-        protected override string getFindCondition(PersonAddressDTO pAddress)
-        {
-            //Este método no es necesario para esta clase
-            return null;
-        }
-
-        protected override void setFindParameters(MySqlCommand pCommand, PersonAddressDTO pAddress)
-        {
-            //Este método no es necesario para esta clase
-        }
-
         public override void insert(PersonAddressDTO pAddress, MySqlCommand pCommand)
         {
             string tableName = "DIRECCION_PERSONA";

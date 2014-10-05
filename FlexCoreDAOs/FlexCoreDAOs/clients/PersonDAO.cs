@@ -124,5 +124,67 @@ namespace FlexCoreDAOs.clients
             }
             return list;
         }
+
+        public override List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand)
+        {
+            string selection = "*";
+            string from = "PERSONA_JURIDICA_V";
+            string condition = getFindCondition(pPerson);
+            string query = getSelectQuery(selection, from, condition);
+
+            pCommand.CommandText = query;
+            setFindParameters(pCommand, pPerson);
+
+            MySqlDataReader reader = pCommand.ExecuteReader();
+            List<PersonDTO> list = new List<PersonDTO>();
+
+            while (reader.Read())
+            {
+                PersonDTO person = new PersonDTO();
+                person.setPersonID((int)reader[PERSON_ID]);
+                person.setName(reader[NAME].ToString());
+                person.setIDCard(reader[ID_CARD].ToString());
+                person.setPersonType(reader[TYPE].ToString());
+                list.Add(person);
+            }
+            return list;
+        }
+
+        public override List<PersonDTO> getAll(MySqlCommand pCommand)
+        {
+            string query = "SELECT * FROM PERSONA";
+            pCommand.CommandText = query;
+            MySqlDataReader reader = pCommand.ExecuteReader();
+            List<PersonDTO> list = new List<PersonDTO>();
+            while (reader.Read())
+            {
+                PersonDTO person = new PersonDTO();
+                person.setPersonID((int)reader[PERSON_ID]);
+                person.setName(reader[NAME].ToString());
+                person.setIDCard(reader[ID_CARD].ToString());
+                person.setPersonType(reader[TYPE].ToString());
+                list.Add(person);
+            }
+            return list;
+        }
+
+        public override List<PersonDTO> getAllJuridical(MySqlCommand pCommand)
+        {
+            string query = "SELECT * FROM PERSONA_JURIDICA_V";
+            pCommand.CommandText = query;
+            MySqlDataReader reader = pCommand.ExecuteReader();
+            List<PersonDTO> list = new List<PersonDTO>();
+            while (reader.Read())
+            {
+                PersonDTO person = new PersonDTO();
+                person.setPersonID((int)reader[PERSON_ID]);
+                person.setName(reader[NAME].ToString());
+                person.setIDCard(reader[ID_CARD].ToString());
+                person.setPersonType(reader[TYPE].ToString());
+                list.Add(person);
+            }
+            return list;
+        }
+
     }
 }
