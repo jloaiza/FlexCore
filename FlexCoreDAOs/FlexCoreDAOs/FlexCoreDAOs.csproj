@@ -40,6 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="administration\CierreQueriesDAO.cs" />
+    <Compile Include="administration\ConfiguracionesQueriesDAO.cs" />
+    <Compile Include="administration\DispositivoCuentaQueriesDAO.cs" />
+    <Compile Include="administration\ErrorQueriesDAO.cs" />
+    <Compile Include="administration\HistoricoTransaccionalQueriesDAO.cs" />
+    <Compile Include="administration\PagoInteresesQueriesDAO.cs" />
+    <Compile Include="administration\TipoTransaccionQueriesDAO.cs" />
+    <Compile Include="administration\TransaccionesVueloQueriesDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
