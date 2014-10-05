@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +9,14 @@ namespace FlexCoreDTOs.clients
 {
     public class PersonDocumentDTO
     {
-        private string _hexBytes;
+        private byte[] _docBytes;
         private string _name;
         private string _description;
         private int    _clientID;
 
         public PersonDocumentDTO()
         {
-            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _docBytes = null;
             _name = DTOConstants.DEFAULT_STRING;
             _description = DTOConstants.DEFAULT_STRING;
             _clientID = DTOConstants.DEFAULT_INT_ID;
@@ -23,7 +24,7 @@ namespace FlexCoreDTOs.clients
 
         public PersonDocumentDTO(string pName)
         {
-            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _docBytes = null;
             _name = pName;
             _description = DTOConstants.DEFAULT_STRING;
             _clientID = DTOConstants.DEFAULT_INT_ID;
@@ -31,22 +32,22 @@ namespace FlexCoreDTOs.clients
 
         public PersonDocumentDTO(int pClientID)
         {
-            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _docBytes = null;
             _name = DTOConstants.DEFAULT_STRING;
             _description = DTOConstants.DEFAULT_STRING;
             _clientID = pClientID;
         }
 
-        public PersonDocumentDTO(int pClientID, string pDocHexBytes, string pName, string pDescription)
+        public PersonDocumentDTO(int pClientID, byte[] pFile, string pName, string pDescription)
         {
-               _hexBytes = pDocHexBytes;
+                   _docBytes = pFile;
                    _name = pName;
             _description = pDescription;
                _clientID = pClientID;
         }
 
         //getters
-        public string getDocHexBytes() { return _hexBytes; }
+        public byte[] getFile() { return _docBytes; }
 
         public string getName() { return _name; }
 
@@ -55,7 +56,7 @@ namespace FlexCoreDTOs.clients
         public int getPersonID() { return _clientID; }
 
         //setters
-        public void setDocHexBytes(string pBytes) { _hexBytes = pBytes; }
+        public void setDocHexBytes(byte[] pFile) { _docBytes = pFile; }
 
         public void setName(string pName) { _name = pName; }
 

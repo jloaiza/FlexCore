@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,27 +9,27 @@ namespace FlexCoreDTOs.clients
 {
     public class PersonPhotoDTO
     {
-        private string _hexBytes;
-        private int    _personID;
+        private byte[] _photoBytes;
+        private int  _personID;
 
         public PersonPhotoDTO(int pPersonID)
         {
             _personID = pPersonID;
-            _hexBytes = DTOConstants.DEFAULT_STRING;
+            _photoBytes = null;
         }
 
-        public PersonPhotoDTO(int pPersonID, string pHexBytes)
+        public PersonPhotoDTO(int pPersonID, byte[] pFile)
         {
-            _hexBytes = pHexBytes;
+            _photoBytes = pFile;
             _personID = pPersonID;
         }
 
         //setters
-        public void setHexBytes(string pHexBytes) { _hexBytes = pHexBytes; }
+        public void setHexBytes(byte[] pFile) { _photoBytes = pFile; }
         public void setPersonID(int pPersonID) { _personID = pPersonID; }
 
         //getters
-        public string getHexBytes() { return _hexBytes; }
+        public byte[] getHexBytes() { return _photoBytes; }
         public int getPersonID() { return _personID; }
     }
 }
