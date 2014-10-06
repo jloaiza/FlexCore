@@ -45,6 +45,11 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroVistaManager.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista);
         }
 
+        public static int obtenerCuentaAhorroVistaID(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        {
+            return CuentaAhorroVistaManager.obtenerCuentaAhorroVistaID(pCuentaAhorroVista);
+        }
+
         public static string agregarDineroCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
         {
             return CuentaAhorroVistaManager.agregarDinero(pCuentaAhorroVista, pMonto);

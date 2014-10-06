@@ -15,8 +15,10 @@ namespace ModuloCuentas.Cuentas
 
         //DINERO
 
-        public static int DOLARES = 1;
-        public static int COLONES = 2;
+        public static int COLONES = 1;
+        public static int DOLARES = 2;
+
+        public static decimal UNDOLARENCOLONES = 550;
 
         //PERIODO
 

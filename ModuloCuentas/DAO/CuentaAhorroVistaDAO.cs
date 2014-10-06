@@ -122,7 +122,8 @@ namespace ModuloCuentas.DAO
         public static void quitarDinero(string pNumeroCuentaOrigen, decimal pMonto, string pNumeroCuentaDestino, int pTipoCuenta)
         {
             CuentaAhorroVista _cuentaAhorroOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pNumeroCuentaOrigen);
-            _cuentaAhorroOrigen.setSaldoFlotante(_cuentaAhorroOrigen.getSaldoFlotante() - pMonto);
+            decimal _montoDeduccion = Transformaciones.convertirDinero(pMonto, _cuentaAhorroOrigen.getTipoMoneda(), CuentaAhorroDAO.obtenerCuentaAhorroMoneda(pNumeroCuentaDestino));
+            _cuentaAhorroOrigen.setSaldoFlotante(_cuentaAhorroOrigen.getSaldoFlotante() - _montoDeduccion);
             string _query = "UPDATE CUENTA_AHORRO_VISTA SET SALDOFLOTANTE = @saldoFlotante WHERE IDCUENTA = @idCuenta";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();

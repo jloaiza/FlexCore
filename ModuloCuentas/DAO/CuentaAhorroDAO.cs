@@ -14,7 +14,7 @@ namespace ModuloCuentas.DAO
     {
         public static void agregarCuentaAhorro(CuentaAhorroVista pCuentaAhorroVista)
         {
-            String _query = "INSERT INTO CUENTA_AHORRO(NUMCUENTA, DESCRIPCION, SALDO, ACTIVA, IDCLIENTE, TIPOMONEDA, BLOQUEADA) VALUES(@numCuenta, @descripcion, @saldo, @activa, @idCliente, @tipoMoneda, @bloqueada);";
+            String _query = "INSERT INTO CUENTA_AHORRO(NUMCUENTA, DESCRIPCION, SALDO, ACTIVA, IDCLIENTE, TIPOMONEDA) VALUES(@numCuenta, @descripcion, @saldo, @activa, @idCliente, @tipoMoneda);";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -24,14 +24,13 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorroVista.getEstado()));
             _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorroVista.getCliente().getClientID());
             _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroVista.getTipoMoneda());
-            _comandoMySQL.Parameters.AddWithValue("@bloqueada", "0");
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
 
         public static void agregarCuentaAhorro(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
         {
-            String _query = "INSERT INTO CUENTA_AHORRO(NUMCUENTA, DESCRIPCION, SALDO, ACTIVA, IDCLIENTE, TIPOMONEDA, BLOQUEADA) VALUES(@numCuenta, @descripcion, @saldo, @activa, @idCliente, @tipoMoneda, @bloqueada);";
+            String _query = "INSERT INTO CUENTA_AHORRO(NUMCUENTA, DESCRIPCION, SALDO, ACTIVA, IDCLIENTE, TIPOMONEDA) VALUES(@numCuenta, @descripcion, @saldo, @activa, @idCliente, @tipoMoneda);";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
@@ -41,7 +40,6 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorroAutomatico.getEstado()));
             _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorroAutomatico.getCliente().getClientID());
             _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroAutomatico.getTipoMoneda());
-            _comandoMySQL.Parameters.AddWithValue("@bloqueada", "0");
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
@@ -143,6 +141,23 @@ namespace ModuloCuentas.DAO
             }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _idCuenta;
+        }
+
+        public static int obtenerCuentaAhorroMoneda(string pNumeroCuenta)
+        {
+            int _moneda = 0;
+            String _query = "SELECT * FROM CUENTA_AHORRO WHERE NUMCUENTA = @numCuenta;";
+            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
+            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
+            _comandoMySQL.CommandText = _query;
+            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
+            MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
+            if (_reader.Read())
+            {
+                _moneda = Convert.ToInt32(_reader["tipoMoneda"]);
+            }
+            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            return _moneda;
         }
 
         public static string obtenerNumeroCuenta(int pIdCuenta)

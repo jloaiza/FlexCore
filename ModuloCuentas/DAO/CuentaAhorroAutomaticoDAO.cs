@@ -139,7 +139,8 @@ namespace ModuloCuentas.DAO
         public static void quitarDinero(string pNumeroCuentaOrigen, decimal pMonto, string pNumeroCuentaDestino, int pTipoCuenta)
         {
             CuentaAhorroAutomatico _cuentaAhorroOrigen = obtenerCuentaAhorroAutomaticoNumeroCuenta(pNumeroCuentaOrigen);
-            _cuentaAhorroOrigen.setSaldo(_cuentaAhorroOrigen.getSaldo() - pMonto);
+            decimal _montoDeduccion = Transformaciones.convertirDinero(pMonto, _cuentaAhorroOrigen.getTipoMoneda(), CuentaAhorroDAO.obtenerCuentaAhorroMoneda(pNumeroCuentaDestino));
+            _cuentaAhorroOrigen.setSaldo(_cuentaAhorroOrigen.getSaldo() - _montoDeduccion);
             CuentaAhorroDAO.modificarSaldo(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuentaOrigen), _cuentaAhorroOrigen.getSaldo());
             agregarDinero(pNumeroCuentaDestino, pMonto, pTipoCuenta);
         }
