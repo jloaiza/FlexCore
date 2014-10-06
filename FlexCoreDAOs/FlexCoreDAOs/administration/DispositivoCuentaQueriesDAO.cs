@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
 
-namespace FlexCore1.DAO
+namespace FlexCoreDAOs.administration
 {
     class DispositivoCuentaQueriesDAO
     {

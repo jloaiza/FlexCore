@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
-namespace FlexCore1.DAO
+namespace FlexCoreDAOs.administration
 {
     public class CierreQueriesDAO
     {
