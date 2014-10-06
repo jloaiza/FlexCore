@@ -35,9 +35,9 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroVistaManager.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista);
         }
 
-        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos)
         {
-            return CuentaAhorroVistaManager.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista);
+            return CuentaAhorroVistaManager.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista, pNumeroPagina, pCantidadElementos);
         }
 
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista)
@@ -100,9 +100,9 @@ namespace ModuloCuentas.Facade
             return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoCedula(pCuentaAhorroAutomatico);
         }
 
-        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, int pNumeroPagina, int pCantidadElementos)
         {
-            return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoNombre(pCuentaAhorroAutomatico);
+            return CuentaAhorroAutomaticoManager.obtenerCuentaAhorroAutomaticoNombre(pCuentaAhorroAutomatico, pNumeroPagina, pCantidadElementos);
         }
 
         public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
