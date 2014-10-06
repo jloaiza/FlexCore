@@ -16,6 +16,18 @@ namespace FlexCoreDTOs.cuentas
         private bool _estado;
         ClientDTO _cliente;
 
+        public CuentaAhorroDTO() { }
+
+        public CuentaAhorroDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente)
+        {
+            _numeroCuenta = pNumeroCuenta;
+            _descripcion = pDecripcion;
+            _saldo = pSaldo;
+            _estado = pEstado;
+            _tipoMoneda = pTipoMoneda;
+            _cliente = pCliente;
+        }
+
         public string getNumeroCuenta()
         {
             return _numeroCuenta;

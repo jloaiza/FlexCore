@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlexCoreDTOs.clients;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,24 @@ namespace FlexCoreDTOs.cuentas
         private int _proposito;
         private int _magnitudPeriodoAhorro;
         private int _tipoPeriodo;
+
+        public CuentaAhorroAutomaticoDTO() { }
+
+        public CuentaAhorroAutomaticoDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente, DateTime pFechaInicio,
+            int pTiempoAhorro, DateTime pFechaFinalizacion, DateTime pUltimaFechaCobro, decimal pMontoAhorro, decimal pMontoDeduccion, int pProposito, int pMagnitudPeriodoAhorro,
+            int pTipoPeriodo, string pNumeroCuentaDeduccion) : base(pNumeroCuenta, pDecripcion, pSaldo, pEstado, pTipoMoneda, pCliente)
+        {
+            _fechaInicio = pFechaInicio;
+            _tiempoAhorro = pTiempoAhorro;
+            _fechaFinalizacion = pFechaFinalizacion;
+            _ultimaFechaCobro = pUltimaFechaCobro;
+            _montoAhorro = pMontoAhorro;
+            _montoDeduccion = pMontoDeduccion;
+            _proposito = pProposito;
+            _magnitudPeriodoAhorro = pMagnitudPeriodoAhorro;
+            _tipoPeriodo = pTipoPeriodo;
+            _numeroCuentaDeduccion = pNumeroCuentaDeduccion;
+        }
 
         public DateTime getFechaInicio()
         {
