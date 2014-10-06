@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlexCore1.DTO
+namespace FlexCore.DTO
 {
     public class TransaccionesVueloDTO
     {
