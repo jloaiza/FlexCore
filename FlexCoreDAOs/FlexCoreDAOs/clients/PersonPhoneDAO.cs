@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    public class PersonPhoneDAO:GeneralDAO<PersonPhoneDTO>
+    class PersonPhoneDAO:GeneralDAO<PersonPhoneDTO>
     {
 
         private static readonly string PHONE = "telefono";

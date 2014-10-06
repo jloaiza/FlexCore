@@ -7,7 +7,7 @@ using FlexCoreDTOs.clients;
 namespace FlexCoreDAOs.clients
 {   
 
-    public class PersonAddressDAO:GeneralDAO<PersonAddressDTO>
+    class PersonAddressDAO:GeneralDAO<PersonAddressDTO>
     {
 
         private static readonly string ADDRESS = "direccion";
@@ -29,7 +29,7 @@ namespace FlexCoreDAOs.clients
         public override void delete(PersonAddressDTO pAddress, MySqlCommand pCommand)
         {
             string tableName = "DIRECCION_PERSONA";
-            string condition = String.Format("{0}= @{0} AND {1}=@{1}", PERSON_ID, ADDRESS);
+            string condition = String.Format("{0}= @{0}, {1}=@{1}", PERSON_ID, ADDRESS);
             string query = getDeleteQuery(tableName, condition);
 
             pCommand.CommandText = query;
@@ -42,7 +42,7 @@ namespace FlexCoreDAOs.clients
         {
             string tableName = "DIRECCION_PERSONA";
             string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}", PERSON_ID, ADDRESS);
-            string condition = String.Format("{0}= @{0}Anterior AND {1}=@{1}Anterior", PERSON_ID);
+            string condition = String.Format("{0}= @{0}Anterior, {1}=@{1}Anterior", PERSON_ID);
             string query = getUpdateQuery(tableName, values, condition);
 
             pCommand.CommandText = query;

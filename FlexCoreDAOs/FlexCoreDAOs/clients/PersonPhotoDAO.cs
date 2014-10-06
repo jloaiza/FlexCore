@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    public class PersonPhotoDAO:GeneralDAO<PersonPhotoDTO>
+    class PersonPhotoDAO:GeneralDAO<PersonPhotoDTO>
     {
 
         private static readonly string PHOTO = "foto";
