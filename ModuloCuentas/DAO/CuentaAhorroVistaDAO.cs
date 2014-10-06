@@ -114,7 +114,7 @@ namespace ModuloCuentas.DAO
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@saldoFlotante", _cuentaAhorroVista.getSaldoFlotante());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", _cuentaAhorroVista.getNumeroCuenta());
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaAhorroVista));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
