@@ -46,16 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cuentas\CuentaAhorro.cs" />
-    <Compile Include="Cuentas\CuentaAhorroAutomatico.cs" />
-    <Compile Include="Cuentas\CuentaAhorroVista.cs" />
-    <Compile Include="Cuentas\Constantes.cs" />
-    <Compile Include="Cuentas\GeneradorCuentas.cs" />
     <Compile Include="DAO\CuentaAhorroAutomaticoDAO.cs" />
     <Compile Include="DAO\CuentaAhorroVistaDAO.cs" />
     <Compile Include="DAO\CuentaBeneficiariosDAO.cs" />
     <Compile Include="DAO\PeriocidadAhorroDAO.cs" />
     <Compile Include="Facade\FacadeCuentas.cs" />
+    <Compile Include="Generales\Constantes.cs" />
+    <Compile Include="Generales\GeneradorCuentas.cs" />
     <Compile Include="Generales\Tiempo.cs" />
     <Compile Include="Generales\Transformaciones.cs" />
     <Compile Include="Managers\CuentaAhorroAutomaticoManager.cs" />

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModuloCuentas.Cuentas;
 using ModuloCuentas.DAO;
 using System.Threading;
 using FlexCoreDTOs.cuentas;
+using ModuloCuentas.Generales;
 
 namespace ModuloCuentas.Managers
 {
@@ -17,11 +17,10 @@ namespace ModuloCuentas.Managers
             try
             {
                 string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROVISTA, pCuentaAhorroVista.getTipoMoneda());
-                CuentaAhorroVista _cuentaAhorroVista = new CuentaAhorroVista(_numeroCuenta, pCuentaAhorroVista.getDescripcion(), 0, pCuentaAhorroVista.getEstado(),
-                    pCuentaAhorroVista.getTipoMoneda(), 0);
-                _cuentaAhorroVista.setCliente(pCuentaAhorroVista.getCliente());
-                _cuentaAhorroVista.setListaBeneficiarios(pCuentaAhorroVista.getListaBeneficiarios());
-                CuentaAhorroVistaDAO.agregarCuentaAhorroVistaBase(_cuentaAhorroVista);
+                pCuentaAhorroVista.setNumeroCuenta(_numeroCuenta);
+                pCuentaAhorroVista.setSaldo(0);
+                pCuentaAhorroVista.setSaldoFlotante(0);
+                CuentaAhorroVistaDAO.agregarCuentaAhorroVistaBase(pCuentaAhorroVista);
                 return "Transacción completada con éxito";
             }
             catch
@@ -34,7 +33,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVistaDAO.eliminarCuentaAhorroVistaBase(pCuentaAhorroVista.getNumeroCuenta());
+                CuentaAhorroVistaDAO.eliminarCuentaAhorroVistaBase(pCuentaAhorroVista);
                 return "Transacción completada con éxito";
             }
             catch
@@ -47,9 +46,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVista _cuentaAhorroVista = new CuentaAhorroVista(pCuentaAhorroVista.getNumeroCuenta(), pCuentaAhorroVista.getDescripcion(),
-                0, pCuentaAhorroVista.getEstado(), pCuentaAhorroVista.getTipoMoneda(), 0);
-                CuentaAhorroVistaDAO.modificarCuentaAhorroVistaBase(_cuentaAhorroVista);
+                CuentaAhorroVistaDAO.modificarCuentaAhorroVistaBase(pCuentaAhorroVista);
                 return "Transacción completada con éxito";
             }
             catch
@@ -62,8 +59,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVista _cuentaAhorroVista =  CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista.getNumeroCuenta());
-                return cuentaAhorroVistaADTO(_cuentaAhorroVista);
+                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista);
             }
             catch
             {
@@ -76,8 +72,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVista _cuentaAhorroVista = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista.getNumeroCuenta());
-                return cuentaAhorroVistaADTO(_cuentaAhorroVista);
+                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista);
             }
             catch
             {
@@ -89,13 +84,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                List<CuentaAhorroVista> _cuentasAhorroVista = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista.getNumeroCuenta());
-                List<CuentaAhorroVistaDTO> _cuentasSalida = new List<CuentaAhorroVistaDTO>();
-                foreach (CuentaAhorroVista cuentas in _cuentasAhorroVista)
-                {
-                    _cuentasSalida.Add(cuentaAhorroVistaADTO(cuentas));
-                }
-                return _cuentasSalida;
+                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista, pNumeroPagina, pCantidadElementos);
             }
             catch
             {
@@ -108,8 +97,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVista _cuentaAhorroVista = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista.getNumeroCuenta());
-                return cuentaAhorroVistaADTO(_cuentaAhorroVista);
+                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista);
             }
             catch
             {
@@ -121,7 +109,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                return CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista.getNumeroCuenta());
+                return CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista);
             }
             catch
             {
@@ -133,7 +121,7 @@ namespace ModuloCuentas.Managers
         {
             try
             {
-                CuentaAhorroVistaDAO.agregarDinero(pCuentaAhorroVista.getNumeroCuenta(), pMonto, Constantes.AHORROVISTA);
+                CuentaAhorroVistaDAO.agregarDinero(pCuentaAhorroVista, pMonto, Constantes.AHORROVISTA);
                 return "Transacción completada con éxito";
             }
             catch
@@ -162,7 +150,7 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroVistaDestino.getNumeroCuenta(), Constantes.AHORROVISTA);
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA);
                     return "Transacción completada con éxito";
                 }
             }
@@ -192,7 +180,7 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen.getNumeroCuenta(), pMonto, pCuentaAhorroAutomaticoDestino.getNumeroCuenta(), Constantes.AHORROAUTOMATICO);
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroAutomaticoDestino, Constantes.AHORROAUTOMATICO);
                     return "Transacción completada con éxito";
                 }
             }
@@ -220,18 +208,6 @@ namespace ModuloCuentas.Managers
         private static void realizarCierreCuentasAux()
         {
             CuentaAhorroVistaDAO.iniciarCierre();
-        }
-
-        private static CuentaAhorroVistaDTO cuentaAhorroVistaADTO(CuentaAhorroVista pCuentaAhorroVista)
-        {
-            CuentaAhorroVistaDTO _cuentaSalida = new CuentaAhorroVistaDTO();
-            _cuentaSalida.setDescripcion(pCuentaAhorroVista.getDescripcion());
-            _cuentaSalida.setEstado(pCuentaAhorroVista.getEstado());
-            _cuentaSalida.setNumeroCuenta(pCuentaAhorroVista.getNumeroCuenta());
-            _cuentaSalida.setSaldo(pCuentaAhorroVista.getSaldo());
-            _cuentaSalida.setSaldoFlotante(pCuentaAhorroVista.getSaldoFlotante());
-            _cuentaSalida.setTipoMoneda(pCuentaAhorroVista.getTipoMoneda());
-            return _cuentaSalida;
         }
     }
 }

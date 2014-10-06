@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ModuloCuentas.Cuentas
+namespace ModuloCuentas.Generales
 {
     internal static class GeneradorCuentas
     {

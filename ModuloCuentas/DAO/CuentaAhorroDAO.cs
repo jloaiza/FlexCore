@@ -1,5 +1,4 @@
-﻿using ModuloCuentas.Cuentas;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,101 +6,62 @@ using System.Threading.Tasks;
 using ConexionMySQLServer.ConexionMySql;
 using MySql.Data.MySqlClient;
 using ModuloCuentas.Generales;
+using FlexCoreDTOs.cuentas;
 
 namespace ModuloCuentas.DAO
 {
     internal static class CuentaAhorroDAO
     {
-        public static void agregarCuentaAhorro(CuentaAhorroVista pCuentaAhorroVista)
+        public static void agregarCuentaAhorro(CuentaAhorroDTO pCuentaAhorro)
         {
             String _query = "INSERT INTO CUENTA_AHORRO(NUMCUENTA, DESCRIPCION, SALDO, ACTIVA, IDCLIENTE, TIPOMONEDA) VALUES(@numCuenta, @descripcion, @saldo, @activa, @idCliente, @tipoMoneda);";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorroVista.getNumeroCuenta());
-            _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorroVista.getDescripcion());
-            _comandoMySQL.Parameters.AddWithValue("@saldo", pCuentaAhorroVista.getSaldo());
-            _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorroVista.getEstado()));
-            _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorroVista.getCliente().getClientID());
-            _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroVista.getTipoMoneda());
+            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorro.getNumeroCuenta());
+            _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorro.getDescripcion());
+            _comandoMySQL.Parameters.AddWithValue("@saldo", pCuentaAhorro.getSaldo());
+            _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorro.getEstado()));
+            _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorro.getCliente().getClientID());
+            _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorro.getTipoMoneda());
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
+        
 
-        public static void agregarCuentaAhorro(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
-        {
-            String _query = "INSERT INTO CUENTA_AHORRO(NUMCUENTA, DESCRIPCION, SALDO, ACTIVA, IDCLIENTE, TIPOMONEDA) VALUES(@numCuenta, @descripcion, @saldo, @activa, @idCliente, @tipoMoneda);";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorroAutomatico.getNumeroCuenta());
-            _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorroAutomatico.getDescripcion());
-            _comandoMySQL.Parameters.AddWithValue("@saldo", pCuentaAhorroAutomatico.getSaldo());
-            _comandoMySQL.Parameters.AddWithValue("@activa", Transformaciones.boolToInt(pCuentaAhorroAutomatico.getEstado()));
-            _comandoMySQL.Parameters.AddWithValue("@idCliente", pCuentaAhorroAutomatico.getCliente().getClientID());
-            _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroAutomatico.getTipoMoneda());
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-        }
-
-        public static void eliminarCuentaAhorro(int pIdCuenta)
+        public static void eliminarCuentaAhorro(CuentaAhorroDTO pCuentaAhorro)
         {
             String _query = "DELETE FROM CUENTA_AHORRO WHERE idCuenta = @idCuenta";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", pIdCuenta);
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", obtenerCuentaAhorroID(pCuentaAhorro));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
 
-        public static void modificarCuentaAhorro(int pIdCuenta, CuentaAhorroVista pCuentaAhorroVista)
+        public static void modificarCuentaAhorro(CuentaAhorroDTO pCuentaAhorro)
         {
             String _query = "UPDATE CUENTA_AHORRO SET DESCRIPCION = @descripcion, TIPOMONEDA = @tipoMoneda, ACTIVA = @estado WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorroVista.getDescripcion());
-            _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroVista.getTipoMoneda());
-            _comandoMySQL.Parameters.AddWithValue("@estado", pCuentaAhorroVista.getEstado());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", pIdCuenta);
+            _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorro.getDescripcion());
+            _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorro.getTipoMoneda());
+            _comandoMySQL.Parameters.AddWithValue("@estado", pCuentaAhorro.getEstado());
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", obtenerCuentaAhorroID(pCuentaAhorro));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
 
-        public static void modificarEstadoCuentaAhorro(int pIdCuenta, bool pEstado)
-        {
-            String _query = "UPDATE CUENTA_AHORRO SET ACTIVA = @estado WHERE IDCUENTA = @idCuenta;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@estado", pEstado);
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", pIdCuenta);
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-        }
-
-        public static void modificarCuentaAhorro(int pIdCuenta, CuentaAhorroAutomatico pCuentaAhorroAutomatico)
-        {
-            String _query = "UPDATE CUENTA_AHORRO SET DESCRIPCION = @descripcion, TIPOMONEDA = @tipoMoneda WHERE IDCUENTA = @idCuenta;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@descripcion", pCuentaAhorroAutomatico.getDescripcion());
-            _comandoMySQL.Parameters.AddWithValue("@tipoMoneda", pCuentaAhorroAutomatico.getTipoMoneda());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", pIdCuenta);
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-        }
-
-        public static void modificarSaldo(int pIdCuenta, decimal pSaldo)
+        public static void modificarSaldo(CuentaAhorroDTO pCuentaAhorro, decimal pSaldo)
         {
             String _query = "UPDATE CUENTA_AHORRO SET SALDO = @saldo WHERE IDCUENTA = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@saldo", pSaldo);
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", pIdCuenta);
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", obtenerCuentaAhorroID(pCuentaAhorro));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
@@ -126,14 +86,14 @@ namespace ModuloCuentas.DAO
             }
         }
 
-        public static int obtenerCuentaAhorroID(string pNumeroCuenta)
+        public static int obtenerCuentaAhorroID(CuentaAhorroDTO pCuentaAhorro)
         {
             int _idCuenta = 0;
             String _query = "SELECT * FROM CUENTA_AHORRO WHERE NUMCUENTA = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
+            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorro.getNumeroCuenta());
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
             if(_reader.Read())
             {
@@ -143,14 +103,14 @@ namespace ModuloCuentas.DAO
             return _idCuenta;
         }
 
-        public static int obtenerCuentaAhorroMoneda(string pNumeroCuenta)
+        public static int obtenerCuentaAhorroMoneda(CuentaAhorroDTO pCuentaAhorro)
         {
             int _moneda = 0;
             String _query = "SELECT * FROM CUENTA_AHORRO WHERE NUMCUENTA = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
+            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorro.getNumeroCuenta());
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
             if (_reader.Read())
             {

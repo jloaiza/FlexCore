@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModuloCuentas.Cuentas;
 using MySql.Data.MySqlClient;
 using ConexionMySQLServer.ConexionMySql;
 using ModuloCuentas.Generales;
 using FlexCoreDTOs.clients;
+using FlexCoreDTOs.cuentas;
 
 namespace ModuloCuentas.DAO
 {
     internal static class CuentaAhorroAutomaticoDAO
     {
-        public static void agregarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
+        public static void agregarCuentaAhorroAutomaticoBase(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             CuentaAhorroDAO.agregarCuentaAhorro(pCuentaAhorroAutomatico);
             int _lastId = PeriocidadAhorroDAO.agregarMagnitudPeriocidad(pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro(), pCuentaAhorroAutomatico.getTipoPeriodo());
@@ -28,17 +28,19 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@montoDeduccion", pCuentaAhorroAutomatico.getMontoDeduccion());
             _comandoMySQL.Parameters.AddWithValue("@montoFinal", pCuentaAhorroAutomatico.getMontoAhorro());
             _comandoMySQL.Parameters.AddWithValue("@periodicidad", _lastId);
-            _comandoMySQL.Parameters.AddWithValue("@idCuentaAhorro", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico.getNumeroCuenta()));
-            _comandoMySQL.Parameters.AddWithValue("@idCuentaDeduccion", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion()));
+            _comandoMySQL.Parameters.AddWithValue("@idCuentaAhorro", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico));
+            CuentaAhorroAutomaticoDTO _cuentaDeduccion = new CuentaAhorroAutomaticoDTO();
+            _cuentaDeduccion.setNumeroCuenta(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion());
+            _comandoMySQL.Parameters.AddWithValue("@idCuentaDeduccion", CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaDeduccion));
             _comandoMySQL.Parameters.AddWithValue("@proposito", pCuentaAhorroAutomatico.getProposito());
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
 
         }
 
-        public static void modificarCuentaAhorroAutomaticoBase(CuentaAhorroAutomatico pCuentaAhorroAutomatico)
+        public static void modificarCuentaAhorroAutomaticoBase(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
-            CuentaAhorroDAO.modificarCuentaAhorro(CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico.getNumeroCuenta()), pCuentaAhorroAutomatico);
+            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico);
             String _query = "UPDATE CUENTA_AHORRO_AUTOMATICO SET TIEMPOAHORRO = @tiempoAhorro, MONTOFINAL = @montoFinal, MONTODEDUCCION = @montoDeduccion, FECHAFINALIZACION = @fechaFinalizacion, IDCUENTADEDUCCION = @idCuentaDeduccion, PROPOSITO = @proposito, WHERE IDCUENTAAHORRO = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
@@ -47,49 +49,51 @@ namespace ModuloCuentas.DAO
             _comandoMySQL.Parameters.AddWithValue("@montoFinal", pCuentaAhorroAutomatico.getMontoAhorro());
             _comandoMySQL.Parameters.AddWithValue("@montoDeduccion", pCuentaAhorroAutomatico.getMontoDeduccion());
             _comandoMySQL.Parameters.AddWithValue("@fechaFinalizacion", pCuentaAhorroAutomatico.getFechaFinalizacion());
-            _comandoMySQL.Parameters.AddWithValue("@idCuentaDeduccion", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion()));
+            CuentaAhorroAutomaticoDTO _cuentaDeduccion = new CuentaAhorroAutomaticoDTO();
+            _cuentaDeduccion.setNumeroCuenta(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion());
+            _comandoMySQL.Parameters.AddWithValue("@idCuentaDeduccion", CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaDeduccion));
             _comandoMySQL.Parameters.AddWithValue("@proposito", pCuentaAhorroAutomatico.getProposito());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico.getNumeroCuenta()));
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             PeriocidadAhorroDAO.modificarPeriodicidadAhorro(PeriocidadAhorroDAO.obtenerIdPeriodo(pCuentaAhorroAutomatico.getNumeroCuenta()), 
                 pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro(), pCuentaAhorroAutomatico.getTipoPeriodo());
         }
 
-        public static void modificarUltimaFechaCobro(string pNumeroCuenta, DateTime pUltimaFechaCobro)
+        public static void modificarUltimaFechaCobro(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, DateTime pUltimaFechaCobro)
         {
             String _query = "UPDATE CUENTA_AHORRO_AUTOMATICO SET ULTIMAFECHACOBRO = @ultimaFechaCobro WHERE IDCUENTAAHORRO = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
             _comandoMySQL.Parameters.AddWithValue("@ultimaFechaCobro", pUltimaFechaCobro);
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
         }
 
-        public static void eliminarCuentaAhorroAutomaticoBase(string pNumeroCuenta)
+        public static void eliminarCuentaAhorroAutomaticoBase(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
-            int _idPeriodo = PeriocidadAhorroDAO.obtenerIdPeriodo(pNumeroCuenta);
+            int _idPeriodo = PeriocidadAhorroDAO.obtenerIdPeriodo(pCuentaAhorroAutomatico.getNumeroCuenta());
             String _query = "DELETE FROM CUENTA_AHORRO_AUTOMATICO WHERE idCuentaAhorro = @idCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
+            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroAutomatico));
             _comandoMySQL.ExecuteNonQuery();
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             PeriocidadAhorroDAO.eliminarPeriodicidadAhorro(_idPeriodo);
-            CuentaAhorroDAO.eliminarCuentaAhorro(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta));
+            CuentaAhorroDAO.eliminarCuentaAhorro(pCuentaAhorroAutomatico);
         }
 
-        public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoNumeroCuenta(string pNumeroCuenta)
+        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoNumeroCuenta(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
-            CuentaAhorroAutomatico _cuentaSalida = null;
+            CuentaAhorroAutomaticoDTO _cuentaSalida = null;
             String _query = "SELECT * FROM CUENTA_AHORRO_AUTOMATICO_V WHERE NUMCUENTA = @numCuenta;";
             MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
             MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
             _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
+            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorroAutomatico.getNumeroCuenta());
             MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
             if(_reader.Read())
             {
@@ -109,64 +113,64 @@ namespace ModuloCuentas.DAO
                 int _tipoPeriodo = Convert.ToInt32(_reader["idTipoPeriodo"]);
                 int _idCliente = Convert.ToInt32(_reader["idCliente"]);
                 string _numeroCuentaDeduccion = CuentaAhorroDAO.obtenerNumeroCuenta(Convert.ToInt32(_reader["idCuentaDeduccion"]));
-                _cuentaSalida = new CuentaAhorroAutomatico(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _fechaInicio, _tiempoAhorro,
-                    _fechaFinalizacion, _ultimaFechaCobro, _montoAhorro, _montoDeduccion, _proposito, _magnitudPeriodoAhorro, _tipoPeriodo, _numeroCuentaDeduccion);
                 ClientDTO _cliente = new ClientDTO(_idCliente, "");
-                _cuentaSalida.setCliente(_cliente);
+                _cuentaSalida = new CuentaAhorroAutomaticoDTO(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _cliente,_fechaInicio, _tiempoAhorro,
+                    _fechaFinalizacion, _ultimaFechaCobro, _montoAhorro, _montoDeduccion, _proposito, _magnitudPeriodoAhorro, _tipoPeriodo, _numeroCuentaDeduccion);
             }
             MySQLManager.cerrarConexion(_conexionMySQLBase);
             return _cuentaSalida;
         }
 
-        public static List<CuentaAhorroAutomatico> obtenerCuentaAhorroAutomaticoNombre(string pNombre)
+        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, int pNumeroPagina, int pCantidadElementos)
         {
             //SE OBTIENE LA CUENTA DADO EL NOMBRE;
             return null;
         }
 
-        public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoCedula(string pCedula)
+        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             //SE OBTIENE LA CUENTA DADA LA CEDULA;
             return null;
         }
 
-        public static CuentaAhorroAutomatico obtenerCuentaAhorroAutomaticoCIF(string pCIF)
+        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
             //SE OBTIENE LA CUENTA DADO EL CIF;
             return null;
         }
 
-        public static void quitarDinero(string pNumeroCuentaOrigen, decimal pMonto, string pNumeroCuentaDestino, int pTipoCuenta)
+        public static void quitarDinero(CuentaAhorroDTO pCuentaOrigen, decimal pMonto, CuentaAhorroDTO pCuentaDestino, int pTipoCuenta)
         {
-            CuentaAhorroAutomatico _cuentaAhorroOrigen = obtenerCuentaAhorroAutomaticoNumeroCuenta(pNumeroCuentaOrigen);
-            decimal _montoDeduccion = Transformaciones.convertirDinero(pMonto, _cuentaAhorroOrigen.getTipoMoneda(), CuentaAhorroDAO.obtenerCuentaAhorroMoneda(pNumeroCuentaDestino));
+            CuentaAhorroAutomaticoDTO _cuentaOrigenEntrada = new CuentaAhorroAutomaticoDTO();
+            _cuentaOrigenEntrada.setNumeroCuenta(pCuentaOrigen.getNumeroCuenta());
+            CuentaAhorroAutomaticoDTO _cuentaAhorroOrigen = obtenerCuentaAhorroAutomaticoNumeroCuenta(_cuentaOrigenEntrada);
+            decimal _montoDeduccion = Transformaciones.convertirDinero(pMonto, _cuentaAhorroOrigen.getTipoMoneda(), CuentaAhorroDAO.obtenerCuentaAhorroMoneda(pCuentaDestino));
             _cuentaAhorroOrigen.setSaldo(_cuentaAhorroOrigen.getSaldo() - _montoDeduccion);
-            CuentaAhorroDAO.modificarSaldo(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuentaOrigen), _cuentaAhorroOrigen.getSaldo());
-            agregarDinero(pNumeroCuentaDestino, pMonto, pTipoCuenta);
+            CuentaAhorroDAO.modificarSaldo(_cuentaAhorroOrigen, _cuentaAhorroOrigen.getSaldo());
+            agregarDinero(pCuentaDestino, pMonto, pTipoCuenta);
         }
 
-        public static void agregarDinero(string pNumeroCuenta, decimal pMonto, int pTipoCuenta)
+        public static void agregarDinero(CuentaAhorroDTO pCuentaAhorro, decimal pMonto, int pTipoCuenta)
         {
             if (pTipoCuenta == Constantes.AHORROAUTOMATICO)
             {
-                agregarDineroAux(pNumeroCuenta, pMonto);
+                CuentaAhorroAutomaticoDTO _cuentaAhorroAutomatico = new CuentaAhorroAutomaticoDTO();
+                _cuentaAhorroAutomatico.setNumeroCuenta(pCuentaAhorro.getNumeroCuenta());
+                agregarDineroAux(_cuentaAhorroAutomatico, pMonto);
             }
             else if (pTipoCuenta == Constantes.AHORROVISTA)
             {
-                CuentaAhorroVistaDAO.agregarDinero(pNumeroCuenta, pMonto, Constantes.AHORROVISTA);
+                CuentaAhorroVistaDTO _cuentaAhorroVista = new CuentaAhorroVistaDTO();
+                _cuentaAhorroVista.setNumeroCuenta(pCuentaAhorro.getNumeroCuenta());
+                CuentaAhorroVistaDAO.agregarDinero(_cuentaAhorroVista, pMonto, Constantes.AHORROVISTA);
             }
         }
 
-        private static void agregarDineroAux(string pNumeroCuenta, decimal pMonto)
+        private static void agregarDineroAux(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, decimal pMonto)
         {
-            CuentaAhorroAutomatico _cuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pNumeroCuenta);
+            CuentaAhorroAutomaticoDTO _cuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
             _cuentaAhorroAutomatico.setSaldo(_cuentaAhorroAutomatico.getSaldo() + pMonto);
-            CuentaAhorroDAO.modificarSaldo(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta), _cuentaAhorroAutomatico.getSaldo());
-        }
-
-        public static void modificarEstado(string pNumeroCuenta, bool pEstado)
-        {
-            CuentaAhorroDAO.modificarEstadoCuentaAhorro(CuentaAhorroDAO.obtenerCuentaAhorroID(pNumeroCuenta), pEstado);
+            CuentaAhorroDAO.modificarSaldo(_cuentaAhorroAutomatico, _cuentaAhorroAutomatico.getSaldo());
         }
     }
 }
