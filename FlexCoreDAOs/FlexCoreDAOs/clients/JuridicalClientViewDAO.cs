@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class JuridicalClientViewDAO:GeneralDAO<JuridicalClientVDTO>
+    public class JuridicalClientViewDAO:GeneralDAO<JuridicalClientVDTO>
     {
 
         private static readonly string CLIENT_ID = "idCliente";

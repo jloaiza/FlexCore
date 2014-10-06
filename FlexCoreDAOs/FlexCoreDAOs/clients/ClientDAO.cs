@@ -6,10 +6,10 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class ClientDAO:GeneralDAO<ClientDTO>
+    public class ClientDAO:GeneralDAO<ClientDTO>
     {
 
-        private static readonly string PERSON_ID = "idClienta";
+        private static readonly string PERSON_ID = "idCliente";
         private static readonly string CIF = "CIF";
         private static readonly string ACTIVE = "activo";
 

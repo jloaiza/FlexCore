@@ -48,9 +48,9 @@ namespace FlexCoreDAOs.clients
             return pBuffer;
         }
 
-        protected string boolToSql(bool pBool)
+        protected int boolToSql(bool pBool)
         {
-            return pBool ? "TRUE" : "FALSE";
+            return pBool ? 1 : 0;
         }
 
         protected bool sqlToBool(string pSQL)
