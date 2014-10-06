@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class PhysicalClientViewDAO:GeneralDAO<PhysicalClientVDTO>
+    public class PhysicalClientViewDAO:GeneralDAO<PhysicalClientVDTO>
     {
         private static readonly string CLIENT_ID = "idCliente";
         private static readonly string CIF = "CIF";

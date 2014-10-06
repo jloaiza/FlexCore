@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class PhysicalPersonDAO:GeneralDAO<PhysicalPersonDTO>
+    public class PhysicalPersonDAO:GeneralDAO<PhysicalPersonDTO>
     {
         private static readonly string PERSON_ID = "idPersona";
         private static readonly string NAME = "nombre";
