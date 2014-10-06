@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlexCoreDTOs.clients
 {
-    class PhysicalClientVDTO
+    public class PhysicalClientVDTO
     {
         private PhysicalPersonDTO _person;
         private ClientDTO _client;
