@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class JuridicalClientViewDAO:GeneralDAO<ClientViewDTO>
+    class JuridicalClientViewDAO:GeneralDAO<JuridicalClientVDTO>
     {
 
         private static readonly string CLIENT_ID = "idCliente";
@@ -16,7 +16,7 @@ namespace FlexCoreDAOs.clients
         private static readonly string ID_CARD = "cedula";
         private static readonly string TYPE = "tipo";
 
-        protected override string getFindCondition(ClientViewDTO pClient)
+        protected override string getFindCondition(JuridicalClientVDTO pClient)
         {
             string condition = "";
             if (pClient.getClientID() != DTOConstants.DEFAULT_INT_ID)
@@ -34,7 +34,7 @@ namespace FlexCoreDAOs.clients
             return condition;
         }
 
-        protected override void setFindParameters(MySqlCommand pCommand, ClientViewDTO pClient)
+        protected override void setFindParameters(MySqlCommand pCommand, JuridicalClientVDTO pClient)
         {
             if (pClient.getClientID() != DTOConstants.DEFAULT_INT_ID)
             {
@@ -51,7 +51,7 @@ namespace FlexCoreDAOs.clients
             }
         }
 
-        public override List<ClientViewDTO> search(ClientViewDTO pClient, MySqlCommand pCommand)
+        public override List<JuridicalClientVDTO> search(JuridicalClientVDTO pClient, MySqlCommand pCommand)
         {
             string selection = "*";
             string from = "CLIENTE_JURIDICO_V";
@@ -62,11 +62,11 @@ namespace FlexCoreDAOs.clients
             setFindParameters(pCommand, pClient);
 
             MySqlDataReader reader = pCommand.ExecuteReader();
-            List<ClientViewDTO> list = new List<ClientViewDTO>();
+            List<JuridicalClientVDTO> list = new List<JuridicalClientVDTO>();
 
             while (reader.Read())
             {
-                ClientViewDTO client = new ClientViewDTO();
+                JuridicalClientVDTO client = new JuridicalClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
                 client.setActive(sqlToBool(reader[ACTIVE].ToString()));
@@ -78,15 +78,15 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<ClientViewDTO> getAll(MySqlCommand pCommand)
+        public override List<JuridicalClientVDTO> getAll(MySqlCommand pCommand)
         {
             string query = "SELECT * FROM CLIENTE_JURIDICO_V";
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
-            List<ClientViewDTO> list = new List<ClientViewDTO>();
+            List<JuridicalClientVDTO> list = new List<JuridicalClientVDTO>();
             while (reader.Read())
             {
-                ClientViewDTO client = new ClientViewDTO();
+                JuridicalClientVDTO client = new JuridicalClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
                 client.setActive(sqlToBool(reader[ACTIVE].ToString()));
