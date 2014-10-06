@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
@@ -26,17 +27,17 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.HistoricoTransaccionalDTO> getDescripcion()
+        public List<HistoricoTransaccionalDTO> getDescripcion()
         {
             String query = "SELECT * FROM HISTORICO_TRANSACCIONAL";
-            List<DTO.HistoricoTransaccionalDTO> transacciones_vuelo = new List<DTO.HistoricoTransaccionalDTO>();
+            List<HistoricoTransaccionalDTO> transacciones_vuelo = new List<HistoricoTransaccionalDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.HistoricoTransaccionalDTO tmp = new DTO.HistoricoTransaccionalDTO((int)reader["idTransaccion"],
+                HistoricoTransaccionalDTO tmp = new HistoricoTransaccionalDTO((int)reader["idTransaccion"],
                     reader["descripcion"].ToString(), DateTime.Parse(reader["fechaHora"].ToString()),
                     (int)reader["idCuenta"], (int)reader["tipoTransaccion"]);
                 transacciones_vuelo.Add(tmp);
@@ -45,10 +46,10 @@ namespace FlexCoreDAOs.administration
             return transacciones_vuelo;
         }
 
-        public List<DTO.HistoricoTransaccionalDTO> getDescripcion(int idTransaccion)
+        public List<HistoricoTransaccionalDTO> getDescripcion(int idTransaccion)
         {
             String query = "SELECT * FROM HISTORICO_TRANSACCIONAL WHERE idTransaccion = @idTransaccion;";
-            List<DTO.HistoricoTransaccionalDTO> transacciones_vuelo = new List<DTO.HistoricoTransaccionalDTO>();
+            List<HistoricoTransaccionalDTO> transacciones_vuelo = new List<HistoricoTransaccionalDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -56,7 +57,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.HistoricoTransaccionalDTO tmp = new DTO.HistoricoTransaccionalDTO((int)reader["idTransaccion"],
+                HistoricoTransaccionalDTO tmp = new HistoricoTransaccionalDTO((int)reader["idTransaccion"],
                     reader["descripcion"].ToString(), DateTime.Parse(reader["fechaHora"].ToString()),
                     (int)reader["idCuenta"], (int)reader["tipoTransaccion"]);
                 transacciones_vuelo.Add(tmp);
@@ -65,10 +66,10 @@ namespace FlexCoreDAOs.administration
             return transacciones_vuelo;
         }
 
-        public List<DTO.HistoricoTransaccionalDTO> getDescripcion(String descripcion)
+        public List<HistoricoTransaccionalDTO> getDescripcion(String descripcion)
         {
             String query = "SELECT * FROM HISTORICO_TRANSACCIONAL WHERE descripcion = @descripcion;";
-            List<DTO.HistoricoTransaccionalDTO> transacciones_vuelo = new List<DTO.HistoricoTransaccionalDTO>();
+            List<HistoricoTransaccionalDTO> transacciones_vuelo = new List<HistoricoTransaccionalDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -76,7 +77,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.HistoricoTransaccionalDTO tmp = new DTO.HistoricoTransaccionalDTO((int)reader["idTransaccion"],
+                HistoricoTransaccionalDTO tmp = new HistoricoTransaccionalDTO((int)reader["idTransaccion"],
                     reader["descripcion"].ToString(), DateTime.Parse(reader["fechaHora"].ToString()),
                     (int)reader["idCuenta"], (int)reader["tipoTransaccion"]);
                 transacciones_vuelo.Add(tmp);

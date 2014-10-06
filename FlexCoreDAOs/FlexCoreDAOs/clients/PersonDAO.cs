@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using FlexCoreDTOs.clients;
 using MySql.Data.MySqlClient;
+using ConexionMySQLServer.ConexionMySql;
 
 namespace FlexCoreDAOs.clients
 {
@@ -168,7 +168,15 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<PersonDTO> getAllJuridical(MySqlCommand pCommand)
+        public List<PersonDTO> getAllJuridical()
+        {
+            MySqlCommand command = getCommand();
+            List<PersonDTO> result = getAllJuridical(command);
+            MySQLManager.cerrarConexion(command.Connection);
+            return result;
+        }
+
+        public List<PersonDTO> getAllJuridical(MySqlCommand pCommand)
         {
             string query = "SELECT * FROM PERSONA_JURIDICA_V";
             pCommand.CommandText = query;

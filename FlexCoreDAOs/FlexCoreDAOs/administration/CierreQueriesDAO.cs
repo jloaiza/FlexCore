@@ -25,17 +25,17 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.CierreDTO> getCierre()
+        public List<CierreDTO> getCierre()
         {
             String query = "SELECT * FROM CIERRE";
-            List<DTO.CierreDTO> cierre = new List<DTO.CierreDTO>();
+            List<CierreDTO> cierre = new List<CierreDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.CierreDTO tmp = new DTO.CierreDTO((int)reader["idCierre"],
+                CierreDTO tmp = new CierreDTO((int)reader["idCierre"],
                     DateTime.Parse(reader["fechaHora"].ToString()), (bool)reader["estado"]);
                 cierre.Add(tmp);
             }
@@ -43,10 +43,10 @@ namespace FlexCoreDAOs.administration
             return cierre;
         }
 
-        public List<DTO.CierreDTO> getCierre(int idCierre)
+        public List<CierreDTO> getCierre(int idCierre)
         {
             String query = "SELECT * FROM CIERRE WHERE idCierre = @idCierre";
-            List<DTO.CierreDTO> cierre = new List<DTO.CierreDTO>();
+            List<CierreDTO> cierre = new List<CierreDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -54,7 +54,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.CierreDTO tmp = new DTO.CierreDTO((int)reader["idCierre"],
+                CierreDTO tmp = new CierreDTO((int)reader["idCierre"],
                     DateTime.Parse(reader["fechaHora"].ToString()), (bool)reader["estado"]);
                 cierre.Add(tmp);
             }

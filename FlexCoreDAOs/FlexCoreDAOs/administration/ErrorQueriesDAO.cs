@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
@@ -27,17 +28,17 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.ErrorDTO> getError()
+        public List<ErrorDTO> getError()
         {
             String query = "SELECT * FROM ERROR";
-            List<DTO.ErrorDTO> error = new List<DTO.ErrorDTO>();
+            List<ErrorDTO> error = new List<ErrorDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.ErrorDTO tmp = new DTO.ErrorDTO((int)reader["idError"],
+                ErrorDTO tmp = new ErrorDTO((int)reader["idError"],
                     reader["metodo"].ToString(),  (int)reader["linea"], (DateTime)reader["fechaHora"], 
                     reader["idCierre"].ToString());
                 error.Add(tmp);
@@ -46,10 +47,10 @@ namespace FlexCoreDAOs.administration
             return error;
         }
 
-        public List<DTO.ErrorDTO> getError(int idError)
+        public List<ErrorDTO> getError(int idError)
         {
             String query = "SELECT * FROM ERROR WHERE idError = @idError";
-            List<DTO.ErrorDTO> error = new List<DTO.ErrorDTO>();
+            List<ErrorDTO> error = new List<ErrorDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -57,7 +58,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.ErrorDTO tmp = new DTO.ErrorDTO((int)reader["idError"],
+                ErrorDTO tmp = new ErrorDTO((int)reader["idError"],
                     reader["metodo"].ToString(), (int)reader["linea"], (DateTime)reader["fechaHora"],
                     reader["idCierre"].ToString());
                 error.Add(tmp);

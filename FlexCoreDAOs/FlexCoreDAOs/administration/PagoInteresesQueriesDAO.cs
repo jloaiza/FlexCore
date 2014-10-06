@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
@@ -25,17 +26,17 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.PagoInteresesDTO> getPagoIntereses()
+        public List<PagoInteresesDTO> getPagoIntereses()
         {
             String query = "SELECT * FROM PAGO_INTERESES";
-            List<DTO.PagoInteresesDTO> pagoIntereses = new List<DTO.PagoInteresesDTO>();
+            List<PagoInteresesDTO> pagoIntereses = new List<PagoInteresesDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.PagoInteresesDTO tmp = new DTO.PagoInteresesDTO((int)reader["idPago"],
+                PagoInteresesDTO tmp = new PagoInteresesDTO((int)reader["idPago"],
                     (Decimal)reader["monto"], (int)reader["idCuenta"], (int)reader["idCierre"]);
                 pagoIntereses.Add(tmp);
             }
@@ -43,10 +44,10 @@ namespace FlexCoreDAOs.administration
             return pagoIntereses;
         }
 
-        public List<DTO.PagoInteresesDTO> getPagoIntereses(int idPago)
+        public List<PagoInteresesDTO> getPagoIntereses(int idPago)
         {
             String query = "SELECT * FROM PAGO_INTERESES WHERE idPago = @idPago";
-            List<DTO.PagoInteresesDTO> pagoIntereses = new List<DTO.PagoInteresesDTO>();
+            List<PagoInteresesDTO> pagoIntereses = new List<PagoInteresesDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -54,7 +55,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.PagoInteresesDTO tmp = new DTO.PagoInteresesDTO((int)reader["idPago"],
+                PagoInteresesDTO tmp = new PagoInteresesDTO((int)reader["idPago"],
                     (Decimal)reader["monto"], (int)reader["idCuenta"], (int)reader["idCierre"]);
                 pagoIntereses.Add(tmp);
             }

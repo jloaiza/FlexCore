@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
@@ -25,17 +26,17 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.DispositivoCuentaDTO> getDispositivoCuenta()
+        public List<DispositivoCuentaDTO> getDispositivoCuenta()
         {
             String query = "SELECT * FROM DISPOSITIVO_CUENTA";
-            List<DTO.DispositivoCuentaDTO> dispositivoCuenta = new List<DTO.DispositivoCuentaDTO>();
+            List<DispositivoCuentaDTO> dispositivoCuenta = new List<DispositivoCuentaDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.DispositivoCuentaDTO tmp = new DTO.DispositivoCuentaDTO((int)reader["idDispositivoCuenta"],
+                DispositivoCuentaDTO tmp = new DispositivoCuentaDTO((int)reader["idDispositivoCuenta"],
                     reader["idDispositivo"].ToString(), (bool)reader["activo"], (int)reader["idCuenta"]);
                 dispositivoCuenta.Add(tmp);
             }
@@ -43,10 +44,10 @@ namespace FlexCoreDAOs.administration
             return dispositivoCuenta;
         }
 
-        public List<DTO.DispositivoCuentaDTO> getDispositivoCuenta(int idDispositivoCuenta)
+        public List<DispositivoCuentaDTO> getDispositivoCuenta(int idDispositivoCuenta)
         {
             String query = "SELECT * FROM DISPOSITIVO_CUENTA WHERE idDispositivoCuenta = @idDispositivoCuenta";
-            List<DTO.DispositivoCuentaDTO> dispositivoCuenta = new List<DTO.DispositivoCuentaDTO>();
+            List<DispositivoCuentaDTO> dispositivoCuenta = new List<DispositivoCuentaDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -54,7 +55,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.DispositivoCuentaDTO tmp = new DTO.DispositivoCuentaDTO((int)reader["idDispositivoCuenta"],
+                DispositivoCuentaDTO tmp = new DispositivoCuentaDTO((int)reader["idDispositivoCuenta"],
                     reader["idDispositivo"].ToString(), (bool)reader["activo"], (int)reader["idCuenta"]);
                 dispositivoCuenta.Add(tmp);
             }

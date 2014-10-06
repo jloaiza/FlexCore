@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
@@ -27,17 +28,17 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.ConfiguracionesDTO> getConfiguracion()
+        public List<ConfiguracionesDTO> getConfiguracion()
         {
             String query = "SELECT * FROM CONFIGURACIONES";
-            List<DTO.ConfiguracionesDTO> configuraciones = new List<DTO.ConfiguracionesDTO>();
+            List<ConfiguracionesDTO> configuraciones = new List<ConfiguracionesDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.ConfiguracionesDTO tmp = new DTO.ConfiguracionesDTO((Decimal)reader["compraDolar"],
+                ConfiguracionesDTO tmp = new ConfiguracionesDTO((Decimal)reader["compraDolar"],
                     (Decimal)reader["ventaDolar"], DateTime.Parse(reader["fechaHora"].ToString()),
                     (Decimal)reader["tasaInteresAhorro"]);
                 configuraciones.Add(tmp);
@@ -46,12 +47,12 @@ namespace FlexCoreDAOs.administration
             return configuraciones;
         }
 
-        public List<DTO.ConfiguracionesDTO> getConfiguracion(Decimal compraDolar, Decimal ventaDolar, 
+        public List<ConfiguracionesDTO> getConfiguracion(Decimal compraDolar, Decimal ventaDolar, 
             DateTime fechaHoraSistema, Decimal tasaInteresAhorro)
         {
             String query = "SELECT * FROM CONFIGURACIONES WHERE compraDolar = @compraDolar AND ventaDolar = @ventaDolar AND " +
                 "fechaHoraSistema = @fechaHoraSistema AND tasaInteresAhorro = @tasaInteresAhorro";
-            List<DTO.ConfiguracionesDTO> cierre = new List<DTO.ConfiguracionesDTO>();
+            List<ConfiguracionesDTO> cierre = new List<ConfiguracionesDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -62,7 +63,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.ConfiguracionesDTO tmp = new DTO.ConfiguracionesDTO((Decimal)reader["compraDolar"],
+                ConfiguracionesDTO tmp = new ConfiguracionesDTO((Decimal)reader["compraDolar"],
                     (Decimal)reader["ventaDolar"], DateTime.Parse(reader["fechaHoraSistema"].ToString()),
                     (Decimal)reader["tasaInteresAhorro"]);
                 cierre.Add(tmp);

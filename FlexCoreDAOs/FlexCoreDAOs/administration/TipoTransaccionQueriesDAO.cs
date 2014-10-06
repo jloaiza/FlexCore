@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
@@ -23,27 +24,27 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public List<DTO.TipoTransaccionDTO> getDescripcion()
+        public List<TipoTransaccionDTO> getDescripcion()
         {
             String query = "SELECT * FROM TIPO_TRANSACCION";
-            List<DTO.TipoTransaccionDTO> tipo_transaccion = new List<DTO.TipoTransaccionDTO>();
+            List<TipoTransaccionDTO> tipo_transaccion = new List<TipoTransaccionDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.TipoTransaccionDTO tmp = new DTO.TipoTransaccionDTO((int)reader["idTipo"], reader["descripcion"].ToString());
+                TipoTransaccionDTO tmp = new TipoTransaccionDTO((int)reader["idTipo"], reader["descripcion"].ToString());
                 tipo_transaccion.Add(tmp);
             }
             MySQLManager.cerrarConexion(connD);
             return tipo_transaccion;
         }
 
-        public List<DTO.TipoTransaccionDTO> getDescripcion(int idTipo)
+        public List<TipoTransaccionDTO> getDescripcion(int idTipo)
         {
             String query = "SELECT * FROM TIPO_TRANSACCION WHERE idTipo = @idTipo";
-            List<DTO.TipoTransaccionDTO> tipo_transaccion = new List<DTO.TipoTransaccionDTO>();
+            List<TipoTransaccionDTO> tipo_transaccion = new List<TipoTransaccionDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -51,17 +52,17 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.TipoTransaccionDTO tmp = new DTO.TipoTransaccionDTO((int)reader["idTipo"], reader["descripcion"].ToString());
+                TipoTransaccionDTO tmp = new TipoTransaccionDTO((int)reader["idTipo"], reader["descripcion"].ToString());
                 tipo_transaccion.Add(tmp);
             }
             MySQLManager.cerrarConexion(connD);
             return tipo_transaccion;
         }
 
-        public List<DTO.TipoTransaccionDTO> getDescripcion(String descripcion)
+        public List<TipoTransaccionDTO> getDescripcion(String descripcion)
         {
             String query = "SELECT * FROM TIPO_TRANSACCION WHERE descripcion = @descripcion";
-            List<DTO.TipoTransaccionDTO> tipo_transaccion = new List<DTO.TipoTransaccionDTO>();
+            List<TipoTransaccionDTO> tipo_transaccion = new List<TipoTransaccionDTO>();
             MySqlConnection connD = MySQLManager.nuevaConexion();
             MySqlCommand command = connD.CreateCommand();
             command.CommandText = query;
@@ -69,7 +70,7 @@ namespace FlexCoreDAOs.administration
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                DTO.TipoTransaccionDTO tmp = new DTO.TipoTransaccionDTO((int)reader["idTipo"], reader["descripcion"].ToString());
+                TipoTransaccionDTO tmp = new TipoTransaccionDTO((int)reader["idTipo"], reader["descripcion"].ToString());
                 tipo_transaccion.Add(tmp);
             }
             MySQLManager.cerrarConexion(connD);
