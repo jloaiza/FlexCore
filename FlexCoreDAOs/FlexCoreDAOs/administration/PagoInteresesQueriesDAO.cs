@@ -10,7 +10,7 @@ using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
-    class PagoInteresesQueriesDAO
+    public class PagoInteresesQueriesDAO
     {
         public void insertPagoIntereses(Decimal monto, int idCuenta, int idCierre)
         {
