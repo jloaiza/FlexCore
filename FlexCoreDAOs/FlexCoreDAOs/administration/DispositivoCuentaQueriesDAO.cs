@@ -10,7 +10,7 @@ using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
-    class DispositivoCuentaQueriesDAO
+    public class DispositivoCuentaQueriesDAO
     {
         public void insertDispositivoCuenta(String idDispositivo, bool activo, int idCuenta)
         {

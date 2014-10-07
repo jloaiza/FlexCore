@@ -10,7 +10,7 @@ using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
-    class ConfiguracionesQueriesDAO
+    public class ConfiguracionesQueriesDAO
     {
         public void insertCierre(Decimal compraDolar, Decimal ventaDolar, DateTime fechaHoraSistema, 
             Decimal tasaInteresAhorro)

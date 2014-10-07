@@ -10,7 +10,7 @@ using FlexCoreDTOs.administration;
 
 namespace FlexCoreDAOs.administration
 {
-    class ErrorQueriesDAO
+    public class ErrorQueriesDAO
     {
         public void insertError(String metodo, int linea, DateTime fechaHora, 
             String descripcion)
