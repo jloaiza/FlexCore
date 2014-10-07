@@ -71,7 +71,7 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonPhoneDTO> search(PersonPhoneDTO pPhone, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonPhoneDTO> search(PersonPhoneDTO pPhone, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "TELEFONO_PERSONA";

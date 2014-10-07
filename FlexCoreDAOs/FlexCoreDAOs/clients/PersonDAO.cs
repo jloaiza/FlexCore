@@ -123,7 +123,7 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "PERSONA";
@@ -148,7 +148,7 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "PERSONA_JURIDICA_V";

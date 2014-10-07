@@ -70,7 +70,7 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonPhotoDTO> search(PersonPhotoDTO pPhoto, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonPhotoDTO> search(PersonPhotoDTO pPhoto, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "FOTO_PERSONA";
