@@ -26,6 +26,7 @@ namespace ModuloCuentas.Managers
                 pCuentaAhorroAutomatico.setEstado(false);
                 pCuentaAhorroAutomatico.setFechaFinalizacion(_fechaFinalizacion.Day, _fechaFinalizacion.Month, _fechaFinalizacion.Year, _fechaFinalizacion.Hour, _fechaFinalizacion.Minute, _fechaFinalizacion.Second);
                 pCuentaAhorroAutomatico.setMontoAhorro(_montoAhorro);
+                pCuentaAhorroAutomatico.setUltimaFechaCobro(pCuentaAhorroAutomatico.getFechaInicio().Day, pCuentaAhorroAutomatico.getFechaInicio().Month, pCuentaAhorroAutomatico.getFechaInicio().Year, pCuentaAhorroAutomatico.getFechaInicio().Hour, pCuentaAhorroAutomatico.getFechaInicio().Minute, pCuentaAhorroAutomatico.getFechaInicio().Second);
                 CuentaAhorroAutomaticoDAO.agregarCuentaAhorroAutomaticoBase(pCuentaAhorroAutomatico);
                 Console.WriteLine(iniciarAhorro(pCuentaAhorroAutomatico));
                 return "Transacción completada con éxito";
@@ -370,7 +371,7 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroAutomaticoDAO.quitarDinero(pCuentaAhorroAutomaticoOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA);
+                    CuentaAhorroAutomaticoDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA);
                     return "Transacción completada con éxito";
                 }
             }
