@@ -8,11 +8,34 @@ namespace FlexCoreDAOs.clients
 {
     public class PersonDAO:GeneralDAO<PersonDTO>
     {
+        public static readonly string JURIDICAL_PERSON = "Juridica";
+        public static readonly string PHYSICAL_PERSON = "Fisica";
 
-        private static readonly string PERSON_ID = "idPersona";
-        private static readonly string NAME = "nombre";
-        private static readonly string ID_CARD = "cedula";
-        private static readonly string TYPE = "tipo";
+        public static readonly string PERSON_ID = "idPersona";
+        public static readonly string NAME = "nombre";
+        public static readonly string ID_CARD = "cedula";
+        public static readonly string TYPE = "tipo";
+
+        private static object _syncLock = new object();
+        private static PersonDAO _instance = null;
+
+        public static PersonDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new PersonDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+
+        private PersonDAO() { }
 
         protected override string getFindCondition(PersonDTO pPerson)
         {
@@ -100,12 +123,12 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand)
+        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "PERSONA";
             string condition = getFindCondition(pPerson);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pPerson);
@@ -125,12 +148,12 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand)
+        public List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "PERSONA_JURIDICA_V";
             string condition = getFindCondition(pPerson);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pPerson);
@@ -150,9 +173,9 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<PersonDTO> getAll(MySqlCommand pCommand)
+        public override List<PersonDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            string query = "SELECT * FROM PERSONA";
+            string query = getSelectQuery("*", "PERSONA", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
             List<PersonDTO> list = new List<PersonDTO>();
@@ -168,17 +191,17 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public List<PersonDTO> getAllJuridical()
+        public List<PersonDTO> getAllJuridical(int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             MySqlCommand command = getCommand();
-            List<PersonDTO> result = getAllJuridical(command);
+            List<PersonDTO> result = getAllJuridical(command, pPageNumber, pShowCount, pOrderBy);
             MySQLManager.cerrarConexion(command.Connection);
             return result;
         }
 
-        public List<PersonDTO> getAllJuridical(MySqlCommand pCommand)
+        public List<PersonDTO> getAllJuridical(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            string query = "SELECT * FROM PERSONA_JURIDICA_V";
+            string query = getSelectQuery("*", "PERSONA_JURIDICA_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
             List<PersonDTO> list = new List<PersonDTO>();

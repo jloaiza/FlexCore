@@ -9,8 +9,28 @@ namespace FlexCoreDAOs.clients
     public class PersonPhotoDAO:GeneralDAO<PersonPhotoDTO>
     {
 
-        private static readonly string PHOTO = "foto";
-        private static readonly string PERSON_ID = "idPersona";
+        public static readonly string PHOTO = "foto";
+        public static readonly string PERSON_ID = "idPersona";
+
+        private static object _syncLock = new object();
+        private static PersonPhotoDAO _instance;
+
+        public static PersonPhotoDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new PersonPhotoDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private PersonPhotoDAO() { }
 
         public override void insert(PersonPhotoDTO pPhoto, MySqlCommand pCommand)
         {
@@ -50,12 +70,12 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonPhotoDTO> search(PersonPhotoDTO pPhoto, MySqlCommand pCommand)
+        public override List<PersonPhotoDTO> search(PersonPhotoDTO pPhoto, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "FOTO_PERSONA";
             string condition = String.Format("{0}= @{0}", PERSON_ID);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             pCommand.Parameters.AddWithValue("@"+PERSON_ID, pPhoto.getPersonID());

@@ -6,18 +6,37 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    public class PhysicalClientViewDAO:GeneralDAO<PhysicalClientVDTO>
+    public class JuridicalClientVDAO:GeneralDAO<JuridicalClientVDTO>
     {
-        private static readonly string CLIENT_ID = "idCliente";
-        private static readonly string CIF = "CIF";
-        private static readonly string ACTIVE = "activo";
-        private static readonly string NAME = "nombre";
-        private static readonly string ID_CARD = "cedula";
-        private static readonly string TYPE = "tipo";
-        private static readonly string FIRST_LSTNM = "primerApellido";
-        private static readonly string SECOND_LSTNM = "segundoApellido";
 
-        protected override string getFindCondition(PhysicalClientVDTO pClient)
+        public static readonly string CLIENT_ID = "idCliente";
+        public static readonly string CIF = "CIF";
+        public static readonly string ACTIVE = "activo";
+        public static readonly string NAME = "nombre";
+        public static readonly string ID_CARD = "cedula";
+        public static readonly string TYPE = "tipo";
+
+        private static object _syncLock = new object();
+        private static JuridicalClientVDAO _instance;
+
+        public static JuridicalClientVDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new JuridicalClientVDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private JuridicalClientVDAO() { }
+
+        protected override string getFindCondition(JuridicalClientVDTO pClient)
         {
             string condition = "";
             if (pClient.getClientID() != DTOConstants.DEFAULT_INT_ID)
@@ -35,7 +54,7 @@ namespace FlexCoreDAOs.clients
             return condition;
         }
 
-        protected override void setFindParameters(MySqlCommand pCommand, PhysicalClientVDTO pClient)
+        protected override void setFindParameters(MySqlCommand pCommand, JuridicalClientVDTO pClient)
         {
             if (pClient.getClientID() != DTOConstants.DEFAULT_INT_ID)
             {
@@ -52,44 +71,42 @@ namespace FlexCoreDAOs.clients
             }
         }
 
-        public override List<PhysicalClientVDTO> search(PhysicalClientVDTO pClient, MySqlCommand pCommand)
+        public override List<JuridicalClientVDTO> search(JuridicalClientVDTO pClient, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             string selection = "*";
-            string from = "CLIENTE_FISICO_V";
+            string from = "CLIENTE_JURIDICO_V";
             string condition = getFindCondition(pClient);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pClient);
 
             MySqlDataReader reader = pCommand.ExecuteReader();
-            List<PhysicalClientVDTO> list = new List<PhysicalClientVDTO>();
+            List<JuridicalClientVDTO> list = new List<JuridicalClientVDTO>();
 
             while (reader.Read())
             {
-                PhysicalClientVDTO client = new PhysicalClientVDTO();
+                JuridicalClientVDTO client = new JuridicalClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
                 client.setActive(sqlToBool(reader[ACTIVE].ToString()));
                 client.setName(reader[NAME].ToString());
                 client.setIDCard(reader[ID_CARD].ToString());
                 client.setPersonType(reader[TYPE].ToString());
-                client.setFirstLastName(reader[FIRST_LSTNM].ToString());
-                client.setSecondLastName(reader[SECOND_LSTNM].ToString());
                 list.Add(client);
             }
             return list;
         }
 
-        public override List<PhysicalClientVDTO> getAll(MySqlCommand pCommand)
+        public override List<JuridicalClientVDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            string query = "SELECT * FROM CLIENTE_FISICO_V";
+            string query = getSelectQuery("*", "CLIENTE_JURIDICO_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
-            List<PhysicalClientVDTO> list = new List<PhysicalClientVDTO>();
+            List<JuridicalClientVDTO> list = new List<JuridicalClientVDTO>();
             while (reader.Read())
             {
-                PhysicalClientVDTO client = new PhysicalClientVDTO();
+                JuridicalClientVDTO client = new JuridicalClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
                 client.setActive(sqlToBool(reader[ACTIVE].ToString()));

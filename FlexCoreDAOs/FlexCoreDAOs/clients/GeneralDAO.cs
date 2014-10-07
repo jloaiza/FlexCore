@@ -7,6 +7,12 @@ namespace FlexCoreDAOs.clients
 {
     public abstract class GeneralDAO<T>
     {
+
+        private int getRowOffset(int pPageNumber, int pShowCount)
+        {
+            return pShowCount * (pPageNumber - 1);
+        }
+
         protected string getInsertQuery(string pTableName, string pColumns, string pValues)
         {
             return String.Format("INSERT INTO {0} ({1}) VALUES ({2})", pTableName, pColumns, pValues);
@@ -22,14 +28,26 @@ namespace FlexCoreDAOs.clients
             return String.Format("UPDATE {0} SET {1} WHERE {2}", pTableName, pValues, pCondition);
         }
 
-        protected string getSelectQuery(string pSelection, string pFrom, string pCondition)
+        protected string getSelectQuery(string pSelection, string pFrom, string pCondition, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            return String.Format("SELECT {0} FROM {1} WHERE {2}", pSelection, pFrom, pCondition);
+            string ordBuffer = "";
+            foreach (String ord in pOrderBy)
+            {
+                ordBuffer= addCondition(ordBuffer, ord);
+            }
+            int offset = getRowOffset(pPageNumber, pShowCount);
+            return String.Format("SELECT {0} FROM {1} WHERE {2} ORDER BY {3} DESC LIMIT {4} OFFSET {5}", pSelection, pFrom, pCondition, ordBuffer, pShowCount, offset);
         }
 
-        protected string getSelectQuery(string pSelection, string pFrom)
+        protected string getSelectQuery(string pSelection, string pFrom, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            return String.Format("SELECT {0} FROM {1}", pSelection, pFrom);
+            string ordBuffer = "";
+            foreach (String ord in pOrderBy)
+            {
+                ordBuffer = addCondition(ordBuffer, ord);
+            }
+            int offset = getRowOffset(pPageNumber, pShowCount);
+            return String.Format("SELECT {0} FROM {1} ORDER BY {2} DESC LIMIT {3} OFFSET {4}", pSelection, pFrom, ordBuffer, pShowCount, offset);
         }
 
         protected MySqlCommand getCommand()
@@ -91,18 +109,18 @@ namespace FlexCoreDAOs.clients
             MySQLManager.cerrarConexion(command.Connection);
         }
 
-        public virtual List<T> search(T pDTO)
+        public virtual List<T> search(T pDTO, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             MySqlCommand command = getCommand();
-            List<T> result = search(pDTO, command);
+            List<T> result = search(pDTO, command, pPageNumber, pShowCount, pOrderBy);
             MySQLManager.cerrarConexion(command.Connection);
             return result;
         }
 
-        public virtual List<T> getAll()
+        public virtual List<T> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             MySqlCommand command = getCommand();
-            List<T> result = getAll(command);
+            List<T> result = getAll(command, pPageNumber, pShowCount, pOrderBy);
             MySQLManager.cerrarConexion(command.Connection);
             return result;
         }
@@ -136,13 +154,13 @@ namespace FlexCoreDAOs.clients
             throw new NotImplementedException();
         }
 
-        public virtual List<T> search(T pDTO, MySqlCommand pCommand)
+        public virtual List<T> search(T pDTO, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             // Not developed yet.
             throw new NotImplementedException();
         }
 
-        public virtual List<T> getAll(MySqlCommand pCommand)
+        public virtual List<T> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             // Not developed yet.
             throw new NotImplementedException();

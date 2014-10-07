@@ -9,10 +9,30 @@ namespace FlexCoreDAOs.clients
     public class PersonDocumentDAO:GeneralDAO<PersonDocumentDTO>
     {
 
-        private static readonly string DOCUMENT = "documento";
-        private static readonly string DOC_NAME = "nombreDocumento";
-        private static readonly string DOC_DESCRIP = "descripcionDocumento";
-        private static readonly string PERSON_ID = "idPersona";
+        public static readonly string DOCUMENT = "documento";
+        public static readonly string DOC_NAME = "nombreDocumento";
+        public static readonly string DOC_DESCRIP = "descripcionDocumento";
+        public static readonly string PERSON_ID = "idPersona";
+        
+        private static object _syncLock = new object();
+        private static PersonDocumentDAO _instance;
+
+        public static PersonDocumentDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new PersonDocumentDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private PersonDocumentDAO() { }
 
         protected override string getFindCondition(PersonDocumentDTO pDocument)
         {
@@ -94,12 +114,12 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonDocumentDTO> search(PersonDocumentDTO pDocument, MySqlCommand pCommand)
+        public override List<PersonDocumentDTO> search(PersonDocumentDTO pDocument, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "DOCUMENTO_PERSONA";
             string condition = getFindCondition(pDocument);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pDocument);

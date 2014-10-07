@@ -9,10 +9,29 @@ namespace FlexCoreDAOs.clients
     public class ClientDAO:GeneralDAO<ClientDTO>
     {
 
-        private static readonly string PERSON_ID = "idCliente";
-        private static readonly string CIF = "CIF";
-        private static readonly string ACTIVE = "activo";
+        public static readonly string PERSON_ID = "idCliente";
+        public static readonly string CIF = "CIF";
+        public static readonly string ACTIVE = "activo";
+        
+        private static object _syncLock = new object();
+        private static ClientDAO _instance;
 
+        public static ClientDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new ClientDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private ClientDAO() { }
         protected override string getFindCondition(ClientDTO pClient)
         {
             string condition = "";
@@ -81,12 +100,12 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<ClientDTO> search(ClientDTO pClient, MySqlCommand pCommand)
+        public override List<ClientDTO> search(ClientDTO pClient, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "CLIENTE";
             string condition = getFindCondition(pClient);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pClient);
@@ -105,9 +124,9 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<ClientDTO> getAll(MySqlCommand pCommand)
+        public override List<ClientDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            string query = "SELECT * FROM CLIENTE";
+            string query = getSelectQuery("*", "CLIENTE", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
             List<ClientDTO> list = new List<ClientDTO>();
