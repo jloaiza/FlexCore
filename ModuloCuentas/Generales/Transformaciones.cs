@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ModuloCuentas.Generales
 {
-    internal static class Transformaciones
+    public  static class Transformaciones
     {
         public static int boolToInt(bool pEstado)
         {
