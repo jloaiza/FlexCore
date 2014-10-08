@@ -37,6 +37,9 @@
     <Reference Include="FlexCoreDTOs">
       <HintPath>dll\FlexCoreDTOs.dll</HintPath>
     </Reference>
+    <Reference Include="ModuloCuentas">
+      <HintPath>dll\ModuloCuentas.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,6 +78,7 @@
   <ItemGroup>
     <Content Include="dll\ConexionMySQLServer.dll" />
     <Content Include="dll\FlexCoreDTOs.dll" />
+    <Content Include="dll\ModuloCuentas.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
