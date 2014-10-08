@@ -12,6 +12,7 @@ namespace FlexCoreDAOs.administration
 {
     public class DispositivoCuentaQueriesDAO
     {
+
         public void insertDispositivoCuenta(String idDispositivo, bool activo, int idCuenta)
         {
             String query = "INSERT INTO DISPOSITIVO_CUENTA (idDispositivo, activo, idCuenta)" +
@@ -61,6 +62,50 @@ namespace FlexCoreDAOs.administration
             }
             MySQLManager.cerrarConexion(connD);
             return dispositivoCuenta;
+        }
+
+        public List<int> checkDispositivoCuenta(String idDispositivo, int idCuenta)
+        {
+            List<int> respuesta = new List<int>();
+            if (existDispositivo(idDispositivo) == ConstantesDAO.DISPOSITIVOEXISTE)
+            {
+                respuesta.Add(ConstantesDAO.DISPOSITIVOEXISTE);
+                String query = "SELECT activo FROM DISPOSITIVO_CUENTA WHERE idDispositivo = @idDispositivo" +
+                    " AND idCuenta = @idCuenta";
+                MySqlConnection connD = MySQLManager.nuevaConexion();
+                MySqlCommand command = connD.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@idDispositivo", idDispositivo);
+                command.Parameters.AddWithValue("@idCuenta", idCuenta);
+                MySqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    respuesta.Add(ConstantesDAO.DISPOSITIVOCUENTAENLAZADOS);
+                    if ((bool)reader["activo"]) { respuesta.Add(ConstantesDAO.DISPOSITIVOACTIVO); }
+                    else { respuesta.Add(ConstantesDAO.DISPOSITIVOINACTIVO); }
+                }
+                else { respuesta.Add(ConstantesDAO.DISPOSITIVOCUENTANOENLAZADOS); }
+                MySQLManager.cerrarConexion(connD);
+            }
+            else { respuesta.Add(ConstantesDAO.DISPOSITIVONOEXISTE); }
+            return respuesta;
+        }
+
+        private int existDispositivo(String idDispositivo)
+        {
+            int resp = ConstantesDAO.DISPOSITIVONOEXISTE;
+            String query = "SELECT estado FROM DISPOSITIVO_CUENTA WHERE idDispositivo = @idDispositivo";
+            MySqlConnection connD = MySQLManager.nuevaConexion();
+            MySqlCommand command = connD.CreateCommand();
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@idDispositivo", idDispositivo);
+            MySqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                resp = ConstantesDAO.DISPOSITIVOEXISTE;
+            }
+            MySQLManager.cerrarConexion(connD);
+            return resp;
         }
 
         public void updateDispositivoCuenta(int idDispositivoCuenta, String idDispositivo, bool activo, 
