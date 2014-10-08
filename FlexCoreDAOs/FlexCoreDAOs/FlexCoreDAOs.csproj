@@ -34,8 +34,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\ConexionMySQLServer.dll</HintPath>
     </Reference>
-    <Reference Include="FlexCoreDTOs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="FlexCoreDTOs">
       <HintPath>dll\FlexCoreDTOs.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
@@ -66,6 +65,11 @@
     <Compile Include="clients\PersonDAO.cs" />
     <Compile Include="clients\PhysicalClientVDAO.cs" />
     <Compile Include="clients\PhysicalPersonDAO.cs" />
+    <Compile Include="cuentas\CuentaAhorroAutomaticoDAO.cs" />
+    <Compile Include="cuentas\CuentaAhorroDAO.cs" />
+    <Compile Include="cuentas\CuentaAhorroVistaDAO.cs" />
+    <Compile Include="cuentas\CuentaBeneficiariosDAO.cs" />
+    <Compile Include="cuentas\PeriocidadAhorroDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
