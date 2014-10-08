@@ -46,10 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAO\CuentaAhorroAutomaticoDAO.cs" />
-    <Compile Include="DAO\CuentaAhorroVistaDAO.cs" />
-    <Compile Include="DAO\CuentaBeneficiariosDAO.cs" />
-    <Compile Include="DAO\PeriocidadAhorroDAO.cs" />
     <Compile Include="Facade\FacadeCuentas.cs" />
     <Compile Include="Generales\Constantes.cs" />
     <Compile Include="Generales\GeneradorCuentas.cs" />
@@ -58,9 +54,6 @@
     <Compile Include="Managers\CuentaAhorroAutomaticoManager.cs" />
     <Compile Include="Managers\CuentaAhorroVistaManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DAO\CuentaAhorroDAO.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
