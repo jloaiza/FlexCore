@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModuloCuentas.Generales;
 using System.Threading;
 using FlexCoreDTOs.cuentas;
 using MySql.Data.MySqlClient;
 using ConexionMySQLServer.ConexionMySql;
 using FlexCoreDAOs.cuentas;
+using FlexCoreLogic.cuentas.Generales;
 
-namespace ModuloCuentas.Managers
+namespace FlexCoreLogic.cuentas.Managers
 {
     internal static class CuentaAhorroAutomaticoManager
     {

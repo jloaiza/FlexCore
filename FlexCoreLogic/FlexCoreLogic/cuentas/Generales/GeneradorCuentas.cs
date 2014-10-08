@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlexCoreDAOs.cuentas;
 
-namespace ModuloCuentas.Generales
+namespace FlexCoreLogic.cuentas.Generales
 {
     internal static class GeneradorCuentas
     {

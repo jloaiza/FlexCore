@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModuloCuentas.Managers;
 using FlexCoreDTOs.cuentas;
+using FlexCoreLogic.cuentas.Managers;
 
-namespace ModuloCuentas.Facade
+namespace FlexCoreLogic.cuentas.Facade
 {
     public static class FacadeCuentas
     {

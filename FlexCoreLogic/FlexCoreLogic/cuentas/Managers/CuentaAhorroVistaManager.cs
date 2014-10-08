@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using FlexCoreDTOs.cuentas;
-using ModuloCuentas.Generales;
 using MySql.Data.MySqlClient;
 using ConexionMySQLServer.ConexionMySql;
 using FlexCoreDAOs.cuentas;
+using FlexCoreLogic.cuentas.Generales;
 
-namespace ModuloCuentas.Managers
+namespace FlexCoreLogic.cuentas.Managers
 {
     internal static class CuentaAhorroVistaManager
     {
