@@ -8,7 +8,7 @@ using ConexionMySQLServer.ConexionMySql;
 
 namespace FlexCoreDAOs.cuentas
 {
-    internal class PeriocidadAhorroDAO
+    public class PeriocidadAhorroDAO
     {
         public static int agregarMagnitudPeriocidad(int pMagnitud, int pTipoPeriodo, MySqlCommand pComando)
         {

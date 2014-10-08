@@ -11,7 +11,7 @@ using FlexCoreDTOs.cuentas;
 
 namespace FlexCoreDAOs.cuentas
 {
-    internal static class CuentaAhorroAutomaticoDAO
+    public static class CuentaAhorroAutomaticoDAO
     {
         public static void agregarCuentaAhorroAutomaticoBase(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, MySqlCommand pComando)
         {

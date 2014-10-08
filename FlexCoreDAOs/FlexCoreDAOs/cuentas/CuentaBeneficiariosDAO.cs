@@ -10,7 +10,7 @@ using FlexCoreDTOs.cuentas;
 
 namespace FlexCoreDAOs.cuentas
 {
-    internal class CuentaBeneficiariosDAO
+    public class CuentaBeneficiariosDAO
     {
         public static void agregarBeneficiarios(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
