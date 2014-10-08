@@ -8,6 +8,7 @@ using System.Threading;
 using FlexCoreDTOs.cuentas;
 using MySql.Data.MySqlClient;
 using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDAOs.cuentas;
 
 namespace ModuloCuentas.Managers
 {
