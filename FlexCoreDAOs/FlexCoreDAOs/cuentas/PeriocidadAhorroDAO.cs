@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using ConexionMySQLServer.ConexionMySql;
 
-namespace ModuloCuentas.DAO
+namespace FlexCoreDAOs.cuentas
 {
     internal class PeriocidadAhorroDAO
     {

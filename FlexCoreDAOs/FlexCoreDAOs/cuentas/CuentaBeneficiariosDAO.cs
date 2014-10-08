@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 using FlexCoreDTOs.clients;
 using FlexCoreDTOs.cuentas;
 
-namespace ModuloCuentas.DAO
+namespace FlexCoreDAOs.cuentas
 {
     internal class CuentaBeneficiariosDAO
     {

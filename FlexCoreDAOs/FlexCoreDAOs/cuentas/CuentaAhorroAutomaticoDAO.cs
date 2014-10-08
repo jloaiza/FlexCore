@@ -9,7 +9,7 @@ using ModuloCuentas.Generales;
 using FlexCoreDTOs.clients;
 using FlexCoreDTOs.cuentas;
 
-namespace ModuloCuentas.DAO
+namespace FlexCoreDAOs.cuentas
 {
     internal static class CuentaAhorroAutomaticoDAO
     {

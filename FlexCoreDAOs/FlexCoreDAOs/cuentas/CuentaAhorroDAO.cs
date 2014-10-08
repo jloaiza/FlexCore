@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 using ModuloCuentas.Generales;
 using FlexCoreDTOs.cuentas;
 
-namespace ModuloCuentas.DAO
+namespace FlexCoreDAOs.cuentas
 {
     internal static class CuentaAhorroDAO
     {
