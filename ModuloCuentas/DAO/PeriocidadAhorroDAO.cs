@@ -10,59 +10,52 @@ namespace ModuloCuentas.DAO
 {
     internal class PeriocidadAhorroDAO
     {
-        public static int agregarMagnitudPeriocidad(int pMagnitud, int pTipoPeriodo)
+        public static int agregarMagnitudPeriocidad(int pMagnitud, int pTipoPeriodo, MySqlCommand pComando)
         {
             String _query = "INSERT INTO PERIODICIDAD_AHORRO(MAGNITUD, TIPO) VALUES(@magnitud, @tipo);";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@magnitud", pMagnitud);
-            _comandoMySQL.Parameters.AddWithValue("@tipo", pTipoPeriodo);
-            _comandoMySQL.ExecuteNonQuery();
-            int _lastId = Convert.ToInt32(_comandoMySQL.LastInsertedId);
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@magnitud", pMagnitud);
+            pComando.Parameters.AddWithValue("@tipo", pTipoPeriodo);
+            pComando.ExecuteNonQuery();
+            int _lastId = Convert.ToInt32(pComando.LastInsertedId);
             return _lastId;
         }
 
-        public static void eliminarPeriodicidadAhorro(int pIdPeriodicidad)
+        public static void eliminarPeriodicidadAhorro(int pIdPeriodicidad, MySqlCommand pComando)
         {
             String _query = "DELETE FROM PERIODICIDAD_AHORRO WHERE idPeriodo = @idPeriodo;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idPeriodo", pIdPeriodicidad);
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@idPeriodo", pIdPeriodicidad);
+            pComando.ExecuteNonQuery();
         }
 
-        public static int obtenerIdPeriodo(string pNumeroCuenta)
+        public static int obtenerIdPeriodo(string pNumeroCuenta, MySqlCommand pComando)
         {
             int _idPeriodo = 0;
             String _query = "SELECT * FROM CUENTA_AHORRO_AUTOMATICO_V WHERE numCuenta = @numCuenta;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
-            MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@numCuenta", pNumeroCuenta);
+            MySqlDataReader _reader = pComando.ExecuteReader();
             if(_reader.Read())
             {
                 _idPeriodo = Convert.ToInt32(_reader["idPeriodo"]);
             }
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            _reader.Close();
             return _idPeriodo;
         }
 
-        public static void modificarPeriodicidadAhorro(int pIdPeriodicidad, int pMagnitud, int pTipo)
+        public static void modificarPeriodicidadAhorro(int pIdPeriodicidad, int pMagnitud, int pTipo, MySqlCommand pComando)
         {
             String _query = "UPDATE PERIODICIDAD_AHORRO SET MAGNITUD = @magnitud, TIPO = @tipo WHERE IDPERIODO = @idPeriodicidad;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@magnitud", pMagnitud);
-            _comandoMySQL.Parameters.AddWithValue("@tipo", pTipo);
-            _comandoMySQL.Parameters.AddWithValue("@idPeriodicidad", pIdPeriodicidad);
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@magnitud", pMagnitud);
+            pComando.Parameters.AddWithValue("@tipo", pTipo);
+            pComando.Parameters.AddWithValue("@idPeriodicidad", pIdPeriodicidad);
+            pComando.ExecuteNonQuery();
         }
     }
 }

@@ -13,47 +13,45 @@ namespace ModuloCuentas.DAO
 {
     internal static class CuentaAhorroVistaDAO
     {
-        public static void agregarCuentaAhorroVistaBase(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static void agregarCuentaAhorroVistaBase(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            CuentaAhorroDAO.agregarCuentaAhorro(pCuentaAhorroVista);
+            CuentaAhorroDAO.agregarCuentaAhorro(pCuentaAhorroVista, pComando);
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista, pComando);
             String _query = "INSERT INTO CUENTA_AHORRO_VISTA(SALDOFLOTANTE, IDCUENTA) VALUES(@saldoFlotante, @idCuenta);";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@saldoFlotante", pCuentaAhorroVista.getSaldoFlotante());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista));
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-            CuentaBeneficiariosDAO.agregarBeneficiarios(pCuentaAhorroVista);
+            pComando.Parameters.Clear();
+            pComando.CommandText = _query;
+            pComando.Parameters.AddWithValue("@saldoFlotante", pCuentaAhorroVista.getSaldoFlotante());
+            pComando.Parameters.AddWithValue("@idCuenta", _id);
+            pComando.ExecuteNonQuery();
+            CuentaBeneficiariosDAO.agregarBeneficiarios(pCuentaAhorroVista, pComando);
         }
 
-        public static void modificarCuentaAhorroVistaBase(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static void modificarCuentaAhorroVistaBase(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroVista);
+            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroVista, pComando);
         }
 
-        public static void eliminarCuentaAhorroVistaBase(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static void eliminarCuentaAhorroVistaBase(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            CuentaBeneficiariosDAO.eliminarBeneficiario(pCuentaAhorroVista);
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista, pComando);
+            CuentaBeneficiariosDAO.eliminarBeneficiario(pCuentaAhorroVista, pComando);
             String _query = "DELETE FROM CUENTA_AHORRO_VISTA WHERE idCuenta = @idCuenta;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista));
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-            CuentaAhorroDAO.eliminarCuentaAhorro(pCuentaAhorroVista);
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@idCuenta", _id);
+            pComando.ExecuteNonQuery();
+            CuentaAhorroDAO.eliminarCuentaAhorro(pCuentaAhorroVista, pComando);
         }
 
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaNumeroCuenta(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaNumeroCuenta(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
             CuentaAhorroVistaDTO _cuentaSalida = null;
+            List<PhysicalPersonDTO> _listaBeneficiarios = CuentaBeneficiariosDAO.obtenerListaBeneficiarios(pCuentaAhorroVista, pComando);
             String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V WHERE NUMCUENTA = @numCuenta";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@numCuenta", pCuentaAhorroVista.getNumeroCuenta());
-            MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@numCuenta", pCuentaAhorroVista.getNumeroCuenta());
+            MySqlDataReader _reader = pComando.ExecuteReader();
             if(_reader.Read())
             {
                 string _numeroCuenta = _reader["numCuenta"].ToString();
@@ -64,10 +62,9 @@ namespace ModuloCuentas.DAO
                 decimal _saldoFlotante = Convert.ToDecimal(_reader["saldoFlotante"]);
                 int _idCliente = Convert.ToInt32(_reader["idCliente"]);
                 ClientDTO _cliente = new ClientDTO(_idCliente, "");
-                List<PhysicalPersonDTO> _listaBeneficiarios = CuentaBeneficiariosDAO.obtenerListaBeneficiarios(pCuentaAhorroVista);
                 _cuentaSalida = new CuentaAhorroVistaDTO(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _cliente, _saldoFlotante, _listaBeneficiarios);
             }
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            _reader.Close();
             return _cuentaSalida;
         }
 
@@ -89,68 +86,71 @@ namespace ModuloCuentas.DAO
             return null;
         }
 
-        public static void agregarDinero(CuentaAhorroDTO pCuentaAhorro, decimal pMonto, int pTipoCuenta)
+        public static void agregarDinero(CuentaAhorroDTO pCuentaAhorro, decimal pMonto, int pTipoCuenta, MySqlCommand pComando)
         {
             if(pTipoCuenta == Constantes.AHORROVISTA)
             {
                 CuentaAhorroVistaDTO _cuentaAhorroVista = new CuentaAhorroVistaDTO();
                 _cuentaAhorroVista.setNumeroCuenta(pCuentaAhorro.getNumeroCuenta());
-                agregarDineroAux(_cuentaAhorroVista, pMonto);
+                agregarDineroAux(_cuentaAhorroVista, pMonto, pComando);
             }
             else if(pTipoCuenta == Constantes.AHORROAUTOMATICO)
             {
                 CuentaAhorroAutomaticoDTO _cuentaAhorroAutomatico = new CuentaAhorroAutomaticoDTO();
                 _cuentaAhorroAutomatico.setNumeroCuenta(pCuentaAhorro.getNumeroCuenta());
-                CuentaAhorroAutomaticoDAO.agregarDinero(_cuentaAhorroAutomatico, pMonto, Constantes.AHORROAUTOMATICO);
+                CuentaAhorroAutomaticoDAO.agregarDinero(_cuentaAhorroAutomatico, pMonto, Constantes.AHORROAUTOMATICO, pComando);
             }
         }
 
-        private static void agregarDineroAux(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
+        private static void agregarDineroAux(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto, MySqlCommand pComando)
         {
-            CuentaAhorroVistaDTO _cuentaAhorroVista = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista);
+            CuentaAhorroVistaDTO _cuentaAhorroVista = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista, pComando);
             _cuentaAhorroVista.setSaldoFlotante(_cuentaAhorroVista.getSaldoFlotante() + pMonto);
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaAhorroVista, pComando);
             string _query = "UPDATE CUENTA_AHORRO_VISTA SET SALDOFLOTANTE = @saldoFlotante WHERE IDCUENTA = @idCuenta";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@saldoFlotante", _cuentaAhorroVista.getSaldoFlotante());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaAhorroVista));
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@saldoFlotante", _cuentaAhorroVista.getSaldoFlotante());
+            pComando.Parameters.AddWithValue("@idCuenta", _id);
+            pComando.ExecuteNonQuery();
         }
 
-        public static void quitarDinero(CuentaAhorroDTO pCuentaOrigen, decimal pMonto, CuentaAhorroDTO pCuentaDestino, int pTipoCuenta)
+        public static void quitarDinero(CuentaAhorroDTO pCuentaOrigen, decimal pMonto, CuentaAhorroDTO pCuentaDestino, int pTipoCuenta, MySqlCommand pComando)
         {
             CuentaAhorroVistaDTO _cuentaOrigenEntrada = new CuentaAhorroVistaDTO();
             _cuentaOrigenEntrada.setNumeroCuenta(pCuentaOrigen.getNumeroCuenta());
-            CuentaAhorroVistaDTO _cuentaAhorroOrigen = obtenerCuentaAhorroVistaNumeroCuenta(_cuentaOrigenEntrada);
-            decimal _montoDeduccion = Transformaciones.convertirDinero(pMonto, _cuentaAhorroOrigen.getTipoMoneda(), CuentaAhorroDAO.obtenerCuentaAhorroMoneda(pCuentaDestino));
+            CuentaAhorroVistaDTO _cuentaAhorroOrigen = obtenerCuentaAhorroVistaNumeroCuenta(_cuentaOrigenEntrada, pComando);
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaAhorroOrigen, pComando);
+            decimal _montoDeduccion = Transformaciones.convertirDinero(pMonto, _cuentaAhorroOrigen.getTipoMoneda(), CuentaAhorroDAO.obtenerCuentaAhorroMoneda(pCuentaDestino, pComando));
             _cuentaAhorroOrigen.setSaldoFlotante(_cuentaAhorroOrigen.getSaldoFlotante() - _montoDeduccion);
             string _query = "UPDATE CUENTA_AHORRO_VISTA SET SALDOFLOTANTE = @saldoFlotante WHERE IDCUENTA = @idCuenta";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@saldoFlotante", _cuentaAhorroOrigen.getSaldoFlotante());
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(_cuentaAhorroOrigen));
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
-            agregarDinero(pCuentaDestino, pMonto, pTipoCuenta);
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@saldoFlotante", _cuentaAhorroOrigen.getSaldoFlotante());
+            pComando.Parameters.AddWithValue("@idCuenta", _id);
+            pComando.ExecuteNonQuery();
+            agregarDinero(pCuentaDestino, pMonto, pTipoCuenta, pComando);
         }
 
-        public static void iniciarCierre()
+        public static void iniciarCierre(MySqlCommand pComando)
         {
             CuentaAhorroDTO _cuentaAhorro = new CuentaAhorroDTO();
+            List<Tuple<string, decimal>> _cuentas = new List<Tuple<string, decimal>>();
             String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            MySqlDataReader _reader = pComando.ExecuteReader();
             while(_reader.Read())
             {
-                _cuentaAhorro.setNumeroCuenta(_reader["numCuenta"].ToString()); 
-                CuentaAhorroDAO.modificarSaldo(_cuentaAhorro, Convert.ToDecimal(_reader["saldoFlotante"]));
+                var _cuentaBase = new Tuple<string, decimal>(_reader["numCuenta"].ToString(), Convert.ToDecimal(_reader["saldoFlotante"]));
+                _cuentas.Add(_cuentaBase);
             }
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            _reader.Close();
+            foreach(Tuple<string, decimal> Cuenta in _cuentas)
+            {
+                _cuentaAhorro.setNumeroCuenta(Cuenta.Item1);
+                CuentaAhorroDAO.modificarSaldo(_cuentaAhorro, Cuenta.Item2, pComando);
+            }
         }
     }
 }

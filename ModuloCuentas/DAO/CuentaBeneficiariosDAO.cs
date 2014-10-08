@@ -12,47 +12,45 @@ namespace ModuloCuentas.DAO
 {
     internal class CuentaBeneficiariosDAO
     {
-        public static void agregarBeneficiarios(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static void agregarBeneficiarios(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista);
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista, pComando);
             foreach (PhysicalPersonDTO beneficiario in pCuentaAhorroVista.getListaBeneficiarios())
             {
                 String _query = "INSERT INTO CUENTA_BENEFICIARIOS(IDCUENTA, IDBENEFICIARIO) VALUES(@idCuenta, @idBeneficiario);";
-                MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-                MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-                _comandoMySQL.CommandText = _query;
-                _comandoMySQL.Parameters.AddWithValue("@idCuenta", _id);
-                _comandoMySQL.Parameters.AddWithValue("@idBeneficiario", beneficiario.getPersonID());
-                _comandoMySQL.ExecuteNonQuery();
-                MySQLManager.cerrarConexion(_conexionMySQLBase);
+                pComando.Parameters.Clear();
+                pComando.CommandText = _query;
+                pComando.Parameters.AddWithValue("@idCuenta", _id);
+                pComando.Parameters.AddWithValue("@idBeneficiario", beneficiario.getPersonID());
+                pComando.ExecuteNonQuery();
             }
         }
 
-        public static void eliminarBeneficiario(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static void eliminarBeneficiario(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista, pComando);
             String _query = "DELETE FROM CUENTA_BENEFICIARIOS WHERE idCuenta = @idCuenta";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista));
-            _comandoMySQL.ExecuteNonQuery();
-            MySQLManager.cerrarConexion(_conexionMySQLBase);
+            pComando.Parameters.Clear();
+            pComando.CommandText = _query;
+            pComando.Parameters.AddWithValue("@idCuenta", _id);
+            pComando.ExecuteNonQuery();
         }
 
-        public static List<PhysicalPersonDTO> obtenerListaBeneficiarios(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static List<PhysicalPersonDTO> obtenerListaBeneficiarios(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
+            int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista, pComando);
             List<PhysicalPersonDTO> _listaBeneficiarios = new List<PhysicalPersonDTO>();
             String _query = "SELECT * FROM CUENTA_BENEFICIARIOS WHERE IDCUENTA = @idCuenta;";
-            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
-            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
-            _comandoMySQL.CommandText = _query;
-            _comandoMySQL.Parameters.AddWithValue("@idCuenta", CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista));
-            MySqlDataReader _reader = _comandoMySQL.ExecuteReader();
+            pComando.Parameters.Clear();
+            pComando.CommandText = _query;
+            pComando.Parameters.AddWithValue("@idCuenta", _id);
+            MySqlDataReader _reader = pComando.ExecuteReader();
             if (_reader.Read())
             {
                 PhysicalPersonDTO _beneficiario = new PhysicalPersonDTO(Convert.ToInt32(_reader["idBeneficiario"]), "", "", "", "");
                 _listaBeneficiarios.Add(_beneficiario);
             }
+            _reader.Close();
             return _listaBeneficiarios;
         }
     }

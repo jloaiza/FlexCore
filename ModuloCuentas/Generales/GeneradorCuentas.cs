@@ -1,4 +1,5 @@
 ﻿using ModuloCuentas.DAO;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace ModuloCuentas.Generales
             return _numeroCuentaAux;
         }
 
-        public static string generarCuenta(int pTipoCuenta, int pTipoMoneda)
+        public static string generarCuenta(int pTipoCuenta, int pTipoMoneda, MySqlCommand pComando)
         {
             string _numeroCuenta = "";
             do
@@ -53,7 +54,7 @@ namespace ModuloCuentas.Generales
                         _numeroCuenta = "6" + _numeroCuenta;
                     }
                 }
-            } while (CuentaAhorroDAO.existeCuenta(_numeroCuenta));
+            } while (CuentaAhorroDAO.existeCuenta(_numeroCuenta, pComando));
             return _numeroCuenta;
         }
     }

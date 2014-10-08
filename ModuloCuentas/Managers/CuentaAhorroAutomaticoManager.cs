@@ -7,6 +7,8 @@ using ModuloCuentas.DAO;
 using ModuloCuentas.Generales;
 using System.Threading;
 using FlexCoreDTOs.cuentas;
+using MySql.Data.MySqlClient;
+using ConexionMySQLServer.ConexionMySql;
 
 namespace ModuloCuentas.Managers
 {
@@ -14,11 +16,22 @@ namespace ModuloCuentas.Managers
     {
         public static int SLEEP = 1000;
 
+        private static MySqlCommand obtenerConexionSQL()
+        {
+            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
+            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
+            MySqlTransaction _transaccion = _conexionMySQLBase.BeginTransaction();
+            _comandoMySQL.Connection = _conexionMySQLBase;
+            _comandoMySQL.Transaction = _transaccion;
+            return _comandoMySQL;
+        }
+
         public static string agregarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROAUTOMATICO, pCuentaAhorroAutomatico.getTipoMoneda());
+                string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROAUTOMATICO, pCuentaAhorroAutomatico.getTipoMoneda(), _comandoMySQL);
                 DateTime _fechaFinalizacion = pCuentaAhorroAutomatico.getFechaInicio().AddMonths(pCuentaAhorroAutomatico.getTiempoAhorro());
                 decimal _montoAhorro = calcularMontoAhorro(pCuentaAhorroAutomatico.getTiempoAhorro(), pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro(), pCuentaAhorroAutomatico.getTipoPeriodo(), pCuentaAhorroAutomatico.getMontoDeduccion());
                 pCuentaAhorroAutomatico.setNumeroCuenta(_numeroCuenta);
@@ -27,13 +40,26 @@ namespace ModuloCuentas.Managers
                 pCuentaAhorroAutomatico.setFechaFinalizacion(_fechaFinalizacion.Day, _fechaFinalizacion.Month, _fechaFinalizacion.Year, _fechaFinalizacion.Hour, _fechaFinalizacion.Minute, _fechaFinalizacion.Second);
                 pCuentaAhorroAutomatico.setMontoAhorro(_montoAhorro);
                 pCuentaAhorroAutomatico.setUltimaFechaCobro(pCuentaAhorroAutomatico.getFechaInicio().Day, pCuentaAhorroAutomatico.getFechaInicio().Month, pCuentaAhorroAutomatico.getFechaInicio().Year, pCuentaAhorroAutomatico.getFechaInicio().Hour, pCuentaAhorroAutomatico.getFechaInicio().Minute, pCuentaAhorroAutomatico.getFechaInicio().Second);
-                CuentaAhorroAutomaticoDAO.agregarCuentaAhorroAutomaticoBase(pCuentaAhorroAutomatico);
+                CuentaAhorroAutomaticoDAO.agregarCuentaAhorroAutomaticoBase(pCuentaAhorroAutomatico, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 Console.WriteLine(iniciarAhorro(pCuentaAhorroAutomatico));
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
@@ -46,9 +72,8 @@ namespace ModuloCuentas.Managers
                 _hiloReplica.Start();
                 return "Transacción completada con éxito";
             }
-            catch(Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
                 return "Ha ocurrido un error en la transacción";
             }
             
@@ -60,9 +85,35 @@ namespace ModuloCuentas.Managers
             {
                 Thread.Sleep(SLEEP);
             }
-            pCuentaAhorroAutomatico.setEstado(true);
-            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico);
+            modificarEstadoCuentaAhorroAutomatico(pCuentaAhorroAutomatico, true);
             iniciarAhorroAux(pCuentaAhorroAutomatico);
+        }
+
+        private static void modificarEstadoCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, bool pEstado)
+        {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
+            try
+            {
+                pCuentaAhorroAutomatico.setEstado(pEstado);
+                CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+            }
+            catch
+            {
+                try
+                {
+                    pCuentaAhorroAutomatico.setEstado(!pEstado);
+                    _comandoMySQL.Transaction.Rollback();
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
+            }
         }
 
         private static void iniciarAhorroAux(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -103,8 +154,7 @@ namespace ModuloCuentas.Managers
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
                 Thread.Sleep(SLEEP);
             }
-            pCuentaAhorroAutomatico.setEstado(false);
-            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico);
+            modificarEstadoCuentaAhorroAutomatico(pCuentaAhorroAutomatico, false);
         }
 
         private static void cobrarEnDias(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -125,8 +175,7 @@ namespace ModuloCuentas.Managers
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
                 Thread.Sleep(SLEEP);
             }
-            pCuentaAhorroAutomatico.setEstado(false);
-            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico);
+            modificarEstadoCuentaAhorroAutomatico(pCuentaAhorroAutomatico, false);
         }
 
         private static void cobrarEnMinutos(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -147,8 +196,7 @@ namespace ModuloCuentas.Managers
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
                 Thread.Sleep(SLEEP);
             }
-            pCuentaAhorroAutomatico.setEstado(false);
-            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico);
+            modificarEstadoCuentaAhorroAutomatico(pCuentaAhorroAutomatico, false);
         }
 
         private static void cobrarEnHoras(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -169,12 +217,12 @@ namespace ModuloCuentas.Managers
                 pCuentaAhorroAutomatico = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
                 Thread.Sleep(SLEEP);
             }
-            pCuentaAhorroAutomatico.setEstado(false);
-            CuentaAhorroDAO.modificarCuentaAhorro(pCuentaAhorroAutomatico);
+            modificarEstadoCuentaAhorroAutomatico(pCuentaAhorroAutomatico, false);
         }
 
         private static void modificarUltimaFechaCobro(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, DateTime pHoraActual, int pProporcionalidadDeCobro)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             DateTime _ultimaFechaCobro = new DateTime();
             if(pHoraActual == pCuentaAhorroAutomatico.getFechaFinalizacion())
             {
@@ -197,7 +245,26 @@ namespace ModuloCuentas.Managers
                 _ultimaFechaCobro = pCuentaAhorroAutomatico.getUltimaFechaCobro().AddDays(pProporcionalidadDeCobro * pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro());
             }
             pCuentaAhorroAutomatico.setUltimaFechaCobro(_ultimaFechaCobro.Day, _ultimaFechaCobro.Month, _ultimaFechaCobro.Year, _ultimaFechaCobro.Hour, _ultimaFechaCobro.Minute, _ultimaFechaCobro.Second);
-            CuentaAhorroAutomaticoDAO.modificarUltimaFechaCobro(pCuentaAhorroAutomatico, pCuentaAhorroAutomatico.getUltimaFechaCobro());
+            try
+            {
+                CuentaAhorroAutomaticoDAO.modificarUltimaFechaCobro(pCuentaAhorroAutomatico, pCuentaAhorroAutomatico.getUltimaFechaCobro(), _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+            }
+            catch
+            {
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
+            }
         }
 
         private static DateTime getHoraActualLimitada(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
@@ -214,38 +281,73 @@ namespace ModuloCuentas.Managers
 
         private static void realizarAhorro(CuentaAhorroVistaDTO pCuentaOrigen, decimal pMontoAhorro, CuentaAhorroAutomaticoDTO pCuentaDestino)
         {
-            CuentaAhorroVistaDTO _cuentaOrigen = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaOrigen);
-            if (_cuentaOrigen.getEstado() == false)
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
+            try
             {
-                Console.WriteLine("La cuenta desde donde se hace la deduccion se encuentra desactivada");
-                //GENERO EL ERROR A LA TABLA DE ERRORES.
+                CuentaAhorroVistaDTO _cuentaOrigen = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaOrigen, _comandoMySQL);
+                if (_cuentaOrigen.getEstado() == false)
+                {
+                    Console.WriteLine("La cuenta desde donde se hace la deduccion se encuentra desactivada");
+                    //GENERO EL ERROR A LA TABLA DE ERRORES.
+                }
+                else if (_cuentaOrigen.getSaldoFlotante() < pMontoAhorro)
+                {
+                    Console.WriteLine("La cuenta desde donde se hace la deduccion se ha quedado sin fondos");
+                    //SE GENERA EL ERROR A LA TABLA DE ERRORES
+                }
+                else
+                {
+                    CuentaAhorroVistaDAO.quitarDinero(pCuentaOrigen, pMontoAhorro, pCuentaDestino, Constantes.AHORROAUTOMATICO, _comandoMySQL);
+                    _comandoMySQL.Transaction.Commit();
+                }
             }
-            else if (_cuentaOrigen.getSaldoFlotante() < pMontoAhorro)
+            catch
             {
-                Console.WriteLine("La cuenta desde donde se hace la deduccion se ha quedado sin fondos");
-                //SE GENERA EL ERROR A LA TABLA DE ERRORES
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                }
+                catch
+                {
+                    return;
+                }
             }
-            else
+            finally
             {
-                CuentaAhorroVistaDAO.quitarDinero(pCuentaOrigen, pMontoAhorro, pCuentaDestino, Constantes.AHORROAUTOMATICO);
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string eliminarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                CuentaAhorroAutomaticoDAO.eliminarCuentaAhorroAutomaticoBase(pCuentaAhorroAutomatico);
+                CuentaAhorroAutomaticoDAO.eliminarCuentaAhorroAutomaticoBase(pCuentaAhorroAutomatico, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string modificarCuentaAhorroAutomatico(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
                 CuentaAhorroAutomaticoDTO _cuentaAhorroAutomaticoInterna = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
@@ -261,24 +363,52 @@ namespace ModuloCuentas.Managers
                 _cuentaAhorroAutomaticoInterna.setMagnitudPeriodoAhorro(pCuentaAhorroAutomatico.getMagnitudPeriodoAhorro());
                 _cuentaAhorroAutomaticoInterna.setTipoPeriodo(pCuentaAhorroAutomatico.getTipoPeriodo());
                 _cuentaAhorroAutomaticoInterna.setNumeroCuentaDeduccion(pCuentaAhorroAutomatico.getNumeroCuentaDeduccion());
-                CuentaAhorroAutomaticoDAO.modificarCuentaAhorroAutomaticoBase(_cuentaAhorroAutomaticoInterna);
+                CuentaAhorroAutomaticoDAO.modificarCuentaAhorroAutomaticoBase(_cuentaAhorroAutomaticoInterna, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoNumeroCuenta(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico);
+                CuentaAhorroAutomaticoDTO _cuentaSalida = CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomatico, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentaSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
@@ -323,6 +453,7 @@ namespace ModuloCuentas.Managers
 
         public static string realizarPagoODebito(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoOrigen, decimal pMonto, CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoDestino)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
                 CuentaAhorroAutomaticoDTO _cuentaOrigen = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomaticoOrigen);
@@ -341,18 +472,32 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroAutomaticoDAO.quitarDinero(pCuentaAhorroAutomaticoOrigen, pMonto, pCuentaAhorroAutomaticoDestino, Constantes.AHORROAUTOMATICO);
+                    CuentaAhorroAutomaticoDAO.quitarDinero(pCuentaAhorroAutomaticoOrigen, pMonto, pCuentaAhorroAutomaticoDestino, Constantes.AHORROAUTOMATICO, _comandoMySQL);
+                    _comandoMySQL.Transaction.Commit();
                     return "Transacción completada con éxito";
                 }
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string realizarPagoODebito(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
                 CuentaAhorroAutomaticoDTO _cuentaOrigen = obtenerCuentaAhorroAutomaticoNumeroCuenta(pCuentaAhorroAutomaticoOrigen);
@@ -371,13 +516,26 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroAutomaticoDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA);
+                    CuentaAhorroAutomaticoDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA, _comandoMySQL);
+                    _comandoMySQL.Transaction.Commit();
                     return "Transacción completada con éxito";
                 }
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 

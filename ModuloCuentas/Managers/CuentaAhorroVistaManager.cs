@@ -7,63 +7,132 @@ using ModuloCuentas.DAO;
 using System.Threading;
 using FlexCoreDTOs.cuentas;
 using ModuloCuentas.Generales;
+using MySql.Data.MySqlClient;
+using ConexionMySQLServer.ConexionMySql;
 
 namespace ModuloCuentas.Managers
 {
     internal static class CuentaAhorroVistaManager
     {
+        private static MySqlCommand obtenerConexionSQL()
+        {
+            MySqlConnection _conexionMySQLBase = MySQLManager.nuevaConexion();
+            MySqlCommand _comandoMySQL = _conexionMySQLBase.CreateCommand();
+            MySqlTransaction _transaccion = _conexionMySQLBase.BeginTransaction();
+            _comandoMySQL.Connection = _conexionMySQLBase;
+            _comandoMySQL.Transaction = _transaccion;
+            return _comandoMySQL;
+        }
+
         public static string agregarCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROVISTA, pCuentaAhorroVista.getTipoMoneda());
+                string _numeroCuenta = GeneradorCuentas.generarCuenta(Constantes.AHORROVISTA, pCuentaAhorroVista.getTipoMoneda(), _comandoMySQL);
                 pCuentaAhorroVista.setNumeroCuenta(_numeroCuenta);
                 pCuentaAhorroVista.setSaldo(0);
                 pCuentaAhorroVista.setSaldoFlotante(0);
-                CuentaAhorroVistaDAO.agregarCuentaAhorroVistaBase(pCuentaAhorroVista);
+                CuentaAhorroVistaDAO.agregarCuentaAhorroVistaBase(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string eliminarCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                CuentaAhorroVistaDAO.eliminarCuentaAhorroVistaBase(pCuentaAhorroVista);
+                CuentaAhorroVistaDAO.eliminarCuentaAhorroVistaBase(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string modificarCuentaAhorroVista(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                CuentaAhorroVistaDAO.modificarCuentaAhorroVistaBase(pCuentaAhorroVista);
+                CuentaAhorroVistaDAO.modificarCuentaAhorroVistaBase(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaNumeroCuenta(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista);
+                CuentaAhorroVistaDTO _cuentaSalida = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentaSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
@@ -107,35 +176,65 @@ namespace ModuloCuentas.Managers
 
         public static int obtenerCuentaAhorroVistaID(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista);
+                int _id = CuentaAhorroDAO.obtenerCuentaAhorroID(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _id;
             }
             catch
             {
-                return 0;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return 0;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string agregarDinero(CuentaAhorroVistaDTO pCuentaAhorroVista, decimal pMonto)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                CuentaAhorroVistaDAO.agregarDinero(pCuentaAhorroVista, pMonto, Constantes.AHORROVISTA);
+                CuentaAhorroVistaDAO.agregarDinero(pCuentaAhorroVista, pMonto, Constantes.AHORROVISTA, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
                 return "Transacción completada con éxito";
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                CuentaAhorroVistaDTO _cuentaOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaOrigen);
-                CuentaAhorroVistaDTO _cuentaDestino = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaDestino);
+                CuentaAhorroVistaDTO _cuentaOrigen = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaOrigen, _comandoMySQL);
+                CuentaAhorroVistaDTO _cuentaDestino = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaDestino, _comandoMySQL);
                 if(_cuentaOrigen.getSaldoFlotante() < pMonto)
                 {
                     return "Fondos insuficientes";
@@ -150,18 +249,32 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA);
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroVistaDestino, Constantes.AHORROVISTA, _comandoMySQL);
+                    _comandoMySQL.Transaction.Commit();
                     return "Transacción completada con éxito";
                 }
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroAutomaticoDTO pCuentaAhorroAutomaticoDestino)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
                 CuentaAhorroVistaDTO _cuentaOrigen = obtenerCuentaAhorroVistaNumeroCuenta(pCuentaAhorroVistaOrigen);
@@ -180,13 +293,26 @@ namespace ModuloCuentas.Managers
                 }
                 else
                 {
-                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroAutomaticoDestino, Constantes.AHORROAUTOMATICO);
+                    CuentaAhorroVistaDAO.quitarDinero(_cuentaOrigen, pMonto, pCuentaAhorroAutomaticoDestino, Constantes.AHORROAUTOMATICO, _comandoMySQL);
+                    _comandoMySQL.Transaction.Commit();
                     return "Transacción completada con éxito";
                 }
             }
             catch
             {
-                return "Ha ocurrido un error en la transacción";
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return "Ha ocurrido un error en la transacción";
+                }
+                catch
+                {
+                    return "Ha ocurrido un error en la transacción";
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
@@ -207,7 +333,27 @@ namespace ModuloCuentas.Managers
 
         private static void realizarCierreCuentasAux()
         {
-            CuentaAhorroVistaDAO.iniciarCierre();
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
+            try
+            {
+                CuentaAhorroVistaDAO.iniciarCierre(_comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+            }
+            catch
+            {
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
+            }
         }
     }
 }
