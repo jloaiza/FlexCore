@@ -12,25 +12,26 @@ namespace Pruebas
     {
         static void Main(string[] args)
         {
-            //PersonDAO personDAO = new PersonDAO();
-            //PersonDTO person = new PersonDTO(DTOConstants.DEFAULT_INT_ID, "%Joseph%", "", "");
+            PersonDAO personDAO = PersonDAO.getInstance();
+            PersonDTO person = new PersonDTO(DTOConstants.DEFAULT_INT_ID, "Joseph", DTOConstants.DEFAULT_STRING, DTOConstants.DEFAULT_STRING);
             //personDAO.insert(person);
+            //Console.WriteLine(person==null);
 
             //ClientDAO cd = new ClientDAO();
             //ClientDTO c = new ClientDTO(1, "cif1", true);
             //cd.getAll();
 
-            JuridicalClientViewDAO jcv = new JuridicalClientViewDAO();
-            jcv.getAll();
-
-            //List<PersonDTO> results = personDAO.search(person);
-            //foreach (PersonDTO p in results)
-            //{
-            //    Console.WriteLine(p.getPersonID());
-            //    Console.WriteLine(p.getName());
-            //    Console.WriteLine(p.getPersonType());
-            //    Console.WriteLine("-----------------");
-            //}
+            //JuridicalClientVDAO jcv = JuridicalClientVDAO.getInstance();
+            //jcv.getAll(0, 10, JuridicalClientVDAO.NAME);
+            
+            List<PersonDTO> results = personDAO.getAll(1, 10);
+            foreach (PersonDTO p in results)
+            {
+                Console.WriteLine(p.getPersonID());
+                Console.WriteLine(p.getName());
+                Console.WriteLine(p.getPersonType());
+                Console.WriteLine("-----------------");
+            }
             Console.ReadLine();         
         }
     }

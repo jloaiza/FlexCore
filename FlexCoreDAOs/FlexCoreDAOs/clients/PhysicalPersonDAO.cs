@@ -8,12 +8,32 @@ namespace FlexCoreDAOs.clients
 {
     public class PhysicalPersonDAO:GeneralDAO<PhysicalPersonDTO>
     {
-        private static readonly string PERSON_ID = "idPersona";
-        private static readonly string NAME = "nombre";
-        private static readonly string ID_CARD = "cedula";
-        private static readonly string TYPE = "tipo";
-        private static readonly string FIRST_LSTNM = "primerApellido";
-        private static readonly string SECOND_LSTNM = "segundoApellido";
+        public static readonly string PERSON_ID = "idPersona";
+        public static readonly string NAME = "nombre";
+        public static readonly string ID_CARD = "cedula";
+        public static readonly string TYPE = "tipo";
+        public static readonly string FIRST_LSTNM = "primerApellido";
+        public static readonly string SECOND_LSTNM = "segundoApellido";
+
+        private static object _syncLock = new object();
+        private static PhysicalPersonDAO _instance;
+
+        public static PhysicalPersonDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new PhysicalPersonDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private PhysicalPersonDAO() { }
 
         protected override string getFindCondition(PhysicalPersonDTO pPerson)
         {
@@ -105,12 +125,12 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PhysicalPersonDTO> search(PhysicalPersonDTO pPerson, MySqlCommand pCommand)
+        public override List<PhysicalPersonDTO> search(PhysicalPersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "PERSONA_FISICA_V";
             string condition = getFindCondition(pPerson);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pPerson);
@@ -132,9 +152,9 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<PhysicalPersonDTO> getAll(MySqlCommand pCommand)
+        public override List<PhysicalPersonDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            string query = "SELECT * FROM PERSONA_FISICA_V";
+            string query = getSelectQuery("*", "PERSONA_FISICA_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
             List<PhysicalPersonDTO> list = new List<PhysicalPersonDTO>();

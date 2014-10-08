@@ -6,15 +6,35 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    public class JuridicalClientViewDAO:GeneralDAO<JuridicalClientVDTO>
+    public class JuridicalClientVDAO:GeneralDAO<JuridicalClientVDTO>
     {
 
-        private static readonly string CLIENT_ID = "idCliente";
-        private static readonly string CIF = "CIF";
-        private static readonly string ACTIVE = "activo";   
-        private static readonly string NAME = "nombre";
-        private static readonly string ID_CARD = "cedula";
-        private static readonly string TYPE = "tipo";
+        public static readonly string CLIENT_ID = "idCliente";
+        public static readonly string CIF = "CIF";
+        public static readonly string ACTIVE = "activo";
+        public static readonly string NAME = "nombre";
+        public static readonly string ID_CARD = "cedula";
+        public static readonly string TYPE = "tipo";
+
+        private static object _syncLock = new object();
+        private static JuridicalClientVDAO _instance;
+
+        public static JuridicalClientVDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new JuridicalClientVDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private JuridicalClientVDAO() { }
 
         protected override string getFindCondition(JuridicalClientVDTO pClient)
         {
@@ -51,12 +71,12 @@ namespace FlexCoreDAOs.clients
             }
         }
 
-        public override List<JuridicalClientVDTO> search(JuridicalClientVDTO pClient, MySqlCommand pCommand)
+        public override List<JuridicalClientVDTO> search(JuridicalClientVDTO pClient, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "CLIENTE_JURIDICO_V";
             string condition = getFindCondition(pClient);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pClient);
@@ -78,9 +98,9 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
-        public override List<JuridicalClientVDTO> getAll(MySqlCommand pCommand)
+        public override List<JuridicalClientVDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            string query = "SELECT * FROM CLIENTE_JURIDICO_V";
+            string query = getSelectQuery("*", "CLIENTE_JURIDICO_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
             List<JuridicalClientVDTO> list = new List<JuridicalClientVDTO>();

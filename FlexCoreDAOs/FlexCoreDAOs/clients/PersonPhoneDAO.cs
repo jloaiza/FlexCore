@@ -9,8 +9,28 @@ namespace FlexCoreDAOs.clients
     public class PersonPhoneDAO:GeneralDAO<PersonPhoneDTO>
     {
 
-        private static readonly string PHONE = "telefono";
-        private static readonly string PERSON_ID = "idPersona";
+        public static readonly string PHONE = "telefono";
+        public static readonly string PERSON_ID = "idPersona";
+
+        private static object _syncLock = new object();
+        private static PersonPhoneDAO _instance;
+
+        public static PersonPhoneDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new PersonPhoneDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private PersonPhoneDAO() { }
 
         public override void insert(PersonPhoneDTO pPhone, MySqlCommand pCommand)
         {
@@ -51,12 +71,12 @@ namespace FlexCoreDAOs.clients
             pCommand.ExecuteNonQuery();
         }
 
-        public override List<PersonPhoneDTO> search(PersonPhoneDTO pPhone, MySqlCommand pCommand)
+        public override List<PersonPhoneDTO> search(PersonPhoneDTO pPhone, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
             string selection = "*";
             string from = "TELEFONO_PERSONA";
             string condition = getFindCondition(pPhone);
-            string query = getSelectQuery(selection, from, condition);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
 
             pCommand.CommandText = query;
             setFindParameters(pCommand, pPhone);
