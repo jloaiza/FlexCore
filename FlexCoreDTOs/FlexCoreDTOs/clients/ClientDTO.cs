@@ -34,6 +34,13 @@ namespace FlexCoreDTOs.clients
                   _active = pActive;
         }
 
+        public ClientDTO(string pCIF, bool pActive = false)
+        {
+            _clientID = DTOConstants.DEFAULT_INT_ID;
+            _CIF = pCIF;
+            _active = pActive;
+        }
+
         //Setters
         public void setClientID(int pClientID) { _clientID = pClientID; }
 

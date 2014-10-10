@@ -31,6 +31,13 @@ namespace FlexCoreDTOs.clients
             _secondLastName = pSecondLastName;
         }
 
+        public PhysicalPersonDTO(string pName, string pFirstLastName, string pSecondLastName, string pIDCard)
+            : base(DTOConstants.DEFAULT_INT_ID, pName, pIDCard, PersonDTO.PHYSICAL_PERSON)
+        {
+            _firstLastName = pFirstLastName;
+            _secondLastName = pSecondLastName;
+        }
+
         //setters
         public void setFirstLastName(string pLastName) { _firstLastName = pLastName; }
         public void setSecondLastName(string pLastName) { _secondLastName = pLastName; }

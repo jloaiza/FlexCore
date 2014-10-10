@@ -29,6 +29,12 @@ namespace FlexCoreDTOs.clients
             _person = new PersonDTO(pIDClient, pName, pIDCard, pType);
         }
 
+        public JuridicalClientVDTO(string pName, string pIDCard, string pType, string pCIF, bool pActive = false)
+        {
+            _client = new ClientDTO(DTOConstants.DEFAULT_INT_ID, pCIF, pActive);
+            _person = new PersonDTO(DTOConstants.DEFAULT_INT_ID, pName, pIDCard, pType);
+        }
+
         //Setters
         public void setClientID(int pClientID) { 
             _client.setClientID(pClientID);

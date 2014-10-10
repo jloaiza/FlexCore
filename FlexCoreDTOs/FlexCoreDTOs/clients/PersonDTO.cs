@@ -42,6 +42,15 @@ namespace FlexCoreDTOs.clients
             checkType();
         }
 
+        public PersonDTO(string pName, string pIDCard, string pType)
+        {
+            _personID = DTOConstants.DEFAULT_INT_ID;
+            _name = pName;
+            _idCard = pIDCard;
+            _type = pType;
+            checkType();
+        }
+
         private void checkType()
         {
             bool notValid = _type != PHYSICAL_PERSON && _type != JURIDIC_PERSON;
