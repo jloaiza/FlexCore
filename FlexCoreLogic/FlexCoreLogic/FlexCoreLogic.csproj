@@ -59,9 +59,7 @@
     <Compile Include="cuentas\Managers\CuentaAhorroVistaManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="pagos\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="dll\ConexionMySQLServer.dll" />
     <Content Include="dll\FlexCoreDAOs.dll" />
