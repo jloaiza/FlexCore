@@ -49,7 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clients\GeneralLogic.cs" />
+    <Compile Include="clients\ClientLogic.cs" />
+    <Compile Include="clients\PersonAddressLogic.cs" />
+    <Compile Include="clients\PersonLogic.cs" />
+    <Compile Include="clients\PersonPhotoLogic.cs" />
+    <Compile Include="clients\PhysicalPersonLogic.cs" />
     <Compile Include="cuentas\Facade\FacadeCuentas.cs" />
     <Compile Include="cuentas\Generales\Constantes.cs" />
     <Compile Include="cuentas\Generales\GeneradorCuentas.cs" />
