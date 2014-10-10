@@ -61,11 +61,11 @@
     <Compile Include="cuentas\Generales\Transformaciones.cs" />
     <Compile Include="cuentas\Managers\CuentaAhorroAutomaticoManager.cs" />
     <Compile Include="cuentas\Managers\CuentaAhorroVistaManager.cs" />
+    <Compile Include="pagos\Facade\FacadePagos.cs" />
+    <Compile Include="pagos\Managers\PagosManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="pagos\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="dll\ConexionMySQLServer.dll" />
     <Content Include="dll\FlexCoreDAOs.dll" />
