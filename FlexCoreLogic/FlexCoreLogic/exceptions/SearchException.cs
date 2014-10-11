@@ -6,22 +6,20 @@ using System.Threading.Tasks;
 
 namespace FlexCoreLogic.exceptions
 {
-    internal class InsertException:Exception
+    class SearchException:Exception
     {
-
-        public InsertException()
+        public SearchException()
         {
         }
 
-        public InsertException(string message)
+        public SearchException(string message)
             : base(message)
         {
         }
 
-        public InsertException(string message, Exception inner)
+        public SearchException(string message, Exception inner)
             : base(message, inner)
         {
         }
-
     }
 }

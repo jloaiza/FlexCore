@@ -7,6 +7,7 @@ using FlexCoreDTOs.clients;
 using FlexCoreDAOs.clients;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using FlexCoreLogic.exceptions;
 
 namespace FlexCoreLogic.clients
 {
@@ -42,7 +43,7 @@ namespace FlexCoreLogic.clients
             }
             catch (MySqlException e)
             {
-                //if (e.Number == )
+                throw new InsertException();
             }
         }
 
@@ -55,27 +56,49 @@ namespace FlexCoreLogic.clients
             }
             catch (MySqlException e)
             {
-
+                throw new DeleteException();
             }
                 
         }
 
         public void update(PersonDTO pNewPerson, PersonDTO pPastPerson)
         {
-            PersonDAO dao = PersonDAO.getInstance();
-            dao.update(pNewPerson, pPastPerson);
+            try
+            {
+                PersonDAO dao = PersonDAO.getInstance();
+                dao.update(pNewPerson, pPastPerson);
+            }
+            catch (MySqlException e)
+            {
+                throw new UpdateException();
+            }
+            
         }
 
         public List<PersonDTO> search(PersonDTO pPerson, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            PersonDAO dao = PersonDAO.getInstance();
-            return dao.search(pPerson, pPageNumber, pShowCount, pOrderBy);
+            try
+            {
+                PersonDAO dao = PersonDAO.getInstance();
+                return dao.search(pPerson, pPageNumber, pShowCount, pOrderBy);
+            }
+            catch (MySqlException e)
+            {
+                throw new SearchException();
+            }
         }
 
         public List<PersonDTO> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
-            PersonDAO dao = PersonDAO.getInstance();
-            return dao.getAll(pPageNumber, pShowCount, pOrderBy);
+            try
+            {
+                PersonDAO dao = PersonDAO.getInstance();
+                return dao.getAll(pPageNumber, pShowCount, pOrderBy);
+            }
+            catch (MySqlException e)
+            {
+                throw new SearchException();
+            }
         }
     }
 }

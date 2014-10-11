@@ -39,7 +39,7 @@
     <Reference Include="FlexCoreDTOs">
       <HintPath>dll\FlexCoreDTOs.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data, Version=6.9.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,7 +60,10 @@
     <Compile Include="cuentas\Generales\Transformaciones.cs" />
     <Compile Include="cuentas\Managers\CuentaAhorroAutomaticoManager.cs" />
     <Compile Include="cuentas\Managers\CuentaAhorroVistaManager.cs" />
+    <Compile Include="exceptions\DeleteException.cs" />
     <Compile Include="exceptions\InsertException.cs" />
+    <Compile Include="exceptions\SearchException.cs" />
+    <Compile Include="exceptions\UpdateException.cs" />
     <Compile Include="pagos\Facade\FacadePagos.cs" />
     <Compile Include="pagos\Managers\PagosManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
