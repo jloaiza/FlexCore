@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ConexionMySQLServer.ConexionMySql;
 using FlexCoreDAOs.cuentas;
+using FlexCoreDAOs.administration;
 using FlexCoreDTOs.cuentas;
 using FlexCoreLogic.cuentas.Generales;
 using FlexCoreLogic.cuentas.Managers;
+
 
 namespace FlexCoreLogic.pagos.Managers
 {
@@ -22,6 +24,40 @@ namespace FlexCoreLogic.pagos.Managers
             _comandoMySQL.Connection = _conexionMySQLBase;
             _comandoMySQL.Transaction = _transaccion;
             return _comandoMySQL;
+        }
+
+        public static string verficarCliente() {
+
+            return "";
+        }
+
+        public static string verificarDispositivos() {
+            string resultado;
+            List<int> estadoCuentaDisp;
+            try
+            {
+                FlexCoreDAOs.administration.DispositivoCuentaQueriesDAO DispC = new DispositivoCuentaQueriesDAO();
+                estadoCuentaDisp = DispC.checkDispositivoCuenta(this._cuentaOrigen, this._idOrigen);
+                if (estadoCuentaDisp[0] == 0)
+                {
+                    resultado = "Dispositvo NO Valido"; 
+                }
+                else if (estadoCuentaDisp[0] == 1)
+                {
+                    resultado = "Dispositivo Inactivado";
+                }
+                else if (estadoCuentaDisp[0] == 2) { }
+
+            }
+            catch (Exception ex)
+            {
+
+            }            
+            return "";
+        }
+
+        public static string identificarCuenta() {
+            return "";
         }
 
         public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
