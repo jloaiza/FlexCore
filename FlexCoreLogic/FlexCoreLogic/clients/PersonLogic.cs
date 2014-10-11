@@ -42,7 +42,7 @@ namespace FlexCoreLogic.clients
             }
             catch (MySqlException e)
             {
-                
+                //if (e.Number == )
             }
         }
 

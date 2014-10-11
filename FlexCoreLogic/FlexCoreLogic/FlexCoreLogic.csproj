@@ -50,9 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clients\ClientLogic.cs" />
-    <Compile Include="clients\PersonAddressLogic.cs" />
+    <Compile Include="clients\AbstractPersonLogic.cs" />
     <Compile Include="clients\PersonLogic.cs" />
-    <Compile Include="clients\PersonPhotoLogic.cs" />
     <Compile Include="clients\PhysicalPersonLogic.cs" />
     <Compile Include="cuentas\Facade\FacadeCuentas.cs" />
     <Compile Include="cuentas\Generales\Constantes.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="cuentas\Generales\Transformaciones.cs" />
     <Compile Include="cuentas\Managers\CuentaAhorroAutomaticoManager.cs" />
     <Compile Include="cuentas\Managers\CuentaAhorroVistaManager.cs" />
+    <Compile Include="exceptions\InsertException.cs" />
     <Compile Include="pagos\Facade\FacadePagos.cs" />
     <Compile Include="pagos\Managers\PagosManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
