@@ -34,6 +34,7 @@ namespace FlexCoreDAOs.clients
 
         public override void insert(PersonPhotoDTO pPhoto, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "FOTO_PERSONA";
             string columns = String.Format("{0}, {1}", PHOTO, PERSON_ID);
             string values = String.Format("@{0}, @{1}", PHOTO, PERSON_ID);
@@ -47,6 +48,7 @@ namespace FlexCoreDAOs.clients
 
         public override void delete(PersonPhotoDTO pPhoto, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "FOTO_PERSONA";
             string condition = String.Format("{0} = @{0}", PERSON_ID);
             string query = getDeleteQuery(tableName, condition);
@@ -58,6 +60,7 @@ namespace FlexCoreDAOs.clients
 
         public override void update(PersonPhotoDTO pNewPhoto, PersonPhotoDTO pPastPhoto, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "FOTO_PERSONA";
             string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}", PERSON_ID, PHOTO);
             string condition = String.Format("{0} = @{0}Anterior", PERSON_ID);
@@ -72,6 +75,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PersonPhotoDTO> search(PersonPhotoDTO pPhoto, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "FOTO_PERSONA";
             string condition = String.Format("{0}= @{0}", PERSON_ID);

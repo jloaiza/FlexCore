@@ -72,6 +72,7 @@ namespace FlexCoreDAOs.clients
 
         public override void insert(PersonDocumentDTO pDocument, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "DOCUMENTO_PERSONA";
             string columns = String.Format("{0}, {1}, {2}, {3}", DOCUMENT, DOC_NAME, DOC_DESCRIP, PERSON_ID);
             string values = String.Format("@{0}, @{1}, @{2}, @{3}", DOCUMENT, DOC_NAME, DOC_DESCRIP, PERSON_ID);
@@ -87,6 +88,7 @@ namespace FlexCoreDAOs.clients
 
         public override void delete(PersonDocumentDTO pDocument, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "DOCUMENTO_PERSONA";
             string condition = String.Format("{0}= @{0} AND {1}=@{1}", PERSON_ID, DOC_NAME);
             string query = getDeleteQuery(tableName, condition);
@@ -99,6 +101,7 @@ namespace FlexCoreDAOs.clients
 
         public override void update(PersonDocumentDTO pNewDoc, PersonDocumentDTO pPastDoc, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "DOCUMENTO_PERSONA";
             string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}, {2}=@nuevo{2}, {3}=@nuevo{3}", DOCUMENT, PERSON_ID, DOC_NAME, DOC_DESCRIP);
             string condition = String.Format("{0}= @{0}Anterior AND {1}=@{1}Anterior", PERSON_ID, DOC_NAME);
@@ -116,6 +119,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PersonDocumentDTO> search(PersonDocumentDTO pDocument, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "DOCUMENTO_PERSONA";
             string condition = getFindCondition(pDocument);

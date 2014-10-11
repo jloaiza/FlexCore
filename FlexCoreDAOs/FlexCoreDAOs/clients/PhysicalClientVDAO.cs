@@ -74,6 +74,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PhysicalClientVDTO> search(PhysicalClientVDTO pClient, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "CLIENTE_FISICO_V";
             string condition = getFindCondition(pClient);
@@ -103,6 +104,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PhysicalClientVDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string query = getSelectQuery("*", "CLIENTE_FISICO_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();

@@ -35,6 +35,7 @@ namespace FlexCoreDAOs.clients
 
         public override void insert(PersonAddressDTO pAddress, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "DIRECCION_PERSONA";
             string columns = String.Format("{0}, {1}", ADDRESS, PERSON_ID);
             string values = String.Format("@{0}, @{1}", ADDRESS, PERSON_ID);
@@ -48,6 +49,7 @@ namespace FlexCoreDAOs.clients
 
         public override void delete(PersonAddressDTO pAddress, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "DIRECCION_PERSONA";
             string condition = String.Format("{0}= @{0} AND {1}=@{1}", PERSON_ID, ADDRESS);
             string query = getDeleteQuery(tableName, condition);
@@ -60,6 +62,7 @@ namespace FlexCoreDAOs.clients
 
         public override void update(PersonAddressDTO pNewAddress, PersonAddressDTO pPastAddress, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "DIRECCION_PERSONA";
             string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}", PERSON_ID, ADDRESS);
             string condition = String.Format("{0}= @{0}Anterior AND {1}=@{1}Anterior", PERSON_ID);
@@ -76,6 +79,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PersonAddressDTO> search(PersonAddressDTO pAddress, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "DIRECCION_PERSONA";
             string condition = String.Format("{0} = @{0}", PERSON_ID);

@@ -82,6 +82,7 @@ namespace FlexCoreDAOs.clients
 
         public override void insert(PersonDTO pPerson, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "PERSONA";
             string columns = String.Format("{0}, {1}, {2}", NAME, ID_CARD, TYPE);
             string values = String.Format("@{0}, @{1}, @{2}", NAME, ID_CARD, TYPE);
@@ -95,6 +96,7 @@ namespace FlexCoreDAOs.clients
         }
         public override void delete(PersonDTO pPerson, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "PERSONA";
             string condition = String.Format("{0} = @{0} OR {1}=@{1}", PERSON_ID, ID_CARD);
             string query = getDeleteQuery(tableName, condition);
@@ -107,14 +109,14 @@ namespace FlexCoreDAOs.clients
 
         public override void update(PersonDTO pNewPerson, PersonDTO pPastPerson, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "PERSONA";
             //Añadir trigger que valide el cambio de tipo
-            string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}, {2}=@nuevo{2}, {3}=@nuevo{3}", PERSON_ID, NAME, ID_CARD, TYPE);
+            string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}, {2}=@nuevo{2}", NAME, ID_CARD, TYPE);
             string condition = String.Format("{0} = @{0}Anterior OR {1} = @{1}Anterior", PERSON_ID, ID_CARD);
             string query = getUpdateQuery(tableName, values, condition);
             
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@nuevo"+PERSON_ID, pNewPerson.getPersonID());
             pCommand.Parameters.AddWithValue("@nuevo"+NAME, pNewPerson.getName());
             pCommand.Parameters.AddWithValue("@nuevo"+ID_CARD, pNewPerson.getIDCard());
             pCommand.Parameters.AddWithValue("@nuevo"+TYPE, pNewPerson.getPersonType());
@@ -125,6 +127,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "PERSONA";
             string condition = getFindCondition(pPerson);
@@ -150,6 +153,7 @@ namespace FlexCoreDAOs.clients
 
         public List<PersonDTO> searchJuridical(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "PERSONA_JURIDICA_V";
             string condition = getFindCondition(pPerson);
@@ -175,6 +179,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PersonDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string query = getSelectQuery("*", "PERSONA", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
@@ -201,6 +206,7 @@ namespace FlexCoreDAOs.clients
 
         public List<PersonDTO> getAllJuridical(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string query = getSelectQuery("*", "PERSONA_JURIDICA_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
@@ -216,6 +222,5 @@ namespace FlexCoreDAOs.clients
             }
             return list;
         }
-
     }
 }

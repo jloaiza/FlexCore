@@ -88,6 +88,7 @@ namespace FlexCoreDAOs.clients
 
         public override void insert(PhysicalPersonDTO pPerson, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "PERSONA_FISICA";
             string columns = String.Format("{0}, {1}, {2}", PERSON_ID, FIRST_LSTNM, SECOND_LSTNM);
             string values = String.Format("@{0}, @{1}, @{2}", PERSON_ID, FIRST_LSTNM, SECOND_LSTNM);
@@ -101,6 +102,7 @@ namespace FlexCoreDAOs.clients
         }
         public override void delete(PhysicalPersonDTO pPerson, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "PERSONA_FISICA";
             string condition = String.Format("{0} = @{0}", PERSON_ID);
             string query = getDeleteQuery(tableName, condition);
@@ -112,13 +114,13 @@ namespace FlexCoreDAOs.clients
 
         public override void update(PhysicalPersonDTO pNewPerson, PhysicalPersonDTO pPastPerson, MySqlCommand pCommand)
         {
+            pCommand.Parameters.Clear();
             string tableName = "PERSONA_FISICA";
-            string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}, {2}=@nuevo{2}", PERSON_ID, FIRST_LSTNM, SECOND_LSTNM);
+            string values = String.Format("{0}=@nuevo{0}, {1}=@nuevo{1}", FIRST_LSTNM, SECOND_LSTNM);
             string condition = String.Format("{0} = @{0}Anterior", PERSON_ID);
             string query = getUpdateQuery(tableName, values, condition);
 
             pCommand.CommandText = query;
-            pCommand.Parameters.AddWithValue("@nuevo" + PERSON_ID, pNewPerson.getPersonID());
             pCommand.Parameters.AddWithValue("@nuevo" + FIRST_LSTNM, pNewPerson.getFirstLastName());
             pCommand.Parameters.AddWithValue("@nuevo" + SECOND_LSTNM, pNewPerson.getSecondLastName());
             pCommand.Parameters.AddWithValue("@" + PERSON_ID + "Anterior", pPastPerson.getPersonID());
@@ -127,6 +129,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PhysicalPersonDTO> search(PhysicalPersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string selection = "*";
             string from = "PERSONA_FISICA_V";
             string condition = getFindCondition(pPerson);
@@ -154,6 +157,7 @@ namespace FlexCoreDAOs.clients
 
         public override List<PhysicalPersonDTO> getAll(MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
+            pCommand.Parameters.Clear();
             string query = getSelectQuery("*", "PERSONA_FISICA_V", pPageNumber, pShowCount, pOrderBy);
             pCommand.CommandText = query;
             MySqlDataReader reader = pCommand.ExecuteReader();
