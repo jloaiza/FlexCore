@@ -12,6 +12,8 @@ namespace FlexCoreLogic.clients
     {
         public void insert(PhysicalPersonDTO pPerson)
         {
+            PersonDAO perDao = PersonDAO.getInstance();
+            PersonDTO result = perDao.search();
             PhysicalPersonDAO dao = PhysicalPersonDAO.getInstance();
             dao.insert(pPerson);
         }

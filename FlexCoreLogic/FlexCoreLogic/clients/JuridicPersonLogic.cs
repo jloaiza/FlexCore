@@ -12,29 +12,29 @@ using FlexCoreLogic.exceptions;
 namespace FlexCoreLogic.clients
 {
 
-    class PersonLogic
+    class JuridicPersonLogic:AbstractPersonLogic<PersonDTO>
     {
 
-        private static PersonLogic _instance = null;
+        private static JuridicPersonLogic _instance = null;
         private static object _syncLock = new object();
 
-        public PersonLogic  getInstance(){
+        public JuridicPersonLogic  getInstance(){
             if (_instance == null)
             {
                 lock (_syncLock)
                 {
                     if (_instance == null)
                     {
-                        _instance = new PersonLogic();
+                        _instance = new JuridicPersonLogic();
                     }
                 }
             }
             return _instance;
         }
 
-        private PersonLogic() { }
+        private JuridicPersonLogic() { }
 
-        public void insert(PersonDTO pPerson)
+        public override void insert(PersonDTO pPerson, MySqlCommand pCommand)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace FlexCoreLogic.clients
             }
         }
 
-        public void delete(PersonDTO pPerson)
+        public override void delete(PersonDTO pPerson, MySqlCommand pCommand)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace FlexCoreLogic.clients
                 
         }
 
-        public void update(PersonDTO pNewPerson, PersonDTO pPastPerson)
+        public override void update(PersonDTO pNewPerson, PersonDTO pPastPerson, MySqlCommand pCommand)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace FlexCoreLogic.clients
             
         }
 
-        public List<PersonDTO> search(PersonDTO pPerson, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             try
             {
@@ -88,12 +88,12 @@ namespace FlexCoreLogic.clients
             }
         }
 
-        public List<PersonDTO> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonDTO> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             try
             {
                 PersonDAO dao = PersonDAO.getInstance();
-                return dao.getAll(pPageNumber, pShowCount, pOrderBy);
+                return dao.getAllJuridical(pPageNumber, pShowCount, pOrderBy);
             }
             catch (MySqlException e)
             {

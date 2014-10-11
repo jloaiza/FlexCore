@@ -7,6 +7,8 @@ using FlexCoreDTOs.clients;
 using FlexCoreDAOs.clients;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using FlexCoreLogic.exceptions;
+using ConexionMySQLServer.ConexionMySql;
 
 namespace FlexCoreLogic.clients
 {
@@ -35,9 +37,66 @@ namespace FlexCoreLogic.clients
             }
             catch (MySqlException e)
             {
-                throw 
+                throw new InsertException();
             }
-                
+        }
+
+        public void addPhoto(PersonPhotoDTO pPhoto, MySqlCommand pCommand)
+        {
+            try
+            {
+                PersonPhotoDAO dao = PersonPhotoDAO.getInstance();
+                PersonPhotoDTO result = dao.search(pPhoto, pCommand)[0];
+                if (result != null)
+                {
+                    dao.update(pPhoto, pPhoto, pCommand);
+                }
+                else
+                {
+                    dao.insert(pPhoto, pCommand);
+                }
+            }
+            catch (MySqlException e)
+            {
+                throw new UpdateException();
+            }
+        }
+        
+        public void addPhone(List<PersonPhoneDTO> pPhones, MySqlCommand pCommand)
+        {
+            try
+            {
+                PersonPhoneDAO dao = PersonPhoneDAO.getInstance();
+                foreach (PersonPhoneDTO phone in pPhones)
+                {
+                    dao.insert(phone, pCommand);
+                }
+            }
+            catch (MySqlException e)
+            {
+                throw new UpdateException();
+            }
+        }
+
+        public void addDoc(PersonDocumentDTO pDocument, MySqlCommand pCommand)
+        {
+            try
+            {
+                PersonDocumentDAO dao = PersonDocumentDAO.getInstance();
+                PersonDocumentDTO result = dao.search(pDocument)[0];
+                if (result != null)
+                {
+                    dao.update(pDocument, pDocument, pCommand);
+                }
+                else
+                {
+                    dao.insert(pDocument, pCommand);
+                }
+            }
+            catch (MySqlException e)
+            {
+                throw new UpdateException();
+            }
         }
 
     }
