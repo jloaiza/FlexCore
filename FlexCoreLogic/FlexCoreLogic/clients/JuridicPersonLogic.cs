@@ -8,6 +8,7 @@ using FlexCoreDAOs.clients;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using FlexCoreLogic.exceptions;
+using ConexionMySQLServer.ConexionMySql;
 
 namespace FlexCoreLogic.clients
 {
@@ -39,7 +40,7 @@ namespace FlexCoreLogic.clients
             try
             {
                 PersonDAO dao = PersonDAO.getInstance();
-                dao.insert(pPerson);
+                dao.insert(pPerson, pCommand);
             }
             catch (MySqlException e)
             {
@@ -52,7 +53,7 @@ namespace FlexCoreLogic.clients
             try
             {
                 PersonDAO dao = PersonDAO.getInstance();
-                dao.delete(pPerson);
+                dao.delete(pPerson, pCommand);
             }
             catch (MySqlException e)
             {
@@ -66,7 +67,7 @@ namespace FlexCoreLogic.clients
             try
             {
                 PersonDAO dao = PersonDAO.getInstance();
-                dao.update(pNewPerson, pPastPerson);
+                dao.update(pNewPerson, pPastPerson, pCommand);
             }
             catch (MySqlException e)
             {
@@ -80,7 +81,7 @@ namespace FlexCoreLogic.clients
             try
             {
                 PersonDAO dao = PersonDAO.getInstance();
-                return dao.search(pPerson, pPageNumber, pShowCount, pOrderBy);
+                return dao.searchJuridical(pPerson, pCommand, pPageNumber, pShowCount, pOrderBy);
             }
             catch (MySqlException e)
             {
