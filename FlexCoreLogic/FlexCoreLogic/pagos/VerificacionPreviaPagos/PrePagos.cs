@@ -13,13 +13,18 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
 {
     public class PrePagos
     {
+        /*
+         * Banderas de los requerimientos antes de hacer un pago
+         */
         private Boolean _sePuedePagar;
         private Boolean _clientesOK;
         private Boolean _cuentasOrigenOK;
         private Boolean _cuentasDestinoOK;
         private Boolean _DispositivoOK;
 
-        
+        /*
+         * Contructor, se asignan valores falsos a las banderas
+         */
         public PrePagos() {
             this._sePuedePagar = false;
             this._clientesOK = false;
@@ -28,18 +33,25 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             this._DispositivoOK = false;
         }
 
+        /*
+         * Este metodo, recibe los parametros necesarios para realizar un pago, pCuentaOrigen, se refiere a la 
+         * cuenta del usuario que esta realizando un pago, pCuenta Destino a la cuenta donde se va a hacer el 
+         * deposito, y el IdOrigen, se refiere al id del dispositivo con el que se conecta el usuario para
+         * realizar el pago.
+         * Como es un pago, todo pago tiene un monto, pMonto, es el monto del pago.
+         */
         public string iniciarPago(string pCuentaOrigen, string pCuentaDestino, string pIdOrigen, int pMonto)
         {
             FlexCoreDTOs.cuentas.CuentaAhorroVistaDTO nCuentaVista_O = new CuentaAhorroVistaDTO();
             FlexCoreDTOs.cuentas.CuentaAhorroVistaDTO nCuentaVista_D = new CuentaAhorroVistaDTO();
             FlexCoreDTOs.cuentas.CuentaAhorroAutomaticoDTO nCuentaAA_O = new CuentaAhorroAutomaticoDTO();
             FlexCoreDTOs.cuentas.CuentaAhorroAutomaticoDTO nCuentaAA_D = new CuentaAhorroAutomaticoDTO();
-            int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);
-            int tCuentaDestino = this.identificarCuentas(pCuentaDestino);
+            int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);//verifica el tipo de cuenta
+            int tCuentaDestino = this.identificarCuentas(pCuentaDestino);//verifica el tipo de cuenta
             this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
             this.verficarCliente();
             decimal Monto = (decimal)pMonto;
-            if (_clientesOK && _cuentasOrigenOK && _DispositivoOK) {
+            if (_clientesOK && _cuentasOrigenOK && _DispositivoOK) {//si se activan las 3 banderas, se puede hacer un pago
                 if(tCuentaOrigen == 0 && tCuentaDestino==0){
                     nCuentaAA_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaAA_D.setNumeroCuenta(pCuentaDestino);
@@ -70,7 +82,9 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             return "";
         }
 
-        
+        /*
+         * Verifica su un dispositivo, esta activo, si esta asociado a una cuenta,  y si existe. 
+         */
         public string verificarDispositivos(string pCuentaOrigen, string pIdOrigen)
         {
             String resultado = "Dispositivo";
@@ -126,6 +140,10 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             return resultado;
         }
 
+        /*
+         * Identifica el tipo de cuenta,  si es una cuenta de Ahorro vista,
+         * o si es una cuenta de ahorra automatico
+         */
         public int identificarCuentas(string pCuenta) {
             int resultado=-1;
             switch(pCuenta.ElementAt(0)){
