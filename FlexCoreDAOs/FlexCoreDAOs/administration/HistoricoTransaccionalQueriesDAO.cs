@@ -12,7 +12,7 @@ namespace FlexCoreDAOs.administration
 {
     public class HistoricoTransaccionalQueriesDAO
     {
-        public void insertTransaccionVuelo(String descripcion, DateTime fechaHora, int idCuenta, int tipoTransaccion)
+        public void insertHistoricoTransaccional(String descripcion, DateTime fechaHora, int idCuenta, int tipoTransaccion)
         {
             String query = "INSERT INTO HISTORICO_TRANSACCIONAL (descripcion, fechaHora, idCuenta, tipoTransaccion)" +
                 " VALUES (@descripcion, @fechaHora, @idCuenta, @tipoTransaccion);";
@@ -86,7 +86,7 @@ namespace FlexCoreDAOs.administration
             return transacciones_vuelo;
         }
 
-        public int getIdTransaccionVuelo(String descripcion)
+        public int getIdHistoricoTransaccional(String descripcion)
         {
             String query = "SELECT * FROM HISTORICO_TRANSACCIONAL WHERE descripcion = @descripcion;";
             int transaccion_vuelo = -1;
@@ -103,7 +103,7 @@ namespace FlexCoreDAOs.administration
             return transaccion_vuelo;
         }
 
-        public void updateTransaccionVuelo(int idTransaccion, String descripcion)
+        public void updateHistoricoTransaccional(int idTransaccion, String descripcion)
         {
             String query = "UPDATE HISTORICO_TRANSACCIONAL SET descripcion = @descripcion WHERE idTransaccion = @idTransaccion;";
             MySqlConnection connD = MySQLManager.nuevaConexion();
@@ -115,7 +115,7 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public void deleteTransaccionVuelo(int idTransaccion)
+        public void deleteHistoricoTransaccional(int idTransaccion)
         {
             String query = "DELETE FROM HISTORICO_TRANSACCIONAL WHERE idTransaccion = @idTransaccion;";
             MySqlConnection connD = MySQLManager.nuevaConexion();
@@ -126,7 +126,7 @@ namespace FlexCoreDAOs.administration
             MySQLManager.cerrarConexion(connD);
         }
 
-        public void deleteTransaccionVuelo(String descripcion)
+        public void deleteHistoricoTransaccional(String descripcion)
         {
             String query = "DELETE FROM HISTORICO_TRANSACCIONAL WHERE descripcion = @descripcion;";
             MySqlConnection connD = MySQLManager.nuevaConexion();
