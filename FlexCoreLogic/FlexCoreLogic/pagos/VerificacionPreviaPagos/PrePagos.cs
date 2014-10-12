@@ -144,5 +144,10 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             }
             return 0;
         }
+
+        public void registrarPago() {
+            
+        
+        }
     }
 }
