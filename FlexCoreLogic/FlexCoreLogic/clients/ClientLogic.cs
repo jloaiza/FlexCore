@@ -87,7 +87,26 @@ namespace FlexCoreLogic.clients
         public bool isActive(ClientDTO pClient, MySqlCommand pCommand)
         {
             throw new Exception("Not implemented yet.");
-            //return ClientDAO.getInstance().setActive(pClient);
+        }
+
+        public void setActive(ClientDTO pClient)
+        {
+            MySqlConnection con = MySQLManager.nuevaConexion();
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = con;
+            try
+            {
+                setActive(pClient, command);
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(con);
+            }
+        }
+
+        public void setActive(ClientDTO pClient, MySqlCommand pCommand)
+        {
+            throw new Exception("Not implemented yet.");
         }
 
         public void insert(PersonDTO pPerson)
