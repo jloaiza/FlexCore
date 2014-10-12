@@ -143,6 +143,21 @@ namespace FlexCoreDAOs.clients
             return list;
         }
 
+        public List<PersonDocumentDTO> searchPartial(PersonDocumentDTO pDocument, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
+        {
+            MySqlConnection con = MySQLManager.nuevaConexion();
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = con;
+            try
+            {
+                return searchPartial(pDocument, command, pPageNumber, pShowCount, pOrderBy);
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(con);
+            }
+        }
+
         public List<PersonDocumentDTO> searchPartial(PersonDocumentDTO pDocument, MySqlCommand pCommand, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
             pCommand.Parameters.Clear();
