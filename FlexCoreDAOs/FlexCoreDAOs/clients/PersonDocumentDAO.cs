@@ -142,5 +142,32 @@ namespace FlexCoreDAOs.clients
             }
             return list;
         }
+
+        public List<PersonDocumentDTO> searchPartial(PersonDocumentDTO pDocument, MySqlCommand pCommand, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
+        {
+            pCommand.Parameters.Clear();
+            string selection = String.Format("{0}, {1}, {2}", DOC_NAME, PERSON_ID, DOC_DESCRIP);
+            string from = "DOCUMENTO_PERSONA";
+            string condition = getFindCondition(pDocument);
+            string query = getSelectQuery(selection, from, condition, pPageNumber, pShowCount, pOrderBy);
+
+            pCommand.CommandText = query;
+            setFindParameters(pCommand, pDocument);
+
+            MySqlDataReader reader = pCommand.ExecuteReader();
+            List<PersonDocumentDTO> list = new List<PersonDocumentDTO>();
+
+            while (reader.Read())
+            {
+                PersonDocumentDTO client = new PersonDocumentDTO();
+                client.setPersonID((int)reader[PERSON_ID]);
+                client.setName(reader[DOC_NAME].ToString());
+                client.setDocHexBytes((byte[])reader[DOCUMENT]);
+                client.setDescription(reader[DOC_DESCRIP].ToString());
+                list.Add(client);
+            }
+            return list;
+        }
+
     }
 }
