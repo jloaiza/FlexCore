@@ -26,39 +26,7 @@ namespace FlexCoreLogic.pagos.Managers
             return _comandoMySQL;
         }
 
-        public static string verficarCliente() {
-
-            return "";
-        }
-
-        public static string verificarDispositivos() {
-            string resultado;
-            List<int> estadoCuentaDisp;
-            try
-            {
-                FlexCoreDAOs.administration.DispositivoCuentaQueriesDAO DispC = new DispositivoCuentaQueriesDAO();
-                estadoCuentaDisp = DispC.checkDispositivoCuenta(this._cuentaOrigen, this._idOrigen);
-                if (estadoCuentaDisp[0] == 0)
-                {
-                    resultado = "Dispositvo NO Valido"; 
-                }
-                else if (estadoCuentaDisp[0] == 1)
-                {
-                    resultado = "Dispositivo Inactivado";
-                }
-                else if (estadoCuentaDisp[0] == 2) { }
-
-            }
-            catch (Exception ex)
-            {
-
-            }            
-            return "";
-        }
-
-        public static string identificarCuenta() {
-            return "";
-        }
+       
 
         public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
         {
