@@ -1,4 +1,5 @@
 ﻿using ConexionMySQLServer.ConexionMySql;
+using FlexCoreDAOs.clients;
 using FlexCoreDTOs.clients;
 using MySql.Data.MySqlClient;
 using System;
@@ -33,12 +34,12 @@ namespace FlexCoreLogic.clients
 
         public bool isClientActive(ClientDTO pClient)
         {
-            throw new Exception("Not implemented yet.");
+            return ClientLogic.getInstance().isActive(pClient);
         }
 
         public void setClientActiveStatus(ClientDTO pClient)
         {
-            throw new Exception("Not implemented yet.");
+            ClientLogic.getInstance().setActive(pClient);
         }
 
         //address
@@ -103,61 +104,61 @@ namespace FlexCoreLogic.clients
             return PersonLogic.getInstance().getCompleteDoc(pDocumment);
         }
 
-        public List<PersonDocumentDTO> getPartialDoc(PersonDocumentDTO pDocumment)
+        public List<PersonDocumentDTO> getPartialDoc(PersonDocumentDTO pDocumment, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
-            throw new Exception("Not implemented yet.");
+            return PersonLogic.getInstance().getPartialDoc(pDocumment, pPageNumber, pShowCount, pOrderBy);
         }
 
         //juridical person
         public void newJuridicalPerson(PersonDTO pPerson, MySqlCommand pCommand)
         {
-            throw new Exception("Not implemented yet.");
+            JuridicPersonLogic.getInstance().insert(pPerson);
         }
 
         public void deleteJuridicalPerson(PersonDTO pPerson, MySqlCommand pCommand)
         {
-            throw new Exception("Not implemented yet.");
+            JuridicPersonLogic.getInstance().delete(pPerson);
         }
 
-        public void updateJuridicalPerson(PersonDTO pNewPerson, PersonDTO pPastPerson, MySqlCommand pCommand)
+        public void updateJuridicalPerson(PersonDTO pNewPerson, PersonDTO pPastPerson)
         {
-            throw new Exception("Not implemented yet.");
+            JuridicPersonLogic.getInstance().update(pNewPerson, pPastPerson);
         }
 
-        public List<PersonDTO> searchJuridicalPerson(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
+        public List<PersonDTO> searchJuridicalPerson(PersonDTO pPerson, int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
-            throw new Exception("Not implemented yet.");
+            return JuridicPersonLogic.getInstance().search(pPerson, pPageNumber, pShowCount, pOrderBy);
         }
 
         public List<PersonDTO> getAllJuridicalPerson(int pPageNumber = 0, int pShowCount = 0, params string[] pOrderBy)
         {
-            throw new Exception("Not implemented yet.");
+            return JuridicPersonLogic.getInstance().getAll(pPageNumber, pShowCount, pOrderBy);
         }
 
         //physical person
         public void insertPhysicalPerson(PhysicalPersonDTO pPerson)
         {
-            throw new Exception("Not implemented yet.");
+            PhysicalPersonLogic.getInstance().insert(pPerson);
         }
 
-        public void deletePhysicalPerson(PhysicalPersonDTO pPerson, MySqlCommand pCommand)
+        public void deletePhysicalPerson(PhysicalPersonDTO pPerson)
         {
-            throw new Exception("Not implemented yet.");
+            PhysicalPersonLogic.getInstance().delete(pPerson);
         }
 
         public void updatePhysicalPerson(PhysicalPersonDTO pNewPerson, PhysicalPersonDTO pPastPerson)
         {
-            throw new Exception("Not implemented yet.");
+            PhysicalPersonLogic.getInstance().update(pNewPerson, pPastPerson);
         }
 
-        public List<PhysicalPersonDTO> searchPhysicalPerson(PhysicalPersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public List<PhysicalPersonDTO> searchPhysicalPerson(PhysicalPersonDTO pPerson, MySqlCommand pCommand, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
-            throw new Exception("Not implemented yet.");
+            return PhysicalPersonLogic.getInstance().search(pPerson, pPageNumber, pShowCount, pOrderBy);
         }
 
-        public List<PhysicalPersonDTO> getAllPhysicalPerson(int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public List<PhysicalPersonDTO> getAllPhysicalPerson(int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
-            throw new Exception("Not implemented yet.");
+            return PhysicalPersonLogic.getInstance().getAll(pPageNumber, pShowCount, pOrderBy);
         }
     }
 }

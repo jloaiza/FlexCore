@@ -449,9 +449,9 @@ namespace FlexCoreLogic.clients
             }
         }
 
-        public List<PersonDocumentDTO> getPartialDoc(PersonDocumentDTO pDocumment)
+        public List<PersonDocumentDTO> getPartialDoc(PersonDocumentDTO pDocument, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
-            throw new Exception("Not implemented yet.");
+            return PersonDocumentDAO.getInstance().searchPartial(pDocument, pPageNumber, pShowCount, pOrderBy);
         }
 
     }
