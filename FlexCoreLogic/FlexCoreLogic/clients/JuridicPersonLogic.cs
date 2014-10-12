@@ -19,7 +19,7 @@ namespace FlexCoreLogic.clients
         private static JuridicPersonLogic _instance = null;
         private static object _syncLock = new object();
 
-        public JuridicPersonLogic  getInstance(){
+        public static JuridicPersonLogic getInstance(){
             if (_instance == null)
             {
                 lock (_syncLock)
@@ -76,7 +76,7 @@ namespace FlexCoreLogic.clients
             
         }
 
-        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonDTO> search(PersonDTO pPerson, MySqlCommand pCommand, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FlexCoreLogic.clients
             }
         }
 
-        public override List<PersonDTO> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public override List<PersonDTO> getAll(int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
             try
             {
