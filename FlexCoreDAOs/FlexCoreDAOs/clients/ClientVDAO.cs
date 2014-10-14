@@ -18,6 +18,26 @@ namespace FlexCoreDAOs.clients
         public static readonly string ID_CARD = "cedula";
         public static readonly string TYPE = "tipo";
 
+        private static object _syncLock = new object();
+        private static ClientVDAO _instance;
+
+        public static ClientVDAO getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new ClientVDAO();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private ClientVDAO() { }
+
         protected override string getFindCondition(ClientVDTO pClient)
         {
             string condition = "";
