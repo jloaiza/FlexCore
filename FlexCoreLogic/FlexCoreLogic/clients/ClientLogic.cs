@@ -236,11 +236,11 @@ namespace FlexCoreLogic.clients
             
         }
 
-        public List<ClientDTO> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public List<ClientVDTO> getAll(int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             try
             {
-                ClientDAO dao = ClientDAO.getInstance();
+                ClientVDAO dao = ClientVDAO.getInstance();
                 return dao.getAll(pPageNumber, pShowCount, pOrderBy);
             }
             catch (MySqlException e)

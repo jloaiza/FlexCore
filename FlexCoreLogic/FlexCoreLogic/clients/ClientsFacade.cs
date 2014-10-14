@@ -43,12 +43,12 @@ namespace FlexCoreLogic.clients
             ClientLogic.getInstance().delete(pClient);
         }
 
-        public List<ClientDTO> searchClient(ClientDTO pClient, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
+        public List<ClientVDTO> searchClient(ClientVDTO pClient, int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
             return ClientLogic.getInstance().search(pClient, pPageNumber, pShowCount, pOrderBy);
         }
 
-        public List<ClientDTO> getAllClient(int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
+        public List<ClientVDTO> getAllClient(int pPageNumber=0, int pShowCount=0, params string[] pOrderBy)
         {
             return ClientLogic.getInstance().getAll(pPageNumber, pShowCount, pOrderBy);
         }
