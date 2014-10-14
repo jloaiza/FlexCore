@@ -68,9 +68,9 @@ namespace FlexCoreDAOs.cuentas
             return _cuentaSalida;
         }
 
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            //SE OBTIENE LA CUENTA DADA LA CEDULA;
+            //CEDULA
             return null;
         }
 
