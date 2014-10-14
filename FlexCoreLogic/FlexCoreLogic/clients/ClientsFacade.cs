@@ -31,7 +31,7 @@ namespace FlexCoreLogic.clients
             return _instance;
         }
 
-        private ClientsFacade();
+        private ClientsFacade() { }
 
         public void newClient(PersonDTO pPerson, List<PersonAddressDTO> pAddresses=null, List<PersonPhoneDTO> pPhones=null, List<PersonDocumentDTO> pDocuments=null, PersonPhotoDTO pPhoto=null)
         {
