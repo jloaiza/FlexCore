@@ -89,9 +89,9 @@ namespace FlexCoreDAOs.clients
             return pBool ? 1 : 0;
         }
 
-        protected bool sqlToBool(string pSQL)
+        protected bool sqlToBool(int pValue)
         {
-            if (pSQL.ToLower() == "true")
+            if (pValue == 1)
             {
                 return true;
             }

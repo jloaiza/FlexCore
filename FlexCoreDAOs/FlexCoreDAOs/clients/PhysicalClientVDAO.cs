@@ -91,10 +91,9 @@ namespace FlexCoreDAOs.clients
                 PhysicalClientVDTO client = new PhysicalClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                client.setActive(sqlToBool((int)reader[ACTIVE]));
                 client.setName(reader[NAME].ToString());
                 client.setIDCard(reader[ID_CARD].ToString());
-                client.setPersonType(reader[TYPE].ToString());
                 client.setFirstLastName(reader[FIRST_LSTNM].ToString());
                 client.setSecondLastName(reader[SECOND_LSTNM].ToString());
                 list.Add(client);
@@ -114,10 +113,9 @@ namespace FlexCoreDAOs.clients
                 PhysicalClientVDTO client = new PhysicalClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                client.setActive(sqlToBool((int)reader[ACTIVE]));
                 client.setName(reader[NAME].ToString());
                 client.setIDCard(reader[ID_CARD].ToString());
-                client.setPersonType(reader[TYPE].ToString());
                 list.Add(client);
             }
             return list;

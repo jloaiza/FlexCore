@@ -41,7 +41,7 @@ namespace FlexCoreDAOs.clients
             }
             if (pClient.getCIF() != DTOConstants.DEFAULT_STRING)
             {
-                condition = addCondition(condition, String.Format("{0} LIKE @{0}", CIF));
+                condition = addCondition(condition, String.Format("{0} = @{0}", CIF));
             }
             return condition;
         }
@@ -121,7 +121,7 @@ namespace FlexCoreDAOs.clients
                 ClientDTO client = new ClientDTO();
                 client.setClientID((int)reader[PERSON_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                client.setActive(sqlToBool((int)reader[ACTIVE]));
                 list.Add(client);
             }
             return list;
@@ -139,7 +139,7 @@ namespace FlexCoreDAOs.clients
                 ClientDTO client = new ClientDTO();
                 client.setClientID((int)reader[PERSON_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                client.setActive(sqlToBool((int)reader[ACTIVE]));
                 list.Add(client);
             }
             return list;
@@ -157,7 +157,7 @@ namespace FlexCoreDAOs.clients
                 ClientDTO client = new ClientDTO();
                 client.setClientID((int)reader[PERSON_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
+                client.setActive(sqlToBool((int)reader[ACTIVE]));
                 list.Add(client);
             }
             return list;

@@ -60,6 +60,7 @@
     <Compile Include="administration\TipoTransaccionQueriesDAO.cs" />
     <Compile Include="administration\TransaccionesVueloQueriesDAO.cs" />
     <Compile Include="clients\ClientDAO.cs" />
+    <Compile Include="clients\ClientVDAO.cs" />
     <Compile Include="clients\JuridicalClientVDAO.cs" />
     <Compile Include="clients\PersonAddressDAO.cs" />
     <Compile Include="clients\PersonDocumentDAO.cs" />
