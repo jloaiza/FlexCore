@@ -136,41 +136,84 @@ namespace FlexCoreLogic.cuentas.Managers
             }
         }
 
-        //PASAR A GET CEDULA
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista);
+                CuentaAhorroVistaDTO _cuentaSalida = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCedula(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentaSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
         public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista, pNumeroPagina, pCantidadElementos);
+                List<CuentaAhorroVistaDTO> _cuentaSalida = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaNombre(pCuentaAhorroVista, pNumeroPagina, pCantidadElementos, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentaSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
-        //PASAR A GET CIF 
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista);
+                CuentaAhorroVistaDTO _cuentaSalida = CuentaAhorroVistaDAO.obtenerCuentaAhorroVistaCIF(pCuentaAhorroVista, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentaSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 

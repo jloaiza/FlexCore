@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="clients\ClientLogic.cs" />
     <Compile Include="clients\AbstractPersonLogic.cs" />
+    <Compile Include="clients\ClientsFacade.cs" />
     <Compile Include="clients\JuridicPersonLogic.cs" />
+    <Compile Include="clients\PersonLogic.cs" />
     <Compile Include="clients\PhysicalPersonLogic.cs" />
     <Compile Include="cuentas\Facade\FacadeCuentas.cs" />
     <Compile Include="cuentas\Generales\Constantes.cs" />
