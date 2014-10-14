@@ -6,7 +6,7 @@ using FlexCoreDTOs.clients;
 
 namespace FlexCoreDAOs.clients
 {
-    class ClientVDAO:GeneralDAO<ClientVDTO>
+    public class ClientVDAO:GeneralDAO<ClientVDTO>
     {
         public static readonly string JURIDICAL_PERSON = "Juridica";
         public static readonly string PHYSICAL_PERSON = "Fisica";
