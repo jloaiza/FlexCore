@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ConexionMySQLServer.ConexionMySql;
 using MySql.Data.MySqlClient;
-using ModuloCuentas.Generales;
+using FlexCoreLogic.cuentas.Generales;
 using FlexCoreDTOs.cuentas;
 
 namespace FlexCoreDAOs.cuentas

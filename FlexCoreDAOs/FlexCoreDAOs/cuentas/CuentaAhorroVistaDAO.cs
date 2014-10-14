@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using ConexionMySQLServer.ConexionMySql;
 using MySql.Data.MySqlClient;
 using FlexCoreDTOs.clients;
-using ModuloCuentas.Generales;
+using FlexCoreLogic.cuentas.Generales;
+using FlexCoreLogic.clients;
 using FlexCoreDTOs.cuentas;
 
 namespace FlexCoreDAOs.cuentas
@@ -68,19 +69,19 @@ namespace FlexCoreDAOs.cuentas
             return _cuentaSalida;
         }
 
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            //SE OBTIENE LA CUENTA DADA LA CEDULA;
+            //CEDULA
             return null;
         }
 
-        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos)
+        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos, MySqlCommand pComando)
         {
             //SE OBTIENEN LAS CUENTAS DADO EL NOMBRE;
             return null;
         }
 
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
             //SE OBTIENE LA CUENTA DADO EL CIF;
             return null;
