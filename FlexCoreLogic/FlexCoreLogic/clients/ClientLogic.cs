@@ -207,7 +207,7 @@ namespace FlexCoreLogic.clients
             
         }
 
-        public List<ClientDTO> search(ClientDTO pClient, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public List<ClientVDTO> search(ClientVDTO pClient, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             MySqlConnection con = MySQLManager.nuevaConexion();
             MySqlCommand command = new MySqlCommand();
@@ -222,11 +222,11 @@ namespace FlexCoreLogic.clients
             }
         }
 
-        public List<ClientDTO> search(ClientDTO pClient, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
+        public List<ClientVDTO> search(ClientVDTO pClient, MySqlCommand pCommand, int pPageNumber, int pShowCount, params string[] pOrderBy)
         {
             try
             {
-                ClientDAO dao = ClientDAO.getInstance();
+                ClientVDAO dao = ClientVDAO.getInstance();
                 return dao.search(pClient, pCommand, pPageNumber, pShowCount, pOrderBy);
             }
             catch (MySqlException e)
