@@ -74,13 +74,13 @@ namespace FlexCoreDAOs.cuentas
             return null;
         }
 
-        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos)
+        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos, MySqlCommand pComando)
         {
             //SE OBTIENEN LAS CUENTAS DADO EL NOMBRE;
             return null;
         }
 
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista)
+        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
             //SE OBTIENE LA CUENTA DADO EL CIF;
             return null;
