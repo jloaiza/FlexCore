@@ -12,6 +12,27 @@ namespace FlexCoreLogic.clients
 {
     public class ClientsFacade
     {
+
+        private static ClientsFacade _instance = null;
+        private static object _syncLock = new object();
+
+        public static ClientsFacade getInstance()
+        {
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new ClientsFacade();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private ClientsFacade();
+
         public void newClient(PersonDTO pPerson, List<PersonAddressDTO> pAddresses=null, List<PersonPhoneDTO> pPhones=null, List<PersonDocumentDTO> pDocuments=null, PersonPhotoDTO pPhoto=null)
         {
             ClientLogic.getInstance().newClient(pPerson, pAddresses, pPhones, pDocuments, pPhoto);
