@@ -7,6 +7,7 @@ using ConexionMySQLServer.ConexionMySql;
 using MySql.Data.MySqlClient;
 using FlexCoreDTOs.clients;
 using FlexCoreLogic.cuentas.Generales;
+using FlexCoreLogic.clients;
 using FlexCoreDTOs.cuentas;
 
 namespace FlexCoreDAOs.cuentas
