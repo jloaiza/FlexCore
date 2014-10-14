@@ -15,24 +15,28 @@ namespace FlexCoreDTOs.clients
         {
             _client = new ClientDTO();
             _person = new PhysicalPersonDTO();
+            _person.setPersonType(PersonDTO.PHYSICAL_PERSON);
         }
 
         public PhysicalClientVDTO(int pClientID)
         {
             _client = new ClientDTO(pClientID);
             _person = new PhysicalPersonDTO(pClientID);
+            _person.setPersonType(PersonDTO.PHYSICAL_PERSON);
         }
 
         public PhysicalClientVDTO(int pIDClient, string pName, string pFirstLastName, string pSecondLastName, string pIDCard, string pCIF, bool pActive = false)
         {
             _client = new ClientDTO(pIDClient, pCIF, pActive);
             _person = new PhysicalPersonDTO(pIDClient, pName, pFirstLastName, pSecondLastName, pIDCard);
+            _person.setPersonType(PersonDTO.PHYSICAL_PERSON);
         }
 
         public PhysicalClientVDTO(string pName, string pFirstLastName, string pSecondLastName, string pIDCard, string pCIF, bool pActive = false)
         {
             _client = new ClientDTO(DTOConstants.DEFAULT_INT_ID, pCIF, pActive);
             _person = new PhysicalPersonDTO(DTOConstants.DEFAULT_INT_ID, pName, pFirstLastName, pSecondLastName, pIDCard);
+            _person.setPersonType(PersonDTO.PHYSICAL_PERSON);
         }
 
         //Setters
@@ -48,8 +52,6 @@ namespace FlexCoreDTOs.clients
         public void setName(string pName) { _person.setName(pName); }
 
         public void setIDCard(string pIDCard) { _person.setIDCard(pIDCard); }
-
-        public void setPersonType(string pType) { _person.setPersonType(pType); }
 
         public void setFirstLastName(string pLastName) { _person.setFirstLastName(pLastName); }
 
@@ -73,5 +75,6 @@ namespace FlexCoreDTOs.clients
         public string getFirstLastName() { return _person.getFirstLastName(); }
 
         public string getSecondLastName() { return _person.getSecondLastName(); }
+
     }
 }

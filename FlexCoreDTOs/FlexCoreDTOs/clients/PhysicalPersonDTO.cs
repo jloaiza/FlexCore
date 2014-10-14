@@ -15,6 +15,7 @@ namespace FlexCoreDTOs.clients
         {
             _firstLastName = DTOConstants.DEFAULT_STRING;
             _secondLastName = DTOConstants.DEFAULT_STRING;
+            setPersonType(PHYSICAL_PERSON);
         }
 
         public PhysicalPersonDTO(int pPersonID)
