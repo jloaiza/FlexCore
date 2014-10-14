@@ -53,6 +53,8 @@ namespace FlexCoreDTOs.clients
 
         public void setIDCard(string pIDCard) { _person.setIDCard(pIDCard); }
 
+        public void setPersonType(string pType) { _person.setPersonType(pType); }
+        
         //Getters
         public int getClientID() { return _client.getClientID(); }
 
