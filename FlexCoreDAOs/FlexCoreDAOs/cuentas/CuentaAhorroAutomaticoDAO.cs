@@ -128,7 +128,6 @@ namespace FlexCoreDAOs.cuentas
 
         public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
-            //SE OBTIENE LA CUENTA DADA LA CEDULA;
             return null;
         }
 

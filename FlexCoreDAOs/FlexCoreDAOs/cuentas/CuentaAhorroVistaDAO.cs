@@ -72,7 +72,8 @@ namespace FlexCoreDAOs.cuentas
 
         public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
-            //CEDULA
+            ClientsFacade _facade = ClientsFacade.getInstance();
+            //_facade.se
             return null;
         }
 
