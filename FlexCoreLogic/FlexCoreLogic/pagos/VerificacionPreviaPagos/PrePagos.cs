@@ -42,6 +42,7 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
          */
         public string iniciarPago(string pCuentaOrigen, string pCuentaDestino, string pIdOrigen, int pMonto)
         {
+
             FlexCoreDTOs.cuentas.CuentaAhorroVistaDTO nCuentaVista_O = new CuentaAhorroVistaDTO();
             FlexCoreDTOs.cuentas.CuentaAhorroVistaDTO nCuentaVista_D = new CuentaAhorroVistaDTO();
             FlexCoreDTOs.cuentas.CuentaAhorroAutomaticoDTO nCuentaAA_O = new CuentaAhorroAutomaticoDTO();

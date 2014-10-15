@@ -30,13 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConexionMySQLServer">
+    <Reference Include="ConexionMySQLServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\ConexionMySQLServer.dll</HintPath>
     </Reference>
-    <Reference Include="FlexCoreDAOs">
+    <Reference Include="FlexCoreDAOs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\FlexCoreDAOs.dll</HintPath>
     </Reference>
-    <Reference Include="FlexCoreDTOs">
+    <Reference Include="FlexCoreDTOs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\FlexCoreDTOs.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.9.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
@@ -51,7 +54,9 @@
   <ItemGroup>
     <Compile Include="clients\ClientLogic.cs" />
     <Compile Include="clients\AbstractPersonLogic.cs" />
+    <Compile Include="clients\ClientsFacade.cs" />
     <Compile Include="clients\JuridicPersonLogic.cs" />
+    <Compile Include="clients\PersonLogic.cs" />
     <Compile Include="clients\PhysicalPersonLogic.cs" />
     <Compile Include="cuentas\Facade\FacadeCuentas.cs" />
     <Compile Include="cuentas\Generales\Constantes.cs" />

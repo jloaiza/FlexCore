@@ -13,6 +13,24 @@ namespace FlexCoreLogic.clients
 {
     class PhysicalPersonLogic:AbstractPersonLogic<PhysicalPersonDTO>
     {
+        private static PhysicalPersonLogic _instance = null;
+        private static object _syncLock = new object();
+
+        public static PhysicalPersonLogic  getInstance(){
+            if (_instance == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new PhysicalPersonLogic();
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private PhysicalPersonLogic() { }
 
         public override void insert(PhysicalPersonDTO pPerson)
         {
