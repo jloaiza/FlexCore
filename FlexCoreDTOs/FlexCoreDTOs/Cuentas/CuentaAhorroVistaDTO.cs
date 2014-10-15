@@ -14,7 +14,7 @@ namespace FlexCoreDTOs.cuentas
 
         public CuentaAhorroVistaDTO() { }
 
-        public CuentaAhorroVistaDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente, decimal pSaldoFlotante,
+        public CuentaAhorroVistaDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientVDTO pCliente, decimal pSaldoFlotante,
             List<PhysicalPersonDTO> pListaBeneficiarios) : base(pNumeroCuenta, pDecripcion, pSaldo, pEstado, pTipoMoneda, pCliente)
         {
             _saldoFlotante = pSaldoFlotante;

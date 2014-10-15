@@ -22,7 +22,7 @@ namespace FlexCoreDTOs.cuentas
 
         public CuentaAhorroAutomaticoDTO() { }
 
-        public CuentaAhorroAutomaticoDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente, DateTime pFechaInicio,
+        public CuentaAhorroAutomaticoDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientVDTO pCliente, DateTime pFechaInicio,
             int pTiempoAhorro, DateTime pFechaFinalizacion, DateTime pUltimaFechaCobro, decimal pMontoAhorro, decimal pMontoDeduccion, int pProposito, int pMagnitudPeriodoAhorro,
             int pTipoPeriodo, string pNumeroCuentaDeduccion) : base(pNumeroCuenta, pDecripcion, pSaldo, pEstado, pTipoMoneda, pCliente)
         {

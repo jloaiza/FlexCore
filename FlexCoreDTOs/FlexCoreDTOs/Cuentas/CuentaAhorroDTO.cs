@@ -14,11 +14,11 @@ namespace FlexCoreDTOs.cuentas
         private int _tipoMoneda;
         private decimal _saldo;
         private bool _estado;
-        ClientDTO _cliente;
+        ClientVDTO _cliente;
 
         public CuentaAhorroDTO() { }
 
-        public CuentaAhorroDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientDTO pCliente)
+        public CuentaAhorroDTO(string pNumeroCuenta, string pDecripcion, decimal pSaldo, bool pEstado, int pTipoMoneda, ClientVDTO pCliente)
         {
             _numeroCuenta = pNumeroCuenta;
             _descripcion = pDecripcion;
@@ -78,12 +78,12 @@ namespace FlexCoreDTOs.cuentas
             _tipoMoneda = pTipoMoneda;
         }
 
-        public void setCliente(ClientDTO pCliente)
+        public void setCliente(ClientVDTO pCliente)
         {
             _cliente = pCliente;
         }
 
-        public ClientDTO getCliente()
+        public ClientVDTO getCliente()
         {
             return _cliente;
         }
