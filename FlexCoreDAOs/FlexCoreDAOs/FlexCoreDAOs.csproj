@@ -34,7 +34,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\ConexionMySQLServer.dll</HintPath>
     </Reference>
-    <Reference Include="FlexCoreDTOs">
+    <Reference Include="FlexCoreDTOs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\FlexCoreDTOs.dll</HintPath>
     </Reference>
     <Reference Include="FlexCoreLogic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -62,7 +62,8 @@ namespace FlexCoreDAOs.cuentas
                 int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
                 decimal _saldoFlotante = Convert.ToDecimal(_reader["saldoFlotante"]);
                 int _idCliente = Convert.ToInt32(_reader["idCliente"]);
-                ClientDTO _cliente = new ClientDTO(_idCliente, "");
+                ClientVDTO _cliente = new ClientVDTO();
+                _cliente.setClientID(_idCliente);
                 _cuentaSalida = new CuentaAhorroVistaDTO(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _cliente, _saldoFlotante, _listaBeneficiarios);
             }
             _reader.Close();

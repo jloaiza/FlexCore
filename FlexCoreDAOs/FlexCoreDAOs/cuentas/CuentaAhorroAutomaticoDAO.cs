@@ -110,7 +110,8 @@ namespace FlexCoreDAOs.cuentas
                 int _tipoPeriodo = Convert.ToInt32(_reader["idTipoPeriodo"]);
                 int _idCliente = Convert.ToInt32(_reader["idCliente"]);
                 _idCuentaDeduccion = Convert.ToInt32(_reader["idCuentaDeduccion"]);
-                ClientDTO _cliente = new ClientDTO(_idCliente, "");
+                ClientVDTO _cliente = new ClientVDTO();
+                _cliente.setClientID(_idCliente);
                 _cuentaSalida = new CuentaAhorroAutomaticoDTO(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _cliente,_fechaInicio, _tiempoAhorro,
                     _fechaFinalizacion, _ultimaFechaCobro, _montoAhorro, _montoDeduccion, _proposito, _magnitudPeriodoAhorro, _tipoPeriodo, "");
             }
