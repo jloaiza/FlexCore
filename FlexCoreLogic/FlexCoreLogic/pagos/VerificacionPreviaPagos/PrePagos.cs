@@ -50,7 +50,6 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);//verifica el tipo de cuenta
             int tCuentaDestino = this.identificarCuentas(pCuentaDestino);//verifica el tipo de cuenta
             this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
-            this.verficarCliente();
             decimal Monto = (decimal)pMonto;
             if (_clientesOK && _cuentasOrigenOK && _DispositivoOK) {//si se activan las 3 banderas, se puede hacer un pago
                 if(tCuentaOrigen == 0 && tCuentaDestino==0){
@@ -74,12 +73,6 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
                     FlexCoreLogic.pagos.Facade.FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O,Monto,nCuentaVista_D);
                 }
             }
-            return "";
-        }
-
-        public string verficarCliente()
-        {
-            this._cuentasDestinoOK = true;
             return "";
         }
 
