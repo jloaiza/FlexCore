@@ -71,17 +71,15 @@ namespace FlexCoreLogic.pagos.Managers
                     return "Transacción completada con éxito";
                 }
             }
-            catch(Exception ex1)
+            catch
             {
-                Console.WriteLine(ex1.Message);
                 try
                 {
                     _comandoMySQL.Transaction.Rollback();
                     return "Ha ocurrido un error en la transacción";
                 }
-                catch(Exception ex2)
+                catch
                 {
-                    Console.WriteLine(ex2.Message);
                     return "Ha ocurrido un error en la transacción";
                 }
             }
