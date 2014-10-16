@@ -8,6 +8,7 @@ using FlexCoreDAOs.administration;
 using FlexCoreDTOs.cuentas;
 using FlexCoreLogic.cuentas.Generales;
 using FlexCoreLogic.cuentas.Managers;
+using FlexCoreLogic.pagos.Facade;
 
 namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
 {
@@ -16,20 +17,13 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
         /*
          * Banderas de los requerimientos antes de hacer un pago
          */
-        private Boolean _sePuedePagar;
-        private Boolean _clientesOK;
-        private Boolean _cuentasOrigenOK;
-        private Boolean _cuentasDestinoOK;
         private Boolean _DispositivoOK;
 
         /*
          * Contructor, se asignan valores falsos a las banderas
          */
-        public PrePagos() {
-            this._sePuedePagar = false;
-            this._clientesOK = false;
-            this._cuentasOrigenOK = false;
-            this._cuentasDestinoOK = false;
+        public PrePagos() 
+        {
             this._DispositivoOK = false;
         }
 
@@ -40,37 +34,43 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
          * realizar el pago.
          * Como es un pago, todo pago tiene un monto, pMonto, es el monto del pago.
          */
-        public string iniciarPago(string pCuentaOrigen, string pCuentaDestino, string pIdOrigen, int pMonto)
+        public string iniciarPago(string pCuentaOrigen, string pCuentaDestino, string pIdOrigen, decimal pMonto)
         {
 
-            FlexCoreDTOs.cuentas.CuentaAhorroVistaDTO nCuentaVista_O = new CuentaAhorroVistaDTO();
-            FlexCoreDTOs.cuentas.CuentaAhorroVistaDTO nCuentaVista_D = new CuentaAhorroVistaDTO();
-            FlexCoreDTOs.cuentas.CuentaAhorroAutomaticoDTO nCuentaAA_O = new CuentaAhorroAutomaticoDTO();
-            FlexCoreDTOs.cuentas.CuentaAhorroAutomaticoDTO nCuentaAA_D = new CuentaAhorroAutomaticoDTO();
-            int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);//verifica el tipo de cuenta
-            int tCuentaDestino = this.identificarCuentas(pCuentaDestino);//verifica el tipo de cuenta
-            this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
-            decimal Monto = (decimal)pMonto;
-            if (_clientesOK && _cuentasOrigenOK && _DispositivoOK) {//si se activan las 3 banderas, se puede hacer un pago
-                if(tCuentaOrigen == 0 && tCuentaDestino==0){
+            CuentaAhorroVistaDTO nCuentaVista_O = new CuentaAhorroVistaDTO();
+            CuentaAhorroVistaDTO nCuentaVista_D = new CuentaAhorroVistaDTO();
+            CuentaAhorroAutomaticoDTO nCuentaAA_O = new CuentaAhorroAutomaticoDTO();
+            CuentaAhorroAutomaticoDTO nCuentaAA_D = new CuentaAhorroAutomaticoDTO();
+            int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);   //verifica el tipo de cuenta
+            int tCuentaDestino = this.identificarCuentas(pCuentaDestino); //verifica el tipo de cuenta
+            //this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
+            //_DispositivoOK
+            if (true) 
+            {
+                //si se activan las 3 banderas, se puede hacer un pago
+                if(tCuentaOrigen == 0 && tCuentaDestino == 0)
+                {
                     nCuentaAA_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaAA_D.setNumeroCuenta(pCuentaDestino);
-                    FlexCoreLogic.pagos.Facade.FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O,Monto,nCuentaAA_D);
+                    FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O, pMonto,nCuentaAA_D);
                 }
-                else if(tCuentaOrigen == 0 && tCuentaDestino==1){
+                else if(tCuentaOrigen == 0 && tCuentaDestino == 1)
+                {
                     nCuentaAA_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaVista_D.setNumeroCuenta(pCuentaDestino);
-                    FlexCoreLogic.pagos.Facade.FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O,Monto,nCuentaVista_D);
+                    FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O, pMonto,nCuentaVista_D);
                 }
-                else if(tCuentaOrigen == 1 && tCuentaDestino==0){
+                else if(tCuentaOrigen == 1 && tCuentaDestino == 0)
+                {
                     nCuentaVista_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaAA_D.setNumeroCuenta(pCuentaDestino);
-                    FlexCoreLogic.pagos.Facade.FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, Monto, nCuentaAA_D);
+                    FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto, nCuentaAA_D);
                 }
-                else if (tCuentaOrigen == 1 && tCuentaDestino == 1) {
+                else if (tCuentaOrigen == 1 && tCuentaDestino == 1) 
+                {
                     nCuentaVista_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaVista_D.setNumeroCuenta(pCuentaDestino);
-                    FlexCoreLogic.pagos.Facade.FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O,Monto,nCuentaVista_D);
+                    FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto,nCuentaVista_D);
                 }
             }
             return "";
@@ -86,10 +86,10 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             cuenta.setNumeroCuenta(pCuentaOrigen);
             int idCuenta = FlexCoreLogic.cuentas.Facade.FacadeCuentas.obtenerCuentaAhorroVistaID(cuenta);
 
-            List<int> estadoCuentaDisp;
+            List<int> estadoCuentaDisp = new List<int>();
             try
             {
-                FlexCoreDAOs.administration.DispositivoCuentaQueriesDAO DispC = new DispositivoCuentaQueriesDAO();
+                DispositivoCuentaQueriesDAO DispC = new DispositivoCuentaQueriesDAO();
                 estadoCuentaDisp = DispC.checkDispositivoCuenta(pCuentaOrigen, idCuenta);
                 if (estadoCuentaDisp.Count == 1)
                 {
@@ -113,7 +113,6 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
                         && estadoCuentaDisp.Contains(ConstantesDAO.DISPOSITIVOACTIVO))
                     {
                         this._DispositivoOK = true;
-                        this._cuentasOrigenOK = true;
                         resultado += " EXISTE, ESTA ENLAZADO, Y ACTIVO"; //incluir en constantes
                     }
                 }
@@ -138,9 +137,11 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
          * Identifica el tipo de cuenta,  si es una cuenta de Ahorro vista,
          * o si es una cuenta de ahorra automatico
          */
-        public int identificarCuentas(string pCuenta) {
-            int resultado=-1;
-            switch(pCuenta.ElementAt(0)){
+        public int identificarCuentas(string pCuenta) 
+        {
+            int resultado = -1;
+            switch(pCuenta.ElementAt(0))
+            {
                 case '6':
                     resultado = 0;
                     break;
@@ -154,12 +155,11 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
                     resultado = 1;
                     break;
             }
-            return 0;
+            return resultado;
         }
 
-        public void registrarPago() {
-            
-        
+        public void registrarPago() 
+        {
         }
     }
 }
