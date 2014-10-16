@@ -39,6 +39,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ConexionMySQLServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\ConexionMySQLServer.dll</HintPath>
+    </Reference>
+    <Reference Include="FlexCoreDAOs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\FlexCoreDAOs.dll</HintPath>
+    </Reference>
+    <Reference Include="FlexCoreDTOs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\FlexCoreDTOs.dll</HintPath>
+    </Reference>
+    <Reference Include="FlexCoreLogic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\FlexCoreLogic.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -118,6 +134,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Dll\ConexionMySQLServer.dll" />
+    <Content Include="Dll\FlexCoreDAOs.dll" />
+    <Content Include="Dll\FlexCoreDTOs.dll" />
+    <Content Include="Dll\FlexCoreLogic.dll" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
