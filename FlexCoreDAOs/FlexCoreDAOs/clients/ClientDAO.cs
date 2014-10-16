@@ -121,7 +121,7 @@ namespace FlexCoreDAOs.clients
                 ClientDTO client = new ClientDTO();
                 client.setClientID((int)reader[PERSON_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool((int)reader[ACTIVE]));
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
                 list.Add(client);
             }
             return list;
@@ -139,7 +139,7 @@ namespace FlexCoreDAOs.clients
                 ClientDTO client = new ClientDTO();
                 client.setClientID((int)reader[PERSON_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool((int)reader[ACTIVE]));
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
                 list.Add(client);
             }
             return list;
@@ -157,7 +157,7 @@ namespace FlexCoreDAOs.clients
                 ClientDTO client = new ClientDTO();
                 client.setClientID((int)reader[PERSON_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool((int)reader[ACTIVE]));
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
                 list.Add(client);
             }
             return list;

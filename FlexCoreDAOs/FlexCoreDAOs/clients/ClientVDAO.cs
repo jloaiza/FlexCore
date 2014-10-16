@@ -107,7 +107,7 @@ namespace FlexCoreDAOs.clients
                 ClientVDTO client = new ClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool((int)reader[ACTIVE]));
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
                 client.setName(reader[NAME].ToString());
                 client.setIDCard(reader[ID_CARD].ToString());
                 client.setPersonType(reader[TYPE].ToString());
@@ -128,7 +128,7 @@ namespace FlexCoreDAOs.clients
                 ClientVDTO client = new ClientVDTO();
                 client.setClientID((int)reader[CLIENT_ID]);
                 client.setCIF(reader[CIF].ToString());
-                client.setActive(sqlToBool((int)reader[ACTIVE]));
+                client.setActive(sqlToBool(reader[ACTIVE].ToString()));
                 client.setName(reader[NAME].ToString());
                 client.setIDCard(reader[ID_CARD].ToString());
                 client.setPersonType(reader[TYPE].ToString());
