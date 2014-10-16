@@ -412,42 +412,57 @@ namespace FlexCoreLogic.cuentas.Managers
             }
         }
 
-        //CAMBIAR A GETCEDULA
-        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
+        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoCedula(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCedula(pCuentaAhorroAutomatico);
+                List<CuentaAhorroAutomaticoDTO> _cuentasSalida = CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCedulaOCIF(pCuentaAhorroAutomatico, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentasSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 
-        //CAMBIAR A GET NOMBRE
-        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoNombre(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico, int pNumeroPagina, int pCantidadElementos)
+        public static List<CuentaAhorroAutomaticoDTO> obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
         {
+            MySqlCommand _comandoMySQL = obtenerConexionSQL();
             try
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoNombre(pCuentaAhorroAutomatico, pNumeroPagina, pCantidadElementos);
+                List<CuentaAhorroAutomaticoDTO> _cuentasSalida = CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCedulaOCIF(pCuentaAhorroAutomatico, _comandoMySQL);
+                _comandoMySQL.Transaction.Commit();
+                return _cuentasSalida;
             }
             catch
             {
-                return null;
+                try
+                {
+                    _comandoMySQL.Transaction.Rollback();
+                    return null;
+                }
+                catch
+                {
+                    return null;
+                }
             }
-        }
-
-        //CAMBIAR A GET CIF
-        public static CuentaAhorroAutomaticoDTO obtenerCuentaAhorroAutomaticoCIF(CuentaAhorroAutomaticoDTO pCuentaAhorroAutomatico)
-        {
-            try
+            finally
             {
-                return CuentaAhorroAutomaticoDAO.obtenerCuentaAhorroAutomaticoCIF(pCuentaAhorroAutomatico);
-            }
-            catch
-            {
-                return null;
+                MySQLManager.cerrarConexion(_comandoMySQL.Connection);
             }
         }
 

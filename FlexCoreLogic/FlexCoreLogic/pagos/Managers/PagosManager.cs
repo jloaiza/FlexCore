@@ -10,6 +10,8 @@ using FlexCoreDAOs.administration;
 using FlexCoreDTOs.cuentas;
 using FlexCoreLogic.cuentas.Generales;
 using FlexCoreLogic.cuentas.Managers;
+using FlexCoreDTOs.clients;
+using FlexCoreLogic.clients;
 
 
 namespace FlexCoreLogic.pagos.Managers
@@ -27,6 +29,13 @@ namespace FlexCoreLogic.pagos.Managers
         }
 
        
+        private static bool verificarCliente(int pIdCliente)
+        {
+            ClientsFacade _facadeCliente = ClientsFacade.getInstance();
+            ClientDTO _cliente = new ClientDTO();
+            _cliente.setClientID(pIdCliente);
+            return _facadeCliente.isClientActive(_cliente);
+        }
 
         public static string realizarPagoODebito(CuentaAhorroVistaDTO pCuentaAhorroVistaOrigen, decimal pMonto, CuentaAhorroVistaDTO pCuentaAhorroVistaDestino)
         {
@@ -42,6 +51,14 @@ namespace FlexCoreLogic.pagos.Managers
                 else if (_cuentaOrigen.getEstado() == false)
                 {
                     return "La cuenta con la cual se desea pagar se encuentra actualmente desactivada";
+                }
+                else if(verificarCliente(_cuentaOrigen.getCliente().getClientID()) == false)
+                {
+                    return "El cliente que desea hacer el pago se encuentra inactivo.";
+                }
+                else if (verificarCliente(_cuentaDestino.getCliente().getClientID()) == false)
+                {
+                    return "El cliente al cual se desea hacer el pago se encuentra inactivo.";
                 }
                 else if (_cuentaDestino.getEstado() == false)
                 {
@@ -87,6 +104,14 @@ namespace FlexCoreLogic.pagos.Managers
                 {
                     return "La cuenta con la cual se desea pagar se encuentra actualmente desactivada";
                 }
+                else if (verificarCliente(_cuentaOrigen.getCliente().getClientID()) == false)
+                {
+                    return "El cliente que desea hacer el pago se encuentra inactivo.";
+                }
+                else if (verificarCliente(_cuentaDestino.getCliente().getClientID()) == false)
+                {
+                    return "El cliente al cual se desea hacer el pago se encuentra inactivo.";
+                }
                 else if (_cuentaDestino.getEstado() == true)
                 {
                     return "La cuenta a la cual se desea pagar se encuentra actualmente en ahorro";
@@ -131,6 +156,14 @@ namespace FlexCoreLogic.pagos.Managers
                 {
                     return "Fondos insuficientes";
                 }
+                else if (verificarCliente(_cuentaOrigen.getCliente().getClientID()) == false)
+                {
+                    return "El cliente que desea hacer el pago se encuentra inactivo.";
+                }
+                else if (verificarCliente(_cuentaDestino.getCliente().getClientID()) == false)
+                {
+                    return "El cliente al cual se desea hacer el pago se encuentra inactivo.";
+                }
                 else if (_cuentaDestino.getEstado() == true)
                 {
                     return "La cuenta a la cual se desea pagar se encuentra actualmente en ahorro";
@@ -174,6 +207,14 @@ namespace FlexCoreLogic.pagos.Managers
                 else if (_cuentaOrigen.getSaldo() < pMonto)
                 {
                     return "Fondos insuficientes";
+                }
+                else if (verificarCliente(_cuentaOrigen.getCliente().getClientID()) == false)
+                {
+                    return "El cliente que desea hacer el pago se encuentra inactivo.";
+                }
+                else if (verificarCliente(_cuentaDestino.getCliente().getClientID()) == false)
+                {
+                    return "El cliente al cual se desea hacer el pago se encuentra inactivo.";
                 }
                 else if (_cuentaDestino.getEstado() == false)
                 {
