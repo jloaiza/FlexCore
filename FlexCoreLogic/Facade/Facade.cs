@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Facade
 {
     
-    public static class Program
+    public static class Facade
     {
         /// <summary>
         /// Punto de entrada principal para la aplicación.
