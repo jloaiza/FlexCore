@@ -70,7 +70,10 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
                 {
                     nCuentaVista_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaVista_D.setNumeroCuenta(pCuentaDestino);
-                    FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto,nCuentaVista_D);
+                    //VER AQUI
+                    Console.WriteLine("Llegando: " + nCuentaVista_O.getNumeroCuenta() + " " + nCuentaVista_D.getNumeroCuenta() + " " + pMonto);
+                    Console.WriteLine(FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto,nCuentaVista_D));
+                    //VER AQUI
                 }
             }
             return "";

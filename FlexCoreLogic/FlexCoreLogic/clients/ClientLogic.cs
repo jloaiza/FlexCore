@@ -89,6 +89,8 @@ namespace FlexCoreLogic.clients
             try
             {
                 ClientDAO dao = ClientDAO.getInstance();
+                Console.WriteLine("XDDDDD");
+                Console.WriteLine("ola: " + dao.search(pClient, pCommand));
                 ClientDTO result = dao.search(pClient, pCommand)[0];
                 return result.isActive();
             }

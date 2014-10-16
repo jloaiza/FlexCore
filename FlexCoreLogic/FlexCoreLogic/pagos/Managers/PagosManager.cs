@@ -52,7 +52,7 @@ namespace FlexCoreLogic.pagos.Managers
                 {
                     return "La cuenta con la cual se desea pagar se encuentra actualmente desactivada";
                 }
-                else if(verificarCliente(_cuentaOrigen.getCliente().getClientID()) == false)
+                else if (verificarCliente(_cuentaOrigen.getCliente().getClientID()) == false)
                 {
                     return "El cliente que desea hacer el pago se encuentra inactivo.";
                 }
@@ -71,15 +71,17 @@ namespace FlexCoreLogic.pagos.Managers
                     return "Transacción completada con éxito";
                 }
             }
-            catch
+            catch(Exception ex1)
             {
+                Console.WriteLine(ex1.Message);
                 try
                 {
                     _comandoMySQL.Transaction.Rollback();
                     return "Ha ocurrido un error en la transacción";
                 }
-                catch
+                catch(Exception ex2)
                 {
+                    Console.WriteLine(ex2.Message);
                     return "Ha ocurrido un error en la transacción";
                 }
             }
