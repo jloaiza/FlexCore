@@ -76,7 +76,7 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             }
             else
             {
-                return "Dispositivo no acoplado."
+                return "Dispositivo no acoplado.";
             }
         }
 
