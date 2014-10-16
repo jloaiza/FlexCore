@@ -43,36 +43,41 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             CuentaAhorroAutomaticoDTO nCuentaAA_D = new CuentaAhorroAutomaticoDTO();
             int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);   //verifica el tipo de cuenta
             int tCuentaDestino = this.identificarCuentas(pCuentaDestino); //verifica el tipo de cuenta
-           this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
-           if (_DispositivoOK) 
+            this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
+            if (_DispositivoOK) 
             {
+                string _respuesta = "";
                 //si se activan las 3 banderas, se puede hacer un pago
                 if(tCuentaOrigen == 0 && tCuentaDestino == 0)
                 {
                     nCuentaAA_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaAA_D.setNumeroCuenta(pCuentaDestino);
-                    FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O, pMonto,nCuentaAA_D);
+                    _respuesta = FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O, pMonto,nCuentaAA_D);
                 }
                 else if(tCuentaOrigen == 0 && tCuentaDestino == 1)
                 {
                     nCuentaAA_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaVista_D.setNumeroCuenta(pCuentaDestino);
-                    FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O, pMonto,nCuentaVista_D);
+                    _respuesta = FacadePagos.realizarPagoODebitoCuentoAhorroAutomatico(nCuentaAA_O, pMonto,nCuentaVista_D);
                 }
                 else if(tCuentaOrigen == 1 && tCuentaDestino == 0)
                 {
                     nCuentaVista_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaAA_D.setNumeroCuenta(pCuentaDestino);
-                    FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto, nCuentaAA_D);
+                    _respuesta = FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto, nCuentaAA_D);
                 }
                 else if (tCuentaOrigen == 1 && tCuentaDestino == 1) 
                 {
                     nCuentaVista_O.setNumeroCuenta(pCuentaOrigen);
                     nCuentaVista_D.setNumeroCuenta(pCuentaDestino);
-                    FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto,nCuentaVista_D);
+                    _respuesta = FacadePagos.realizarPagoODebitoCuentaAhorroVista(nCuentaVista_O, pMonto,nCuentaVista_D);
                 }
+                return _respuesta;
             }
-            return "";
+            else
+            {
+                return "Dispositivo no acoplado."
+            }
         }
 
         /*
