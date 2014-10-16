@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlexCoreLogic.principalogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,9 +33,7 @@ namespace FlexCoreLogic.cuentas.Generales
 
         public static DateTime getHoraActual()
         {
-            DateTime _test = new DateTime();
-            _test = DateTime.Now;
-            return _test;
+            return TiempoManager.obtenerHoraActual();
         }
     }
 }

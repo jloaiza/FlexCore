@@ -72,6 +72,8 @@
     <Compile Include="pagos\Facade\FacadePagos.cs" />
     <Compile Include="pagos\Managers\PagosManager.cs" />
     <Compile Include="pagos\VerificacionPreviaPagos\PrePagos.cs" />
+    <Compile Include="principalogic\ControladorDeCierre.cs" />
+    <Compile Include="principalogic\TiempoManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
