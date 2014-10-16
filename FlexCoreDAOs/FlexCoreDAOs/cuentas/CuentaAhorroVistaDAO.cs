@@ -70,23 +70,45 @@ namespace FlexCoreDAOs.cuentas
             return _cuentaSalida;
         }
 
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCedula(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
+        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaCedulaOCIF(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
         {
             ClientsFacade _facade = ClientsFacade.getInstance();
-            //_facade.se
-            return null;
+            List<ClientVDTO> _listaClientes = _facade.searchClient(pCuentaAhorroVista.getCliente());
+            int idCliente = _listaClientes[0].getClientID();
+            List<CuentaAhorroVistaDTO> _cuentasSalida = new List<CuentaAhorroVistaDTO>();
+            String _query = "SELECT * FROM CUENTA_AHORRO_VISTA_V WHERE IDCLIENTE = @idCliente";
+            pComando.CommandText = _query;
+            pComando.Parameters.Clear();
+            pComando.Parameters.AddWithValue("@idCliente", idCliente);
+            MySqlDataReader _reader = pComando.ExecuteReader();
+            if (_reader.Read())
+            {
+                string _numeroCuenta = _reader["numCuenta"].ToString();
+                string _descripcion = _reader["descripcion"].ToString();
+                decimal _saldo = Convert.ToDecimal(_reader["saldo"]);
+                bool _estado = Transformaciones.intToBool(Convert.ToInt32(_reader["activa"]));
+                int _tipoMoneda = Convert.ToInt32(_reader["idMoneda"]);
+                decimal _saldoFlotante = Convert.ToDecimal(_reader["saldoFlotante"]);
+                int _idCliente = idCliente;
+                ClientVDTO _cliente = new ClientVDTO();
+                _cliente.setClientID(_idCliente);
+                CuentaAhorroVistaDTO _cuentaSalidaAux = new CuentaAhorroVistaDTO(_numeroCuenta, _descripcion, _saldo, _estado, _tipoMoneda, _cliente, _saldoFlotante, null);
+                _cuentasSalida.Add(_cuentaSalidaAux);
+            }
+            _reader.Close();
+            _cuentasSalida = setearBeneficiarios(_cuentasSalida, pComando);
+            return _cuentasSalida;
         }
 
-        public static List<CuentaAhorroVistaDTO> obtenerCuentaAhorroVistaNombre(CuentaAhorroVistaDTO pCuentaAhorroVista, int pNumeroPagina, int pCantidadElementos, MySqlCommand pComando)
+        private static List<CuentaAhorroVistaDTO> setearBeneficiarios(List<CuentaAhorroVistaDTO> pListaCuentas, MySqlCommand pComando)
         {
-            //SE OBTIENEN LAS CUENTAS DADO EL NOMBRE;
-            return null;
-        }
-
-        public static CuentaAhorroVistaDTO obtenerCuentaAhorroVistaCIF(CuentaAhorroVistaDTO pCuentaAhorroVista, MySqlCommand pComando)
-        {
-            //SE OBTIENE LA CUENTA DADO EL CIF;
-            return null;
+            List<PhysicalPersonDTO> _listaBeneficiarios = new List<PhysicalPersonDTO>();
+            foreach(CuentaAhorroVistaDTO cuenta in pListaCuentas)
+            {
+                _listaBeneficiarios = CuentaBeneficiariosDAO.obtenerListaBeneficiarios(cuenta, pComando);
+                cuenta.setListaBeneficiarios(_listaBeneficiarios);
+            }
+            return pListaCuentas;
         }
 
         public static void agregarDinero(CuentaAhorroDTO pCuentaAhorro, decimal pMonto, int pTipoCuenta, MySqlCommand pComando)
