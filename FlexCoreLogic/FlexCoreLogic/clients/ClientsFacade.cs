@@ -131,12 +131,16 @@ namespace FlexCoreLogic.clients
         }
 
         //juridical person
-        public void newJuridicalPerson(PersonDTO pPerson, MySqlCommand pCommand)
+        public void newJuridicalPerson(PersonDTO pPerson, List<PersonAddressDTO> pAddresses = null, List<PersonPhoneDTO> pPhones = null, List<PersonDocumentDTO> pDocuments = null, PersonPhotoDTO pPhoto = null){
+            JuridicPersonLogic.getInstance().newPerson(pPerson, pAddresses, pPhones, pDocuments, pPhoto);
+        }
+
+        public void newJuridicalPerson(PersonDTO pPerson)
         {
             JuridicPersonLogic.getInstance().insert(pPerson);
         }
 
-        public void deleteJuridicalPerson(PersonDTO pPerson, MySqlCommand pCommand)
+        public void deleteJuridicalPerson(PersonDTO pPerson)
         {
             JuridicPersonLogic.getInstance().delete(pPerson);
         }
@@ -157,6 +161,11 @@ namespace FlexCoreLogic.clients
         }
 
         //physical person
+        public void newPhysicalPerson(PhysicalPersonDTO pPerson, List<PersonAddressDTO> pAddresses = null, List<PersonPhoneDTO> pPhones = null, List<PersonDocumentDTO> pDocuments = null, PersonPhotoDTO pPhoto = null)
+        {
+            PhysicalPersonLogic.getInstance().newPerson(pPerson, pAddresses, pPhones, pDocuments, pPhoto);
+        }
+
         public void insertPhysicalPerson(PhysicalPersonDTO pPerson)
         {
             PhysicalPersonLogic.getInstance().insert(pPerson);
