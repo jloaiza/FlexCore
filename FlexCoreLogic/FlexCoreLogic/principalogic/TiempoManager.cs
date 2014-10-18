@@ -18,7 +18,10 @@ namespace FlexCoreLogic.principalogic
 
         public static void iniciarReloj()
         {
-            _horaActual = DateTime.Now;
+            ConfiguracionesQueriesDAO _configuraciones = new ConfiguracionesQueriesDAO();
+            List<ConfiguracionesDTO> _listaConfiguraciones = new List<ConfiguracionesDTO>();
+            _listaConfiguraciones = _configuraciones.getConfiguracion();
+            _horaActual = _listaConfiguraciones[0].getFechaHoraActual();
             _relojIniciado = true;
             _cambioDeDia = false;
             ThreadStart _delegado = new ThreadStart(iniciarRelojAux);
