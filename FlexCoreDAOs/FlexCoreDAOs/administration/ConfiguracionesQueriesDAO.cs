@@ -47,6 +47,17 @@ namespace FlexCoreDAOs.administration
             return configuraciones;
         }
 
+        public void actualizarHoraBase(DateTime pHora)
+        {
+            String query = "UPDATE FROM CONFIGURACIONES SET FECHAHORASISTEMA = @horaSistema";
+            MySqlConnection connD = MySQLManager.nuevaConexion();
+            MySqlCommand command = connD.CreateCommand();
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@horaSistema", pHora);
+            command.ExecuteNonQuery();
+            MySQLManager.cerrarConexion(connD);
+        }
+
         public List<ConfiguracionesDTO> getConfiguracion(Decimal compraDolar, Decimal ventaDolar, 
             DateTime fechaHoraSistema, Decimal tasaInteresAhorro)
         {
