@@ -57,7 +57,8 @@ namespace FlexCoreLogic.principalogic
 
         private static void modificarHoraBase()
         {
-            //ACTUALIZAR HORA EN LA BASE
+            ConfiguracionesQueriesDAO _configuraciones = new ConfiguracionesQueriesDAO();
+            _configuraciones.actualizarHoraBase(_horaActual);
         }
 
         public static void pausarReloj()
