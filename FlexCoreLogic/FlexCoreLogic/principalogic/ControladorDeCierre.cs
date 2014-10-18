@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlexCoreLogic.cuentas.Facade;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,7 @@ namespace FlexCoreLogic.principalogic
 
         public static void iniciarCierre()
         {
-            //Iniciar Cierre
+            FacadeCuentas.realizarCierreCuentas();
         }
     }
 }

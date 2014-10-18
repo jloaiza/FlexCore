@@ -48,6 +48,7 @@ namespace FlexCoreLogic.principalogic
         {
             ConfiguracionesQueriesDAO _configuraciones = new ConfiguracionesQueriesDAO();
             List<ConfiguracionesDTO> _listaConfiguraciones = new List<ConfiguracionesDTO>();
+            _listaConfiguraciones = _configuraciones.getConfiguracion();
             if (_horaActual.Day > _listaConfiguraciones[0].getFechaHoraActual().Day)
             {
                 encenderCambioDeDia();

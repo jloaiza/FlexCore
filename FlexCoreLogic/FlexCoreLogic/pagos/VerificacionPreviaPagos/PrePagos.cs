@@ -43,8 +43,9 @@ namespace FlexCoreLogic.pagos.VerificacionPreviaPagos
             CuentaAhorroAutomaticoDTO nCuentaAA_D = new CuentaAhorroAutomaticoDTO();
             int tCuentaOrigen = this.identificarCuentas(pCuentaOrigen);   //verifica el tipo de cuenta
             int tCuentaDestino = this.identificarCuentas(pCuentaDestino); //verifica el tipo de cuenta
-            this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
-            if (_DispositivoOK) 
+            //this.verificarDispositivos(pCuentaOrigen, pIdOrigen);
+            //_DispositivoOK
+            if (true) 
             {
                 string _respuesta = "";
                 //si se activan las 3 banderas, se puede hacer un pago
