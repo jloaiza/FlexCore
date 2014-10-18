@@ -18,7 +18,10 @@ namespace FlexCoreLogic.principalogic
 
         public static void iniciarReloj()
         {
-            _horaActual = DateTime.Now;
+            ConfiguracionesQueriesDAO _configuraciones = new ConfiguracionesQueriesDAO();
+            List<ConfiguracionesDTO> _listaConfiguraciones = new List<ConfiguracionesDTO>();
+            _listaConfiguraciones = _configuraciones.getConfiguracion();
+            _horaActual = _listaConfiguraciones[0].getFechaHoraActual();
             _relojIniciado = true;
             _cambioDeDia = false;
             ThreadStart _delegado = new ThreadStart(iniciarRelojAux);
@@ -48,6 +51,7 @@ namespace FlexCoreLogic.principalogic
         {
             ConfiguracionesQueriesDAO _configuraciones = new ConfiguracionesQueriesDAO();
             List<ConfiguracionesDTO> _listaConfiguraciones = new List<ConfiguracionesDTO>();
+            _listaConfiguraciones = _configuraciones.getConfiguracion();
             if (_horaActual.Day > _listaConfiguraciones[0].getFechaHoraActual().Day)
             {
                 encenderCambioDeDia();
@@ -56,7 +60,8 @@ namespace FlexCoreLogic.principalogic
 
         private static void modificarHoraBase()
         {
-            //ACTUALIZAR HORA EN LA BASE
+            ConfiguracionesQueriesDAO _configuraciones = new ConfiguracionesQueriesDAO();
+            _configuraciones.actualizarHoraBase(_horaActual);
         }
 
         public static void pausarReloj()
